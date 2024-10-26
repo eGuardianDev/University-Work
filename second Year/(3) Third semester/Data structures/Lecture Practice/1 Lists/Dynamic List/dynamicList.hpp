@@ -1,7 +1,10 @@
 
 #pragma once 
-#include <cstddef>
 
+
+#ifndef Dynamic_List_include__
+#define Dynamic_List_include__
+#include <cstddef>
 template<class T>
 class DynamicList{
     
@@ -13,7 +16,7 @@ class DynamicList{
     public:
     //===============================================
     //Init
-    /**/ explicit DynamicList(int capacity = 16);
+    explicit DynamicList(int capacity = 16);
     ~DynamicList();
     
     //Copy
@@ -59,4 +62,11 @@ class DynamicList{
 
 
     //! Iterator
+    // #include "DAIterator.cpp"
+
+    // DynamicArrayIterator<T> begin() { return DynamicArrayIterator<T>(list); }
+    // DynamicArrayIterator<T> end() {return DynamicArrayIterator<T>(list+size);}
 };
+
+
+#endif
