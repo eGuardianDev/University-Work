@@ -1,0 +1,17 @@
+#lang racket
+
+
+
+(define (sum-cubes-pow x)
+(
+ 
+ 
+ )
+
+  )
+
+(define (sum-cubes-no-pow x)
+(
+
+ )
+  )
