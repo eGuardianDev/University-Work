@@ -1,0 +1,11 @@
+#lang racket
+
+
+
+(= (num-palindromes-rec 1 101) 19)
+(= (num-palindromes-rec 1 100) 18)
+(= (num-palindromes-rec 100 1) 18)
+
+(= (num-palindromes-iter 1 101) 19)
+(= (num-palindromes-iter 1 100) 18)
+(= (num-palindromes-iter 100 1) 18)

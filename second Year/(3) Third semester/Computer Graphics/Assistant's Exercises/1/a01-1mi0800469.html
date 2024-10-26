@@ -1,0 +1,159 @@
+﻿<html>
+	<head>
+		<style>
+			body { margin: 0; }
+			canvas { width: 100%; height: 100% }
+		</style>
+		<script type="importmap">
+			{ "imports": {
+				"three": "https://cdn.jsdelivr.net/npm/three@0.164.0/build/three.module.js"
+			} }
+		</script>
+	</head>
+	<body>
+		<script type="module">
+		
+			import * as THREE from "three";
+
+			var renderer = new THREE.WebGLRenderer();
+			renderer.setSize( window.innerWidth, window.innerHeight );
+			document.body.appendChild( renderer.domElement );
+
+			var scene = new THREE.Scene();
+			
+			var aspect = window.innerWidth/window.innerHeight;
+			var camera = new THREE.PerspectiveCamera( 30, aspect );
+			camera.position.set( -8, -0.5, 10 );
+			
+			var target = new THREE.Vector3(5,1,1);
+			camera.lookAt(target);
+
+			var pi = Math.PI;
+			
+			function generateBox(x=1,y=1,z=1, colour="aqua", posx = 0,posy =0,posz = 0,rotationAxis = 0){
+
+				var geometry = new THREE.BoxGeometry(x,y,z);
+				var material = new THREE.MeshStandardMaterial( {color: colour});
+				var building = new THREE.Mesh( geometry, material );
+				building.position.set(posx,posy+y/2-1,posz);
+				building.rotation.set(0,0,rotationAxis * Math.PI/180);
+
+				scene.add( building );
+			}
+			
+
+			var moveZ = -1;
+			generateBox(50,0.5 ,50,"grey"   ,0,-0.5,5);
+			generateBox(1.5,3,6,   "red"    ,1.5-2.25,-0.1,0); // main entrance 1
+			generateBox(6,1.7,6,   "red"    ,1.5,-0.1+1.39,0); // main entrance ROOF
+			generateBox(6,3,6, 	   "darkred"   ,1.5,-0.1,-0.1); // inside
+
+			//windows
+			for(var i =0;i<9;i++){
+				generateBox(0.005,2,0.1, 	   "black"   ,0.5+i/2,-0.1,2.9   ); //window grid  
+
+			}
+			generateBox(0.1,2,0.1, 	   "black"   ,1.5,-0.1,3  ); 
+			generateBox(0.1,2,0.1, 	   "black"   ,3,-0.1,3   );  
+			generateBox(4.5,0.1,0.1, 	   "black"   ,2.25,0.75,2.95,  ); 
+
+
+			generateBox(4,3,6, "darkred",-3.5,0,0); //second building
+			generateBox(5,0.3,7, "darkred",2.4,1.25,1); //Roof On entrance
+			generateBox(12,0.3,4, "Black",0,-0.25,2.95); //Side walk On entrance
+
+			generateBox(3,2,3, "darkred",8,0,2.5); //The building behind
+
+			generateBox(0.2,4.5,0.8, "red",7.3,1.6,4); //Sign
+			generateBox(0.2,4.5,0.5, "darkred",7.2,1.6,4.1); //Sign
+			for(let i =1;i<9;i++){
+				generateBox(0.5,0.1,0.9, "black",7.3,1.6+i/2-0.1,4);
+			}
+
+			generateBox(0.25,0.30,0.05, "white",-2.25,0.2,3); //Poster 1
+			generateBox(0.25,0.30,0.05, "white",-2.6,0.2,3); //Poster 2
+
+			generateBox(0.25,0.30,0.05, "white",-2.25-1.25,0.2,3); //Poster 3
+			generateBox(0.25,0.30,0.05, "white",-2.6-1.25,0.2,3); //Poster 4
+			
+			
+			generateBox(0.5,0.20,0.05, "black",-4.5,2.5,3); //vent
+			var moveX = 11;
+			var moveZ = 1;
+			
+			
+			generateBox(0.25,0.30,0.05, "white",-2.25+moveX,0.2,3+moveZ); //Poster 5
+			generateBox(0.25,0.30,0.05, "white",-2.6 +moveX,0.2,3+moveZ); //Poster 6
+			generateBox(0.25,0.30,0.05, "white",-2.25-1.25+moveX,0.2,3+moveZ); //Poster 7
+			generateBox(0.25,0.30,0.05, "white",-2.6-1.25 +moveX,0.2,3+moveZ); //Poster 8
+			
+			var moveX = -3;
+			var moveY = +0.8;
+			var moveZ = -2.2;
+				//X
+			generateBox(0.2,1.1,0.5 ,"Black",0+moveX,1-0.10+moveY, 5+moveZ , 40);
+			generateBox(0.2,1.1,0.5 ,"Black",0+moveX,1-0.10+moveY, 5+moveZ+.05 , -40);
+				//D
+			moveX -=0.2;
+			generateBox(0.2,1,0.5 ,"Black",  1+moveX   ,1  +moveY, 5+moveZ );
+			generateBox(0.2,0.5,0.5 ,"Black",1.2+moveX ,0.91  +moveY, 5+moveZ,-70);
+			generateBox(0.2,0.65,0.5 ,"Black",1.4+moveX ,1.20+moveY, 5+moveZ,0);
+			generateBox(0.2,0.5,0.5 ,"Black",1.2+moveX ,1.59+moveY, 5+moveZ,70);
+			
+			moveX = -2.2;
+			//C
+			generateBox(0.1,0.3,0.5 ,"Black",1.5+moveX ,0.92  +moveY, 5+moveZ,90);
+			generateBox(0.1,0.3,0.5 ,"Black",1.3+moveX ,1  +moveY, 5+moveZ,45);
+			generateBox(0.1,0.4,0.5 ,"Black",1.2+moveX ,1.25+moveY, 5+moveZ,0);
+			generateBox(0.1,0.3,0.5 ,"Black",1.3+moveX ,1.6+moveY, 5+moveZ,-45);
+			generateBox(0.1,0.3,0.5 ,"Black",1.5+moveX ,1.68  +moveY, 5+moveZ,90);
+			
+			//I
+			generateBox(0.1,0.9,0.5 ,"Black",1.9+moveX ,1  +moveY, 5+moveZ,0);
+			
+			//N
+			generateBox(0.1,0.9,0.5 ,"Black",2.3+moveX ,1  +moveY, 5+moveZ,0);
+			generateBox(0.1,0.9,0.5 ,"Black",2.55+moveX ,1  +moveY, 5+moveZ,30);
+			generateBox(0.1,0.9,0.5 ,"Black",2.80+moveX ,1  +moveY, 5+moveZ,0);
+
+			//E
+			
+			generateBox(0.1,0.9,0.5 ,"Black",3.05+moveX ,1  +moveY, 5+moveZ,0);
+			generateBox(0.1,0.5,0.5 ,"Black",3.30+moveX ,0.8  +moveY, 5+moveZ,90);
+			generateBox(0.1,0.5,0.5 ,"Black",3.30+moveX ,1.25  +moveY, 5+moveZ,90);
+			generateBox(0.1,0.5,0.5 ,"Black",3.30+moveX ,1.60  +moveY, 5+moveZ,90);
+
+			//M
+			generateBox(0.1,0.9,0.5 ,"Black",3.75+moveX ,1  +moveY, 5+moveZ,0);
+			generateBox(0.1,0.5,0.5 ,"Black",3.90+moveX ,1.45  +moveY, 5+moveZ,45);
+			generateBox(0.1,0.5,0.5 ,"Black",4.20+moveX ,1.45  +moveY, 5+moveZ,-45);
+			generateBox(0.1,0.9,0.5 ,"Black",4.40+moveX ,1  +moveY, 5+moveZ,0);
+
+			//A
+			generateBox(0.1,0.9,0.5 ,"Black",4.75+moveX ,1  +moveY, 5+moveZ,-15);
+			generateBox(0.1,0.9,0.5 ,"Black",5.00+moveX ,1  +moveY, 5+moveZ,15);
+			generateBox(0.1,0.3,0.5 ,"Black",4.90+moveX ,1.1  +moveY, 5+moveZ,90);
+
+			//R
+			generateBox(0.1,0.9,0.5 ,"Black",5.35+moveX ,1  +moveY, 5+moveZ,0);
+			generateBox(0.1,0.6,0.5 ,"Black",5.50+moveX ,1.0  +moveY, 5+moveZ,30);
+			generateBox(0.1,0.3,0.5 ,"Black",5.50+moveX ,1.4  +moveY, 5+moveZ,90);
+			generateBox(0.1,0.3,0.5 ,"Black",5.75+moveX ,1.55  +moveY, 5+moveZ,0);
+			generateBox(0.1,0.3,0.5 ,"Black",5.50+moveX ,1.7  +moveY, 5+moveZ,90);
+
+			//K
+			generateBox(0.1,0.9,0.5 ,"Black",6+moveX ,1  +moveY, 5+moveZ,0);
+			generateBox(0.1,0.50,0.5 ,"Black",6.2+moveX ,1  +moveY, 5+moveZ,45);
+			generateBox(0.1,0.50,0.5 ,"Black",6.2+moveX ,1.4  +moveY, 5+moveZ,-45);
+
+			var light = new THREE.PointLight( "white" ,60,0);
+			light.position.set( 0, 1, 10 );
+			scene.add( light );
+
+			scene.background = new THREE.Color(  0x072C5F );
+			renderer.render( scene, camera );
+
+			
+		</script>
+	</body>
+</html>
