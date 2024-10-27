@@ -19,10 +19,12 @@ class DynamicList{
     explicit DynamicList(int capacity = 16);
     ~DynamicList();
     
+    //copy first
     DynamicList(const DynamicList& other);
     DynamicList& operator=(const DynamicList& other);
     
-    //Copy
+
+    //Copy other parsable
     template<class OtherType>
     DynamicList(const DynamicList<OtherType>& other);
     template<class OtherType>
@@ -63,6 +65,7 @@ class DynamicList{
     void resize(size_t newCap);
     void ensureSize(size_t size);
 
+
     //! Iterator
     // #include "DAIterator.cpp"
 
@@ -70,6 +73,5 @@ class DynamicList{
     // DynamicArrayIterator<T> end() {return DynamicArrayIterator<T>(list+size);}
 };
 
-#include "dynamicList.inl"
 
 #endif
