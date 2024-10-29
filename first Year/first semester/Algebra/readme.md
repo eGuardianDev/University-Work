@@ -15,7 +15,7 @@ Not intensive in theoretical formulas, just makes good introduction to topics an
 This channel has some good introduction to other topics and interesting mathematical ideas.
 
 ### matrixes
-matrix calculator - https://matrixcalc.org/bg/
+matrix calculator's - [1](https://matrixcalc.org/bg/), [2](https://matrix.reshish.com/)
 
 matrix multiplication visualization - http://matrixmultiplication.xyz/
 
