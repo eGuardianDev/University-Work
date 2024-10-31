@@ -75,8 +75,7 @@
   (counter 0 data))
 ; end of task 2
 
-; start of task 2 tests
-(sum-predictions "backwards" (list (list 10 13 16 21 30 45) (list 4 7)))
+; start of task 2 tests 
 (equal? (sum-predictions "backwards" (list (list 10 13 16 21 30 45))) 5)
 (equal? (sum-predictions "forwards" (list (list 10 13 16 21 30 45)))  68) 
 (equal? (sum-predictions "backwards" (list (list 7 9 12 16 21 27 34))) 6) 
