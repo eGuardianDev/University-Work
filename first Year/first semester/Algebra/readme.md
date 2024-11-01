@@ -9,10 +9,12 @@ Search wikipedia for more general introduction on specific topics.
 [Exercises](https://www.book.store.bg/p288948/zadachi-po-algebra-linejna-algebra.html) - some exercises. Little too much, some can be very complex. Can be diffrent from what given in FMI. For best performance solve from the drives and notes of friends.
 
 ### get a good general understanding
-![#f03c15](https://placehold.co/15x15/f03c15/f03c15.png) **Important** -> 3blue1brown's Linear Algebra Youtube list - [link](https://www.youtube.com/watch?v=fNk_zzaMoSs&list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab)
+**Important** -> 3blue1brown's Linear Algebra Youtube list - [link](https://www.youtube.com/watch?v=fNk_zzaMoSs&list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab)
 
 Not intensive in theoretical formulas, just makes good introduction to topics and visualizing them.
 This channel has some good introduction to other topics and interesting mathematical ideas.
+
+More introduction to concepts -> [brillinat's wiki](https://brilliant.org/wiki/linear-algebra/)
 
 ### matrixes
 matrix calculator's - [1](https://matrixcalc.org/bg/), [2](https://matrix.reshish.com/)
