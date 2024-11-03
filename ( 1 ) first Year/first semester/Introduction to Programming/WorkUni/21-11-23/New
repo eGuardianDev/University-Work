@@ -1,0 +1,17 @@
+#!/bin/bash
+
+if test -f ./$1.cpp; then
+    echo "$1.cpp already exist";
+    exit 1
+fi
+touch $1.cpp                                    >>$1.cpp    
+echo "#include <iostream>"                      >>$1.cpp   
+
+echo "using namespace std;" >> $1.cpp
+echo >> $1.cpp             
+echo "int main()"                              >>$1.cpp     
+echo "{"                                        >>$1.cpp
+echo >> $1.cpp
+echo >> $1.cpp
+echo "  return 0; "                              >>$1.cpp        
+echo "}"                                       >>$1.cpp
