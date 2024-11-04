@@ -1,6 +1,6 @@
 #lang racket
 
-
+#| ; old version
 (define (run-for-all p?s element)
   (cond
     [(empty? p?s) #t]
@@ -12,8 +12,12 @@
     [(empty? xs) `()]
     [(run-for-all p?s (car xs)) (cons (car xs) (where (cdr xs) p?s))]
     [else (where (cdr xs) p?s)]))
+|#
 
 
+; new version
+(define (where xs p?s)
+   (filter (λ (x) (andmap (λ (y) (y x)) p?s)) xs))
 
 (equal? (where '(3 4 5 6 7 8 9 10) (list even? (lambda (x) (> x 5)))) '(6 8 10)) ; all even numbers greater than 5
 (equal? (where '(3 4 5 7) (list even? (lambda (x) (> x 5)))) '()) ; no numbers are even and greater than 5

@@ -8,7 +8,8 @@
 			{ "imports": {
 		
 				"three": "https://cdn.jsdelivr.net/npm/three@0.164.0/build/three.module.js",
-				"three/addons/": "https://cdn.jsdelivr.net/npm/three@0.164.0/examples/jsm/"
+				"three/addons/": "https://cdn.jsdelivr.net/npm/three@0.164.0/examples/jsm/",
+				"csg/": "https://cdn.jsdelivr.net/gh/looeee/threejs-csg@main/src/CSG/"
 			} }
 		</script>
 	</head>
@@ -17,6 +18,7 @@
 		
 			import * as THREE from "three";
 			import { ParametricGeometry } from 'three/addons/geometries/ParametricGeometry.js';
+			import {CSG} from "csg/CSG.js"; 
 
 			const mainBuilding = new THREE.Group(); 
 			var renderer = new THREE.WebGLRenderer();
@@ -33,8 +35,8 @@
 
 
 			scene.background = new THREE.Color(0x452343);
+
 			var GlobalBuildingMaterial = new THREE.MeshPhongMaterial( {side: THREE.DoubleSide });
-			
 			var GlobalBuildingMaterialCode = 0xffffff;
 			GlobalBuildingMaterial.color.set(GlobalBuildingMaterialCode);
 		
@@ -55,11 +57,19 @@
 				}
 			}
 
-			var geometry = new THREE.BoxGeometry( 100, 0.1, 100);
-			var box = new THREE.Mesh( geometry, GlobalBuildingMaterial );
-			scene.add( box );
+			var GlobalWoodMaterial = new THREE.MeshPhongMaterial( {side: THREE.DoubleSide });
+	GlobalWoodMaterial.color.set(0xA1662F);
+	var GlobalLeafMaterial = new THREE.MeshPhongMaterial( {side: THREE.DoubleSide });
+GlobalLeafMaterial.color.set(0x6db33f);	
+			var groundMat = new THREE.MeshPhongMaterial( {side: THREE.DoubleSide });
+			groundMat.color.set(0x41980a);
+			
+			var geometry = new THREE.BoxGeometry( 120, 0.1, 120);
+			var box = new THREE.Mesh( geometry, groundMat );
+			scene.add( box );	
+			
 
-
+			mainBuilding.add( Cylinder );
 			//pillars
 			for(var i =0;i<2;i++){
 				var positionX = -4.5;
@@ -99,15 +109,112 @@
 					mainBuilding.add( torus );
 				}
 			}
+
+			for(var i =0;i<3;i++){
+				var positionX = -22;
+				var positionY = -4;
+				var positionZ = -17.5;
+				var gap = 5;
+				var geometry = new THREE.BoxGeometry( 1, 1, 1);
+				var box = new THREE.Mesh( geometry, GlobalBuildingMaterial );
+				box.position.set(positionX + gap*i,positionY+4,positionZ);
+				mainBuilding.add( box );
+				
+				var geometry = new THREE.CylinderGeometry( .5, .5, 9, 32,32, false);
+				var Cylinder = new THREE.Mesh( geometry, GlobalBuildingMaterial );
+				Cylinder.position.set(positionX + gap*i,positionY+9,positionZ);
+				mainBuilding.add( Cylinder );
+
+				var geometry = new THREE.BoxGeometry( 1, 1, 1);
+				var box = new THREE.Mesh( geometry, GlobalBuildingMaterial );
+				box.position.set(positionX+ gap*i,positionY+9+4,positionZ);
+				mainBuilding.add( box );		
+				
+				
+			}for(var i =0;i<3;i++){
+				var positionX = +11;
+				var positionY = -4;
+				var positionZ = -17.5;
+				var gap = 5;
+				var geometry = new THREE.BoxGeometry( 1, 1, 1);
+				var box = new THREE.Mesh( geometry, GlobalBuildingMaterial );
+				box.position.set(positionX + gap*i,positionY+4,positionZ);
+				mainBuilding.add( box );
+				
+				var geometry = new THREE.CylinderGeometry( .5, .5, 9, 32,32, false);
+				var Cylinder = new THREE.Mesh( geometry, GlobalBuildingMaterial );
+				Cylinder.position.set(positionX + gap*i,positionY+9,positionZ);
+				mainBuilding.add( Cylinder );
+
+				var geometry = new THREE.BoxGeometry( 1, 1, 1);
+				var box = new THREE.Mesh( geometry, GlobalBuildingMaterial );
+				box.position.set(positionX+ gap*i,positionY+9+4,positionZ);
+				mainBuilding.add( box );		
+				
+				
+			}
+
+
 			
+			var geometry = new THREE.BoxGeometry( 2,3, 2.3);
+			var box = new THREE.Mesh( geometry, GlobalWoodMaterial );
+			box.position.set(0,4,-14);
+			mainBuilding.add( box );
+			var geometry = new THREE.BoxGeometry( .5,.2, 2.4);
+			var box = new THREE.Mesh( geometry,  new THREE.MeshPhongMaterial( {color: "black" }));
+			box.position.set(0,4,-14);
+			mainBuilding.add( box );
+			var geometry = new THREE.BoxGeometry( .1,3, 2.4);
+			var box = new THREE.Mesh( geometry,  new THREE.MeshPhongMaterial( {color: "black" }));
+			box.position.set(0,4,-14);
+			mainBuilding.add( box );
+			var geometry = new THREE.BoxGeometry( 0.3,4, 4);
+			var box = new THREE.Mesh( geometry, GlobalBuildingMaterial );
+			box.position.set(-1,4,-14);
+			mainBuilding.add( box );
+			var geometry = new THREE.BoxGeometry( 0.3,4, 4);
+			var box = new THREE.Mesh( geometry, GlobalBuildingMaterial );
+			box.position.set(1,4,-14);
+			mainBuilding.add( box );
+			var geometry = new THREE.BoxGeometry( 3,0.3, 4);
+			var box = new THREE.Mesh( geometry, GlobalBuildingMaterial );
+			box.position.set(0,6,-14);
+			mainBuilding.add( box );
 			var geometry = new THREE.BoxGeometry( 21.5,6, 4);
 			var box = new THREE.Mesh( geometry, GlobalBuildingMaterial );
 			box.position.set(0,-0.60,-11);
 			mainBuilding.add( box );
+
+			
 			var geometry = new THREE.BoxGeometry( 20,23, 20);
 			var box = new THREE.Mesh( geometry, GlobalBuildingMaterial );
 			box.position.set(0,1.25,-23);
 			mainBuilding.add( box );
+
+			var geometry = new THREE.BoxGeometry( 50, 15, 15);
+			var box = new THREE.Mesh( geometry, GlobalBuildingMaterial );
+			box.position.set(0,1.25,-25);
+			mainBuilding.add( box );
+
+			var roofArea = 3;
+			var roofLength = 3;
+			var roofHight = 0.8;
+			var verticesOfCube = [ 	-1*roofArea,0,-1*roofArea * roofLength,
+								   	-1*roofArea,0,1*roofArea  * roofLength,
+								   	1*roofArea,0,-1*roofArea  * roofLength,
+								    1*roofArea,0,1*roofArea   * roofLength,
+									  0,1*roofHight,1*roofArea,
+									   0,1*roofHight,-1*roofArea ];
+			 var indicesOfFaces = [ 0,1,2, 3,2,1, 0,1,4, 5,4,0, 5,4,3, 3,2,5, 0,2,5, 3,1,4]; 
+			var geometry = new THREE.PolyhedronGeometry( verticesOfCube, indicesOfFaces, 28, 0 );
+			var random =new THREE.Mesh(geometry, GlobalBuildingMaterial);
+			random.position.y = 9;
+			random.position.z = -25;
+			random.rotation.y = Math.PI/180 *90;
+			mainBuilding.add(random);
+
+
+
 
 			var light = new THREE.PointLight( 'white', 600 );
 			light.position.set( 0, 25, 10 );
@@ -134,16 +241,20 @@
 			var GlobalwindowFrameMaterial = new THREE.MeshPhongMaterial();
 			GlobalwindowFrameMaterial.color.set(0x1a1818);
 			
-			var light = new THREE.PointLight( 0xf0b904, 10 );
+			var light = new THREE.PointLight( 0xf0b904, 50 );
 			var windowGroup = new THREE.Group(); 
 
-			var windowsWidth = 3;
-			var windowsHeight = 10;
+			var windowsWidth = 2;
+			var windowsHeight = 3;
 			var windowsBorder = 0.2;
 			var windowsGapFrame = 0.5;
 			var boxGeometry = new THREE.BoxGeometry(windowsWidth,windowsHeight,0.1);
 			var box = new THREE.Mesh( boxGeometry, GlobalWindowMaterial );
 
+			windowGroup.add(box);
+			var boxGeometry = new THREE.BoxGeometry(windowsWidth + windowsBorder*3,windowsHeight/6,0.8);
+			var box = new THREE.Mesh( boxGeometry, GlobalBuildingMaterial );
+			box.position.set(0,-windowsHeight/2,1);
 			windowGroup.add(box);
 
 			var boxGeometry = new THREE.BoxGeometry(windowsWidth+windowsBorder,windowsHeight+windowsBorder,0.05);
@@ -162,30 +273,28 @@
 			box.position.x +=windowsGapFrame;
 			windowGroup.add(box);
 
-			windowGroup.position.set(0,10,15);
+			// windowGroup.position.set(0,20,15);
 			windowGroup.add( light );
 			windowGroup.clone(true);
 			// scene.add(windowGroup);
 			for(var i =1 ;i<=3;i++){
 				var temp = windowGroup.clone();
-				temp.position.set(-12 + 6*i,7,-23);
+				temp.position.set(-12 + 6*i,8,-23);
 				scene.add(temp);
 			}
-			for(var i =1 ;i<=3;i++){
-				var temp = windowGroup.clone();
-				temp.rotation.set(0,R_PI*90,0);
-				temp.position.set(-10,7,-45 + 6*i);
-				scene.add(temp);
-			}
-			for(var i =1 ;i<=3;i++){
-				var temp = windowGroup.clone();
-				temp.rotation.set(0,R_PI*90,0);
-				temp.position.set(10,7,-45 + 6*i);
-				scene.add(temp);
-			}
+		
 
+
+			for(var i =1 ;i<=2;i++){
+				var temp = windowGroup.clone();
+				temp.position.set(-26+ 6*i,4,-27.5);
+				scene.add(temp);
+			}for(var i =1 ;i<=2;i++){
+				var temp = windowGroup.clone();
+				temp.position.set(7+ 6*i,4,-27.5);
+				scene.add(temp);
+			}
 			mainBuilding.position.set(0,0,-10);
-
 
 			scene.add(mainBuilding);
 			
@@ -193,27 +302,31 @@
 			const StatueTop = new THREE.Group(); 
 			
 
+			var globalPaperMaterial = new THREE.MeshPhongMaterial( {side: THREE.DoubleSide });
+			globalPaperMaterial.color.set(0xe5decf);
+
 			var geometry = new THREE.CylinderGeometry( 0.5,.5, 5);
-			var cyl = new THREE.Mesh( geometry, GlobalBuildingMaterial );
+			var cyl = new THREE.Mesh( geometry, globalPaperMaterial );
 			cyl.rotation.set(0,	0, R_PI * 90);
 			StatueTop.add( cyl );
 
 			var geometry = new THREE.CylinderGeometry( 0.25,.25, 6);
-			var cyl = new THREE.Mesh( geometry, GlobalBuildingMaterial );
+			var cyl = new THREE.Mesh( geometry, GlobalWoodMaterial );
 			cyl.rotation.set(0,	0, R_PI * 90);
 			StatueTop.add(cyl);
 			
 			var geometry = new THREE.CylinderGeometry( 0.5,.5, 5);
-			var cyl = new THREE.Mesh( geometry, GlobalBuildingMaterial );
+			var cyl = new THREE.Mesh( geometry, globalPaperMaterial );
 			cyl.rotation.set(0,	0, R_PI * 90);
 			cyl.position.set(0, 5,0);
 			StatueTop.add( cyl);
 
 			var geometry = new THREE.CylinderGeometry( 0.25,.25, 6);
-			var cyl = new THREE.Mesh( geometry, GlobalBuildingMaterial );
+			var cyl = new THREE.Mesh( geometry, GlobalWoodMaterial );
 			cyl.rotation.set(0,	0, R_PI * 90);
 			cyl.position.set(0, 5,0);
 			StatueTop.add( cyl);
+			
 
 
 
@@ -251,23 +364,25 @@
 			Statue.add(box);
 
 
+			var light = new THREE.PointLight( 'yellow', 5 );
+			light.position.set( 0, 1.5, 23 );
+			mainBuilding.add( light );
+
+			var light = new THREE.PointLight( 'yellow', 5 );
+			light.position.set( 0, 7, 17 );
+			mainBuilding.add( light );
 
 			
 			Statue.position.set(0,1,10);
 
 
 			
-			var GlobalWoodMaterial = new THREE.MeshPhongMaterial( {side: THREE.DoubleSide });
-			GlobalWoodMaterial.color.set(0xA1662F);
-			var GlobalLeafMaterial = new THREE.MeshPhongMaterial( {side: THREE.DoubleSide });
-			GlobalLeafMaterial.color.set(0x6db33f);
-			
 
 			
 			var Bush= new THREE.Group(); 
-			var cylinder = new THREE.CylinderGeometry(.5,.5,1);
+			var cylinder = new THREE.CylinderGeometry(.5,.5,4);
 			var cyl = new THREE.Mesh( cylinder, GlobalWoodMaterial);
-			cyl.position.set(0,1.5,0);
+			cyl.position.set(0,1,0);
 			Bush.add(cyl);
 			for(let i =0 ;i<7;i++){
 				var details = new THREE.BoxGeometry(2,2,4.5);
@@ -293,6 +408,17 @@
 				temp.position.set(Math.cos(i)*35,0,Math.sin(i)*50);
 				scene.add(temp);
 			}
+			for(let i =0;i<4;i++){
+				var temp = Bush.clone();
+				temp.rotation.set(0,R_PI* (Math.random() *360),0);
+				temp.position.set(Math.cos(i)*20,-1,Math.sin(i) *20 +5);
+				scene.add(temp);
+			}for(let i =0;i<10;i++){
+				var temp = Bush.clone();
+				temp.rotation.set(0,R_PI* (Math.random() *360),0);
+				temp.position.set(Math.cos(i)*40,-1,Math.sin(i) *40);
+				scene.add(temp);
+			}
 
 			var Bush= new THREE.Group(); 
 			var cylinder = new THREE.CylinderGeometry(0.7,.7,2);
@@ -303,7 +429,7 @@
 			var sp = new THREE.Mesh( sphere, GlobalLeafMaterial);
 			sp.position.set(0,5,0);
 			Bush.add(sp);
-			for(let i =0 ;i<3;i++){
+			for(let i =0 ;i<50;i++){
 				var details = new THREE.BoxGeometry(4,4,6.5);
 				var det = new THREE.Mesh( details, GlobalLeafMaterial);
 				det.rotation.set(R_PI* (Math.random() *180),R_PI* (Math.random() *180),R_PI* (Math.random() *180));
@@ -321,11 +447,40 @@
 			// Bush.position.set(1,5,0);
 			// scene.add(Bush);
 			
+			var a = new THREE.Mesh(new THREE.CylinderGeometry(12,10,1,32));
+			var b = new THREE.Mesh(new THREE.CylinderGeometry(8,8,1,32)); 
+			var csg = new CSG();
+			csg.subtract( [a, b] );
+			
+			
+			var c = csg.toMesh();
+			c.position.set(0,-0.4,10);
+			c.material = new THREE.MeshLambertMaterial( {color:0xada7a9} );
+			
+			scene.add(c);
+
+			var d = new THREE.Mesh(new THREE.BoxGeometry(15,1,12));
+			d.position.set(0,-0.41,-4); 
+			d.material = new THREE.MeshLambertMaterial( {color:0xada7a9} );
+			scene.add(d);
+			var d = new THREE.Mesh(new THREE.BoxGeometry(37,1,3));
+			d.position.set(30,-0.41,10); 
+			d.material = new THREE.MeshLambertMaterial( {color:0xada7a9} );
+			scene.add(d);
+			var d = new THREE.Mesh(new THREE.BoxGeometry(37,1,3));
+			d.position.set(-30,-0.41,10); 
+			d.material = new THREE.MeshLambertMaterial( {color:0xada7a9} );
+			scene.add(d);
+
+			var grassArroundStatue = new THREE.Mesh(new THREE.CylinderGeometry(7,7,1,32)); 
+			grassArroundStatue.material = new THREE.MeshLambertMaterial( {color:0x117c13});
+			grassArroundStatue.position.set(0,-0.4,10);
+			scene.add(grassArroundStatue);
 
 
 			function drawFrame( t )
 			{
-				scene.rotation.y = t/100000;
+				scene.rotation.y = t/10000;
 				renderer.render( scene, camera );
 			}
 		</script>
