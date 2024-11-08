@@ -1,0 +1,9 @@
+1. Check arguments
+2. Check return type
+3. check memory leak
+4. 
+
+
+
+ще има ли задача напиши алокатор?
+как да се подготвя за изпита?
