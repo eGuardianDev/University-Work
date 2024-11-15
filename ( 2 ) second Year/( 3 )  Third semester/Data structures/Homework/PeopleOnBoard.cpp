@@ -17,38 +17,38 @@ bool checkIfAroundIsPerson(Board board, int row, int collum){
     }
     return false;
 }
-Board removePerson(Board board, int row, int collum){
+int removePerson(Board &board, int row, int collum){
     if(!board.isValidPos(row, collum)) {
         throw std::invalid_argument("Trying to remove person out of board");
     }
     if(board.getOnPosition(row,collum) != Person) {
         throw std::invalid_argument("Selected Item is not a person");
     }
+    int removed=0;
     board.setOnPosition(row,collum,valid);
-    
     for(int i =-1;i<2;++i){
         for(int j =-1 ;j<2;++j){
             int newR = row + i;
             int newC = collum+ j;
 
             if(j == 0 && i ==0) continue;
-            
 
             if(board.isValidPos(newR,newC) && 
             board.getOnPosition(newR,newC) == invalid &&
             !checkIfAroundIsPerson(board, newR, newC)){
-                
                 board.setOnPosition(newR,newC,valid);
+                ++removed;
             }
-
             
         }
     }
-    return board;
+    return removed;
 }
 
-Board SetPerson(Board board,int row, int collum){
+int SetPerson(Board& board,int row, int collum){
+
     assert(board.isValidPos(row, collum));
+    int placed = 0;
     board.setOnPosition(row,collum,Person);
     for(int i =-1;i<2;++i){
         for(int j =-1 ;j<2;++j){
@@ -57,27 +57,37 @@ Board SetPerson(Board board,int row, int collum){
             if(j == 0 && i ==0) continue;
             if(board.canPlaceOnPos(newR,newC)){
                 board.setOnPosition(row+i,collum+j,invalid);
+                ++placed;
             }
         }
     }
-    return board;
+    return placed;
 }
 
 Board globalBoard;
 int globalBoardPeople = 0;
-
+int a = 0;
 int findPeopleInRoom(Board board, int count = 0){
+    int minTaken =9;
     for(int i =0;i<board.getRows();++i){
         for(int j =0 ;j<board.getCollums();++j){
             if(board.canPlaceOnPos(i,j)){
                 ++count;
-                board = SetPerson(board, i,j);
-                if(globalBoardPeople < count){
-                    globalBoard = board;
-                    globalBoardPeople = count;
+                int current= SetPerson(board, i,j);
+                if(current < minTaken){
+                    if(globalBoardPeople < count){
+                        globalBoard = board;
+                        globalBoardPeople = count;
+                        std::cout << "saving on this -> ";
+                    }
+                    std::cout<< "Step: " << count << "\n";
+                    board.PrintBoard(std::cout);
+                    // std::cout << "\n\r" << ++a;
+                    minTaken = current;
+                  
+                    findPeopleInRoom(board, count);
                 }
-                findPeopleInRoom(board, count);
-                board = removePerson(board, i,j);
+                removePerson(board, i,j);
                 --count;
             }
         }
@@ -90,28 +100,24 @@ int main(){
 
     Board b;
     b.InitBoard(6,7);
-    // b.setOnPosition(1,Broken);
-    // b.setOnPosition(3,Broken);
-    // b.setOnPosition(5,Broken);
-    // b.setOnPosition(10,Broken);
+
     b.setOnPosition(9,Broken);
     b.setOnPosition(19,Broken);
     b.setOnPosition(29,Broken);
+    
+    // std::cout << b.getOnPosition(9);
+    // system("clear");
 
     findPeopleInRoom(b);
+    // SetPerson(b,5,0);
+    // removePerson(b,5,0);
+    //!!!can remove at left down
 
 
-    b.PrintBoard(std::cout);
+    // b.PrintBoard(std::cout);
     globalBoard.PrintBoard(std::cout);
 
-    // std::cout << findPeopleInRoom(b) << std::endl;
 
-
-    // globalBoard = removePerson(globalBoard,0,0);
-    // globalBoard = removePerson(globalBoard,2,0);
-    // globalBoard = removePerson(globalBoard,0,2);
-    // globalBoard = removePerson(globalBoard,2,2);
-    // globalBoard.PrisntBoard(std::cout);
 
     return 0;
 }
