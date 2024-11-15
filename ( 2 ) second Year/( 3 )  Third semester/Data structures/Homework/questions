@@ -1,0 +1,25 @@
+How to prepare?
+
+Should we learn "LIST" from lectures?
+
+How to read big code?
+
+Should we remember everything in the "LIST" from lectures?
+
+Get Iterator
+
+Serilization
+
+Proxy, Iterator, Adaptor
+
+
+Split and merge
+^^ Non stable
+
+
+no garantee, weak, strong, no garantee safety
+
+weak -> deletes everything, but still can be used
+
+
+initializer_list<T>
