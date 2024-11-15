@@ -12,8 +12,8 @@ struct Pair{
 enum Legend{
     Person = 'p',
     Broken = 'b',
-    invalid = '-', // if someone is close
-    valid = '.'
+    valid = '.',
+    invalid = '!'
 };
 
 
