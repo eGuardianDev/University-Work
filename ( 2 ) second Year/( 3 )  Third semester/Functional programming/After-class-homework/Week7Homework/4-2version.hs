@@ -1,6 +1,6 @@
 
 sumOfDivisors :: Int -> Int
-sumOfDivisors n = sum [x | x<- [1..(n-1)], mod n x == 0]
+sumOfDivisors n = sum (filter (\x -> mod n x == 0) [1..(n-1)])
 
 areAmicable :: Int -> Int -> Bool
 areAmicable x y = sumOfDivisors x  == y && sumOfDivisors y == x
