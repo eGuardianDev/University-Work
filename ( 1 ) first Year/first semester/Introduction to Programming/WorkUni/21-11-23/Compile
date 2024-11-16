@@ -1,5 +1,0 @@
-#!/bin/bash
-
-g++ $1.cpp -o $1.o
-echo "Starting program:" 
-./$1.o

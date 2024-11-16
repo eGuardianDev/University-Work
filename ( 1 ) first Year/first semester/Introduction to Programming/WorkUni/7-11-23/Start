@@ -1,4 +1,0 @@
-#!/bin/bash
-
-g++ z2.cpp -o Test
-./Test
