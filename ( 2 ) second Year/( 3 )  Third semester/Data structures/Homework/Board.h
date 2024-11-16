@@ -70,6 +70,10 @@ public:
         return (row >=0 && row <Board_Rows &&
                 collum >=0 && collum <Board_Collums); 
     }
+
+
+
+    // this is only upgrade to the default class that needs to be removed, so we want use it outside this program.
     bool canPlaceOnPos(const int &row, const int &collum) const {
         if(!isValidPos(row, collum)) return false;
         

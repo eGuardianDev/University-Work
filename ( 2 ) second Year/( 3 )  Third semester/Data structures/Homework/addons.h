@@ -10,10 +10,10 @@ struct Pair{
 };
 
 enum Legend{
-    Person = 'p',
-    Broken = 'b',
+    Person = 'O',
+    Broken = 'B',
     valid = '.',
-    invalid = '!'
+    invalid = 'F'
 };
 
 

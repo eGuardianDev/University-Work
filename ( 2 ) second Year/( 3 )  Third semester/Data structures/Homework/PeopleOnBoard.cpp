@@ -64,10 +64,7 @@ int SetPerson(Board& board,int row, int collum){
     return placed;
 }
 
-Board globalBoard;
-int globalBoardPeople = 0;
-int a = 0;
-int findPeopleInRoom(Board board, int count = 0){
+int findPeopleInRoom(Board board, Board& outputBoard, int outputCount=0, int count = 0){
     int minTaken =9;
     for(int i =0;i<board.getRows();++i){
         for(int j =0 ;j<board.getCollums();++j){
@@ -75,47 +72,46 @@ int findPeopleInRoom(Board board, int count = 0){
                 ++count;
                 int current= SetPerson(board, i,j);
                 if(current < minTaken){
-                    if(globalBoardPeople < count){
-                        globalBoard = board;
-                        globalBoardPeople = count;
-                        std::cout << "saving on this -> ";
+                    if(outputCount < count){
+                        outputBoard = board;
+                        outputCount = count;
                     }
-                    std::cout<< "Step: " << count << "\n";
-                    board.PrintBoard(std::cout);
-                    // std::cout << "\n\r" << ++a;
                     minTaken = current;
                   
-                    findPeopleInRoom(board, count);
+                    outputCount = std::max(outputCount, findPeopleInRoom(board,outputBoard,outputCount, count));
                 }
                 removePerson(board, i,j);
                 --count;
             }
         }
     }
-
-    return count;
+    return outputCount;
 }
 
 int main(){
 
     Board b;
-    b.InitBoard(6,7);
+    Board Global;
+    b.InitBoard(5,5);
 
-    b.setOnPosition(9,Broken);
-    b.setOnPosition(19,Broken);
-    b.setOnPosition(29,Broken);
+    b.setOnPosition(0,Broken);
+    b.setOnPosition(1,Broken);
+    b.setOnPosition(2,Broken);
+    // b.setOnPosition(19,Broken);
+    // b.setOnPosition(29,Broken);
     
     // std::cout << b.getOnPosition(9);
     // system("clear");
 
-    findPeopleInRoom(b);
+    int a = findPeopleInRoom(b,Global);
     // SetPerson(b,5,0);
     // removePerson(b,5,0);
     //!!!can remove at left down
 
 
     // b.PrintBoard(std::cout);
-    globalBoard.PrintBoard(std::cout);
+    Global.PrintBoard(std::cout);
+    std::cout << a;
 
 
 
