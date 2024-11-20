@@ -1,7 +1,7 @@
 
 
-#ifndef __ADDITIONAL_STRUCTS_
-#define __ADDITIONAL_STRUCTS_
+#ifndef __ADDITIONAL_STRUCTS_H_
+#define __ADDITIONAL_STRUCTS_H_
 
 template<class T>
 struct Pair{
@@ -10,10 +10,10 @@ struct Pair{
 };
 
 enum Legend{
-    Person = 'O',
-    Broken = 'B',
+    Person = 'p',
+    Broken = 'b',
     valid = '.',
-    invalid = 'F'
+    invalid = '-'
 };
 
 

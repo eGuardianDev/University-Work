@@ -1,10 +1,13 @@
 
+
+#ifndef __BOARD_HPP_
+#define __BOARD_HPP_
+
 #include <cassert>
 #include <ostream>
 #include <stdexcept>
 #include <vector>
-#include "addons.h"
-
+#include "addons.hpp"
 
 class Board{
 private:
@@ -22,6 +25,9 @@ public:
     }
     const int& getCollums() const{
         return Board_Collums;
+    }
+    bool isInited() const{
+        return !board.empty();
     }
  
 
@@ -60,10 +66,17 @@ public:
         if(board.size() == 0) throw std::underflow_error("Printing empty board");
         for(std::vector<char> row : board){
             for(int i =0 ;i <row.size();++i){
-                stream << row[i] << " ";
+                stream << row[i];
             }
             stream << std::endl;
         }
+    }
+   
+    void Clean(){
+        for(int i =0;i<board.size();++i){
+            board[i].clear();
+        }
+        board.clear();
     }
 
     bool isValidPos(const int &row, const int &collum) const{
@@ -71,14 +84,11 @@ public:
                 collum >=0 && collum <Board_Collums); 
     }
 
-
-
     // this is only upgrade to the default class that needs to be removed, so we want use it outside this program.
     bool canPlaceOnPos(const int &row, const int &collum) const {
         if(!isValidPos(row, collum)) return false;
         
-        char toTest = board[row][collum];
-        return toTest == valid;
+        return board[row][collum] == valid;
     }
 
     bool canPlaceOnPos(int index)const {
@@ -109,3 +119,4 @@ public:
     }
 };
 
+#endif //__BOARD_HPP_

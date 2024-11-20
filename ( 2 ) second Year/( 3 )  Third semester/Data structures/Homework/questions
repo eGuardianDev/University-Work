@@ -1,25 +1,7 @@
-How to prepare?
-
-Should we learn "LIST" from lectures?
-
-How to read big code?
-
-Should we remember everything in the "LIST" from lectures?
-
-Get Iterator
-
-Serilization
-
-Proxy, Iterator, Adaptor
 
 
-Split and merge
-^^ Non stable
 
+casting to int from uint8_t
+some problem with standart library??? thinks it is symbol
 
-no garantee, weak, strong, no garantee safety
-
-weak -> deletes everything, but still can be used
-
-
-initializer_list<T>
+is timing good or needs to be int?

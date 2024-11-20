@@ -1,7 +1,11 @@
+
+#ifndef __PEOPLE_ON_BAORD_HPP_
+#define __PEOPLE_ON_BAORD_HPP_
+
 #include <iostream>
 #include <stdexcept>
-#include "addons.h"
-#include "Board.h"
+#include "addons.hpp"
+#include "Board.hpp"
 
 bool checkIfAroundIsPerson(Board board, int row, int collum){
     for(int i =-1;i<2;++i){
@@ -64,22 +68,33 @@ int SetPerson(Board& board,int row, int collum){
     return placed;
 }
 
+std::vector<int> steps;
+
+
 int findPeopleInRoom(Board board, Board& outputBoard, int outputCount=0, int count = 0){
-    int minTaken =9;
     for(int i =0;i<board.getRows();++i){
         for(int j =0 ;j<board.getCollums();++j){
             if(board.canPlaceOnPos(i,j)){
                 ++count;
                 int current= SetPerson(board, i,j);
-                if(current < minTaken){
+                
+                while(steps.size() <= count-1){
+                    steps.push_back(9);
+                }
+                if(steps[count-1] <= current){
+                    break;
+                }
+                steps[count-1] = current;
+                
                     if(outputCount < count){
                         outputBoard = board;
                         outputCount = count;
                     }
-                    minTaken = current;
-                  
+
+                    // board.PrintBoard(std::cout);
+                    // std::cout <<'\n';
                     outputCount = std::max(outputCount, findPeopleInRoom(board,outputBoard,outputCount, count));
-                }
+                
                 removePerson(board, i,j);
                 --count;
             }
@@ -88,32 +103,8 @@ int findPeopleInRoom(Board board, Board& outputBoard, int outputCount=0, int cou
     return outputCount;
 }
 
-int main(){
-
-    Board b;
-    Board Global;
-    b.InitBoard(5,5);
-
-    b.setOnPosition(0,Broken);
-    b.setOnPosition(1,Broken);
-    b.setOnPosition(2,Broken);
-    // b.setOnPosition(19,Broken);
-    // b.setOnPosition(29,Broken);
-    
-    // std::cout << b.getOnPosition(9);
-    // system("clear");
-
-    int a = findPeopleInRoom(b,Global);
-    // SetPerson(b,5,0);
-    // removePerson(b,5,0);
-    //!!!can remove at left down
-
-
-    // b.PrintBoard(std::cout);
-    Global.PrintBoard(std::cout);
-    std::cout << a;
-
-
-
-    return 0;
+int findPeopleInRoom(Board& b){
+    return findPeopleInRoom(b,b);
 }
+
+#endif
