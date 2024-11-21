@@ -12,10 +12,10 @@ struct Pair{
 
 // * Universal can change to whatever you want
 enum Legend{
-    Person = 'p',
-    Broken = 'b',
+    Person = 'O',
+    Broken = 'B',
     valid = '.',
-    invalid = '-'
+    invalid = 'F'
 };
 
 

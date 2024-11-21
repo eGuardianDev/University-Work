@@ -2,6 +2,7 @@
 #ifndef __PEOPLE_ON_BAORD_HPP_
 #define __PEOPLE_ON_BAORD_HPP_
 
+#include <iostream>
 #include <stdexcept>
 #include "addons.hpp"
 #include "Board.hpp"
@@ -67,32 +68,30 @@ inline int SetPerson(Board& board,int row, int collum){
     return placed;
 }
 
-std::vector<int> steps;
 
+// #define _using_unsolved_algorithm
+// #define _another_unsolved_algorithm_
+
+#ifdef _using_unsolved_algorithm
 
 inline int findPeopleInRoom(Board board, Board& outputBoard, int outputCount=0, int count = 0){
+    int localRec = 9;
     for(int i =0;i<board.getRows();++i){
         for(int j =0 ;j<board.getCollums();++j){
             if(board.canPlaceOnPos(i,j)){
                 ++count;
                 int current= SetPerson(board, i,j);
-                
-                while(steps.size() <= count-1){
-                    steps.push_back(9);
-                }
-                if(steps[count-1] <= current){
-                    break;
-                }
-                steps[count-1] = current;
-                
+
+                if(localRec > current) {
                     if(outputCount < count){
                         outputBoard = board;
                         outputCount = count;
                     }
-
+                    localRec = current;
                     // board.PrintBoard(std::cout);
                     // std::cout <<'\n';
                     outputCount = std::max(outputCount, findPeopleInRoom(board,outputBoard,outputCount, count));
+                }
                 
                 removePerson(board, i,j);
                 --count;
@@ -101,6 +100,72 @@ inline int findPeopleInRoom(Board board, Board& outputBoard, int outputCount=0, 
     }
     return outputCount;
 }
+
+#endif
+#ifdef _another_unsolved_algorithm_
+std::vector<int> currentlyInRecursion;
+inline int findPeopleInRoom(Board board, Board& outputBoard, int outputCount=0, int count = 0){
+    for(int i =0;i<board.getRows();++i){
+        for(int j =0 ;j<board.getCollums();++j){
+            if(board.canPlaceOnPos(i,j)){
+                ++count;
+                int current= SetPerson(board, i,j);
+                
+                    int temp = (count > 1 ? currentlyInRecursion[count-2] : 0);
+                    while(currentlyInRecursion.size() < count){
+                        currentlyInRecursion.push_back(temp+9);
+                    }
+
+                    if(temp+current<currentlyInRecursion[count-1])
+                    {
+                        currentlyInRecursion[count-1] = temp +current;
+                        if(outputCount < count){
+                            outputBoard = board;
+                            outputCount = count;
+                        }
+                        outputCount = std::max(outputCount, findPeopleInRoom(board,outputBoard,outputCount, count));
+                    
+                    }
+                
+                removePerson(board, i,j);
+                --count;
+            }
+        }
+    }
+    return outputCount;
+}
+
+#endif
+#ifndef _using_unsolved_algorithm 
+#ifndef _another_unsolved_algorithm_
+
+inline int findPeopleInRoom(Board board, Board& outputBoard, int outputCount=0, int count = 0){
+    for(int i =0;i<board.getRows();++i){
+        for(int j =0;j<board.getCollums();++j){
+            if(board.canPlaceOnPos(i,j)){
+                ++count;
+                    SetPerson(board, i,j);
+
+                    if(outputCount < count){
+                        outputBoard = board;
+                        outputCount = count;
+                    }
+                    // board.PrintBoard(std::cout);
+                    // std::cout <<'\n';
+                    outputCount = std::max(outputCount, findPeopleInRoom(board,outputBoard,outputCount, count));
+                
+                
+                removePerson(board, i,j);
+                --count;
+            }
+        }
+    }
+    return outputCount;
+}
+
+
+#endif
+#endif
 
 inline int findPeopleInRoom(Board& b){
     return findPeopleInRoom(b,b);
