@@ -1,6 +1,6 @@
 
 
-#include "StudentQueue.hpp"
+#include "../Headers/StudentQueue.hpp"
 
 
 Student StudentQueue::front(int time){

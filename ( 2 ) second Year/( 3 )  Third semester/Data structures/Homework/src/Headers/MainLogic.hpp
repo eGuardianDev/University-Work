@@ -176,10 +176,6 @@ bool checking = false;
             ToBeChecked.pop();
             lastTimePickUp = time;
         }
-            
-
-     
-    
 
         return;
     }
@@ -212,6 +208,8 @@ bool checking = false;
     
 
     std::priority_queue<Student,std::vector<Student>,CompareStudentNeededTime> TakingTestStudents;
+
+    
     StudentQueue studentQueue;
     std::stack<uint8_t> ToBeChecked;
 
