@@ -1,5 +1,6 @@
-#include "src/Headers/TakingTestList.hpp"
-#include "src/Headers/Student.hpp"
+
+#include "../src/Headers/TakingTestList.hpp"
+#include "../src/Headers/Student.hpp"
 
 
 
@@ -65,6 +66,10 @@ TEST_CASE("TakingTestList - Testing copy operator="){
     list2 = list;
     REQUIRE(list2.empty() == false);
     list2.pop();
+
+    REQUIRE(list2.Size() ==0);
+    REQUIRE(list.Size() ==1);
+    
     REQUIRE(list2.empty() == true);
     REQUIRE(list.empty() == false);
 }

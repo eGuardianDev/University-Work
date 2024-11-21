@@ -9,6 +9,8 @@ struct Pair{
     Pair (T _first, T _second) : first(_first), second(_second) {}
 };
 
+
+// * Universal can change to whatever you want
 enum Legend{
     Person = 'p',
     Broken = 'b',

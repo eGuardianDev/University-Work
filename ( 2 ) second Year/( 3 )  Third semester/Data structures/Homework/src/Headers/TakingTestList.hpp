@@ -4,7 +4,7 @@
 
 #include "Student.hpp"
 #include <cassert>
-#include <cstddef>
+
 class TakingTestList{
 private:
    struct Node{
@@ -18,18 +18,22 @@ private:
 public:
     TakingTestList(){
         head = nullptr;
+        size = 0;
     }
 
     ~TakingTestList(){
         clear();
+        size = 0;
     }
     TakingTestList(const TakingTestList& other){
         copy(other.head);
+        this->size = other.size;
     }
 
     TakingTestList& operator=(const TakingTestList& other){
         if(this != &other){
             clear();
+            this->size = other. size;
             copy(other.head);
         }
         return *this;
@@ -38,15 +42,25 @@ public:
     TakingTestList(TakingTestList&& other){
         this->head = other.head;
         other.head = nullptr;
+
+        this->size = other.size;
+        other.size = 0;
     }
     TakingTestList& operator=(TakingTestList&& other){
         if(this != &other){
             clear();
             this->head = other.head;
             other.head = nullptr;
+            
+            this->size = other.size;
+            other.size = 0;
         }
 
         return *this;
+    }
+
+    const int Size() const {
+        return size;
     }
 
 
@@ -82,18 +96,20 @@ public:
     void push(Student student){
         if(head == nullptr){
             head = new Node(student);
+            ++size;
             return;
         }
 
         Node* curr = head;
 
         int studentTime = student.getTimeComing() + student.getTimeNeeded();
-
+        
         if(curr->student.getTimeComing()+
            curr->student.getTimeNeeded() > studentTime){
             Node* temp = new Node(student);
             temp->next = head;
             head = temp;
+            ++size;
             return;
         }
 
@@ -102,12 +118,14 @@ public:
                 Node* temp = curr->next;
                 curr->next = new Node(student);
                 curr->next->next = temp; 
+                ++size;
                 return;
             }
             curr = curr->next; 
         }
 
         curr->next = new Node(student);
+        ++size;
        
     }
     Student& top(){
@@ -117,9 +135,10 @@ public:
         Node* temp = head;
         head = head->next;
         delete temp;
+        --size;
     }
     bool empty(){
-        return head==nullptr;
+        return head==nullptr && size == 0;
     }
 
     void clear(){
@@ -130,6 +149,7 @@ public:
             delete temp;
         }
         head = nullptr;
+        size = 0;
     }
 
 
@@ -138,7 +158,7 @@ public:
 private:
  
 
-    
+    int size;
     Node* head; 
 };
 

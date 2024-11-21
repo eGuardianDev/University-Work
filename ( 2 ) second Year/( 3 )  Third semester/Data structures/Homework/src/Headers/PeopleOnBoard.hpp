@@ -2,12 +2,11 @@
 #ifndef __PEOPLE_ON_BAORD_HPP_
 #define __PEOPLE_ON_BAORD_HPP_
 
-#include <iostream>
 #include <stdexcept>
 #include "addons.hpp"
 #include "Board.hpp"
 
-bool checkIfAroundIsPerson(Board board, int row, int collum){
+inline bool checkIfAroundIsPerson(Board board, int row, int collum){
     for(int i =-1;i<2;++i){
         for(int j =-1 ;j<2;++j){
             int newR = row + i;
@@ -21,7 +20,7 @@ bool checkIfAroundIsPerson(Board board, int row, int collum){
     }
     return false;
 }
-int removePerson(Board &board, int row, int collum){
+inline int removePerson(Board &board, int row, int collum){
     if(!board.isValidPos(row, collum)) {
         throw std::invalid_argument("Trying to remove person out of board");
     }
@@ -49,7 +48,7 @@ int removePerson(Board &board, int row, int collum){
     return removed;
 }
 
-int SetPerson(Board& board,int row, int collum){
+inline int SetPerson(Board& board,int row, int collum){
 
     assert(board.isValidPos(row, collum));
     int placed = 0;
@@ -71,7 +70,7 @@ int SetPerson(Board& board,int row, int collum){
 std::vector<int> steps;
 
 
-int findPeopleInRoom(Board board, Board& outputBoard, int outputCount=0, int count = 0){
+inline int findPeopleInRoom(Board board, Board& outputBoard, int outputCount=0, int count = 0){
     for(int i =0;i<board.getRows();++i){
         for(int j =0 ;j<board.getCollums();++j){
             if(board.canPlaceOnPos(i,j)){
@@ -103,7 +102,7 @@ int findPeopleInRoom(Board board, Board& outputBoard, int outputCount=0, int cou
     return outputCount;
 }
 
-int findPeopleInRoom(Board& b){
+inline int findPeopleInRoom(Board& b){
     return findPeopleInRoom(b,b);
 }
 

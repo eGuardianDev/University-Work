@@ -9,6 +9,7 @@
 #include "PeopleOnBoard.hpp"
 #include "Student.hpp"
 #include "StudentQueue.hpp"
+#include "TakingTestList.hpp"
 
 #include <cstdint>
 #include <iostream>
@@ -79,14 +80,11 @@ public:
         while(!cmd.empty())
         {
             int timeComing = cmd.front(); cmd.pop();
-            int id = cmd.front(); cmd.pop();
+            int id = cmd.front()-1; cmd.pop();
             int timeNeeded = cmd.front(); cmd.pop();
             int course = cmd.front(); cmd.pop();
 
-            // std::cout << timeComing << " "
-            //  << id << " "
-            //   << timeNeeded << " "
-            //    << course << "\n";
+      
             studentQueue.push(Student(timeComing,id,timeNeeded,course));   
         }
     }
@@ -97,14 +95,13 @@ public:
         assert(Room.isInited());
         assert(AvailableSeats > 0);
 
-        if(TakingTestStudents.size() == AvailableSeats) return false;
+        if(TakingTestStudents.Size() == AvailableSeats) return false;
 
         if(studentQueue.isEmpty()) return false;
 
         Student curr = studentQueue.front(time);
         if(time < curr.TimeComing) return false;
 
-        std::cout << "|"<< (int)curr.Id <<"|" << time + (int)curr.TimeNeeded<< "|" << time << '\n';
       
 
         curr.TimeComing = time;
@@ -130,13 +127,10 @@ public:
 
             if(curr.getTimeComing() + curr.getTimeNeeded()>time) return count;
 
-            std::cout << "Student  " << curr.getId() <<" finished with time " << curr.getTimeComing() + curr.getTimeNeeded() << '\n';
-
             TakingTestStudents.pop();
             ToBeChecked.push(curr.Id);
             ++count;
 
-            // std::cout << "letting out "<< curr.getId() <<"  " << " TIME " << curr.getTimeComing() + curr.getTimeNeeded() << "\n";
        
         }
         return count;
@@ -162,7 +156,6 @@ bool checking = false;
             if(lastTimePickUp+lectureCheckingTime ==time){
                 checking = false;
                 Finished.push(checkingCurrently);
-                // std::cout << "Finished checking " << (int)checkingCurrently << "\n";
             }
         }
 
@@ -171,7 +164,6 @@ bool checking = false;
         {   
             checking = true;
             checkingCurrently = ToBeChecked.top();
-                std::cout << "Starting to check " << (int)checkingCurrently << "\n";
 
             ToBeChecked.pop();
             lastTimePickUp = time;
@@ -183,22 +175,27 @@ bool checking = false;
     void outputFinished(std::ostream& stream){
         while(!Finished.empty())
         {
-            stream << (int)Finished.top() << '\n'; Finished.pop();
-        }
-    }
-    void outputToCheck(std::ostream& stream){
-        while(!ToBeChecked.empty())
-        {
-            stream << (int)ToBeChecked.top() << '\n'; ToBeChecked.pop();
+            stream << (int)Finished.top()+1 << '\n'; Finished.pop();
         }
     }
 
+    // * Debug purposes
+    // * Please remove The lecturer checking in main code 
+    // void outputToCheck(std::ostream& stream){
+    //     while(!ToBeChecked.empty())
+    //     {
+    //         stream << (int)ToBeChecked.top()+1 << '\n'; ToBeChecked.pop();
+    //     }
+    // }
+
+    //
+
     bool isEveryoneFinished(){
-        return ToBeChecked.empty() && lastTimePickUp ==0 && TakingTestStudents.empty() && studentQueue.isEmpty(); 
+        return ToBeChecked.empty() && checking==false && TakingTestStudents.empty() && studentQueue.isEmpty(); 
     }
 
     short EmptySeats(){
-        return AvailableSeats - TakingTestStudents.size();
+        return AvailableSeats - TakingTestStudents.Size();
     }
 
     
@@ -207,8 +204,9 @@ bool checking = false;
     short AvailableSeats;
     
 
-    std::priority_queue<Student,std::vector<Student>,CompareStudentNeededTime> TakingTestStudents;
+    // std::priority_queue<Student,std::vector<Student>,CompareStudentNeededTime> TakingTestStudents;
 
+    TakingTestList TakingTestStudents;
     
     StudentQueue studentQueue;
     std::stack<uint8_t> ToBeChecked;

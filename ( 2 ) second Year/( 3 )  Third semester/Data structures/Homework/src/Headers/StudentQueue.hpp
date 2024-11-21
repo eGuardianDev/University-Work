@@ -2,8 +2,10 @@
 
 #ifndef __STUDENTS_QUEUE_HPP_
 #define __STUDENTS_QUEUE_HPP_
+
 #include "Student.hpp"
 #include <queue>
+
 class StudentQueue{
 
 public:
