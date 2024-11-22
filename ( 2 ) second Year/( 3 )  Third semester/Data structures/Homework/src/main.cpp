@@ -40,7 +40,7 @@ void OutputData(std::ostream& stream ){
 int main(){
 
     Initialize();
-    // RunLogic();
+    RunLogic();
     OutputData(std::cout);
   
 

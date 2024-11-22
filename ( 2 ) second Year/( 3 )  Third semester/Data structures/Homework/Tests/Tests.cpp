@@ -21,11 +21,11 @@ TEST_CASE( "TakingTestList - Push, Pop, Empty")
     REQUIRE(list.empty() == false);
     list.push(Student(0,2,5,0));
 
-    Student s1 = list.top();
+    Student s1 = list.front();
     REQUIRE(s1.getTimeNeeded() == 5);
     list.pop();
     REQUIRE(list.empty() == false);
-    Student s2 = list.top();
+    Student s2 = list.front();
     REQUIRE(s2.getTimeNeeded() == 12);
     list.pop();
     REQUIRE(list.empty() == true);

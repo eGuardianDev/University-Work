@@ -13,29 +13,15 @@ struct Student{
     short TimeNeeded;
 
 
-    // * Use this function when output to console
+    // * Use this functions when outputing to console
     int getTimeNeeded(){return (int)TimeNeeded;}
-    // * getId() mainly because of this or it won't show
+    // * getId() or just add 1 to id to be correct
     int getId(){return (int)Id+1;} 
     int getCourse(){return (int)Course;}
     int getTimeComing(){return (int)TimeComing;}
    
 
     Student(uint8_t timeComing, uint8_t id,uint8_t timeNeeded, uint8_t course) : TimeComing(timeComing), Id(id), Course(course), TimeNeeded(timeNeeded) {}
-
-
 };
-
-
-// * Used in priority queue
-// struct CompareStudentNeededTime{
-
-// public:
-//     bool operator()(Student& lhs, Student& rhs){
-//         return lhs.TimeComing+lhs.TimeNeeded >
-//               rhs.TimeComing+rhs.TimeNeeded;
-//     }
-// };
-
 
 #endif

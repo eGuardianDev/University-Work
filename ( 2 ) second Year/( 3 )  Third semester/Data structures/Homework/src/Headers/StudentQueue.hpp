@@ -10,10 +10,12 @@ class StudentQueue{
 
 public:
     Student front(int time);
+
     void pop(int time);
+    
     void push(Student);
 
-    bool isEmpty() {return priority.empty() && normal.empty();}
+    bool isEmpty() const {return priority.empty() && normal.empty();}
 
 private:
     std::queue<Student> priority;
