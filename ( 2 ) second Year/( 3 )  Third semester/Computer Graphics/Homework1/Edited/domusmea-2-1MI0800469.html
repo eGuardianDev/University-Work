@@ -1,0 +1,212 @@
+﻿<!DOCTYPE html>
+
+<!-- Име Фамилиев, група X, ф.н. XXXXX -->
+
+<html>
+	<head>
+		<style>
+			body { margin: 0; }
+			canvas { width: 100%; height: 100% }
+		</style>
+		<script type="importmap">
+			{ "imports": {
+				"three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
+				"three/addons/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/",
+				"domus-mea": "https://cdn.jsdelivr.net/gh/boytchev/CourseOKG@latest/domus-mea.js",
+				"csg/": "https://cdn.jsdelivr.net/gh/looeee/threejs-csg@main/src/CSG/"
+			} }
+		</script>
+	</head>
+	<style>#info {
+		position: absolute;
+		top: 10px;
+		left: 15px;
+		width: 100%;
+		text-align: left;
+		z-index: 100;
+		font-family: Arial, Helvetica, sans-serif;
+		display:block;
+		color:white;
+		line-height: 0.2;
+	}</style>
+	
+	<body>
+		<div id="info">
+			<h3>Tsvetomir Staykov - 1MI0800469  </h3>
+			<br>
+			Spinning (office) chair and antique table
+
+		</div>
+
+		<script type="module">
+			import * as THREE from "three";
+			import {domusMea, scene, renderer, camera} from "domus-mea";
+			import {CSG} from "csg/CSG.js"; 
+
+			domusMea( '1MI0800469' ); // факултетен номер 
+			
+			// 1. преименувайте файла на moidom-g-fn.html
+			//    g=номер на група, а fn=факултетен номер
+			//
+			// 2. първо сменете параметъра на domusMea да
+			//    е факултетният ви номер - по този начин
+			//    ще се генерират сцена, земя и контур на
+			//    къщата ви, която ще трябва да направите
+			//
+			// 3. едва тогава почвайте да строите стените
+			//    и да добавяте исканите обекти по стаите
+			//
+			// 4. кубът по-долу е само за пример как може
+			//    да се слагат обекти, които правят сянка
+			//
+			// 5. едно зелено квадратче е широко 1 метър,
+			//    а белите квадратчета са големи по 20 см
+			//
+			// 6. горд съм как коментарите са равно дълги
+
+			
+			// куб 2х2х2 метра
+
+			function addShadows(object){
+				object.receiveShadow = true;
+				object.castShadow = true;
+
+			}
+			const rot = Math.PI/180;
+
+			const RoomHeight = 2.6; //average hight of room 2.4
+			var WallMaterial = new THREE.MeshPhongMaterial( {color: 'white'} );
+			
+			var csgWalls = new CSG();
+			
+			var geometry = new THREE.BoxGeometry( .2, RoomHeight, 8 );
+			var cube0 = new THREE.Mesh( geometry );
+			cube0.position.set( -5.9, 0, 0 );
+			
+			var geometry = new THREE.BoxGeometry( 5, RoomHeight, .2 ); 
+			var cube = new THREE.Mesh( geometry );
+			cube.position.set( -3.5, 0, 3.9);
+			csgWalls.union([cube0,cube]);
+		
+			
+			var geometry = new THREE.BoxGeometry( 5, RoomHeight, .2 ); 
+			var cube = new THREE.Mesh( geometry );
+			cube.position.set( -3.5, 0, 3.9);
+			csgWalls.union([cube0,cube]);
+
+
+			var geometry = new THREE.BoxGeometry( 5, RoomHeight, .2 ); 
+			var cube = new THREE.Mesh( geometry );
+			cube.position.set( -3.5, 0, -3.9);
+			csgWalls.union([cube0,cube]);
+
+			var geometry = new THREE.BoxGeometry( 1, RoomHeight, .2 ); 
+			var cube = new THREE.Mesh( geometry );
+			cube.position.set( 6.5, 0, -3.9);
+			csgWalls.union([cube0,cube]);
+			
+			var geometry = new THREE.BoxGeometry( 1, RoomHeight, .2 ); 
+			var cube = new THREE.Mesh( geometry );
+			cube.position.set( 6.5, 0, 3.9);
+			csgWalls.union([cube0,cube]);
+			
+			var geometry = new THREE.BoxGeometry( .2, RoomHeight, 8 );
+			var cube = new THREE.Mesh( geometry );
+			cube.position.set( 6.9, 0, 0 );
+			csgWalls.union([cube0,cube]);
+			
+			var geometry = new THREE.BoxGeometry( .2, RoomHeight, 4.2 );
+			var cube = new THREE.Mesh( geometry );
+			cube.position.set( -0.9, 0, -5.9 );
+			csgWalls.union([cube0,cube]);
+			
+			var geometry = new THREE.BoxGeometry( .2, RoomHeight, 4.2 );
+			var cube = new THREE.Mesh( geometry );
+			cube.position.set( 5.9, 0, -5.9 );
+			csgWalls.union([cube0,cube]);
+
+			var geometry = new THREE.BoxGeometry( .2, RoomHeight, 2.2 );
+			var cube = new THREE.Mesh( geometry );
+			cube.position.set( 5.9, 0, 4.9 );
+			csgWalls.union([cube0,cube]);
+
+			var geometry = new THREE.BoxGeometry( .2, RoomHeight, 2.2 );
+			var cube = new THREE.Mesh( geometry );
+			cube.position.set( -0.9, 0, 4.9 );
+			csgWalls.union([cube0,cube]);
+
+
+			var geometry = new THREE.BoxGeometry( 7, RoomHeight, .2);
+			var cube = new THREE.Mesh( geometry );
+			cube.position.set( 2.5, 0, 5.9 );
+			csgWalls.union([cube0,cube]);
+
+			var geometry = new THREE.BoxGeometry( 7, RoomHeight, .2);
+			var cube = new THREE.Mesh( geometry );
+			cube.position.set( 2.5, 0, -7.9);
+			csgWalls.union([cube0,cube]);
+
+
+
+			// ! inner walls
+
+			var geometry = new THREE.BoxGeometry( 5, RoomHeight, .2);
+			var cube = new THREE.Mesh( geometry );
+			cube.position.set(-3.5, 0, 0);
+			csgWalls.union([cube0,cube]);
+
+			var geometry = new THREE.BoxGeometry( .2, RoomHeight, 8);
+			var cube = new THREE.Mesh( geometry );
+			cube.position.set(-0.9, 0, 0);
+			csgWalls.union([cube0,cube]);
+
+
+			
+			var geometry = new THREE.BoxGeometry( .2, RoomHeight, 6);
+			var cube = new THREE.Mesh( geometry );
+			cube.position.set(1.2, 0, -1.15);
+			csgWalls.union([cube0,cube]);
+
+			
+			var geometry = new THREE.BoxGeometry( .2, RoomHeight, 1.5);
+			var cube = new THREE.Mesh( geometry );
+			cube.position.set(0.60, 0, 2.14);
+			cube.rotation.set(0,rot*-60,0);
+			csgWalls.union([cube0,cube]);
+
+			var geometry = new THREE.BoxGeometry(1, RoomHeight, .2);
+			var cube = new THREE.Mesh( geometry );
+			cube.position.set(-0.5, 0, 2.5);
+			csgWalls.union([cube0,cube]);
+
+
+			
+			var geometry = new THREE.BoxGeometry(5.8, RoomHeight, .2);
+			var cube = new THREE.Mesh( geometry );
+			cube.position.set(4,0,-2);
+			csgWalls.union([cube0,cube]);
+
+			var geometry = new THREE.BoxGeometry( .2, RoomHeight,4 );
+			var cube = new THREE.Mesh( geometry );
+			cube.position.set(1.2, 0, -6);
+			csgWalls.union([cube0,cube]);
+			
+			var WallMesh = csgWalls.toMesh();
+			WallMesh.material = WallMaterial;//new THREE.MeshLambertMaterial( {color:'crimson'} );
+			scene.add(WallMesh);
+
+			// var geometry = new THREE.BoxGeometry( 2, 2, 2 ),
+			// 	material = new THREE.MeshPhongMaterial( {color: 'crimson'} );
+				
+			// var cube = new THREE.Mesh( geometry, material );
+			// 	cube.position.set( 0, 1, 0 );
+			
+
+
+			
+		</script>
+		
+	</body>
+</html>
+
+
