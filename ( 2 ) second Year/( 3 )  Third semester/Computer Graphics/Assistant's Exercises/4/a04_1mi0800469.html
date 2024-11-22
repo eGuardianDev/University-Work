@@ -1,0 +1,234 @@
+﻿<html>
+	<head>
+		<style>
+			body { margin: 0; }
+			canvas { width: 100%; height: 100% }
+		</style>
+		<script type="importmap">
+			{ "imports": {
+				"three": "https://cdn.jsdelivr.net/npm/three@0.164.0/build/three.module.js",
+				"csg/": "https://cdn.jsdelivr.net/gh/looeee/threejs-csg@main/src/CSG/"
+			} }
+		</script>
+	</head>
+	<body>
+		<script type="module">
+		
+			import * as THREE from "three";
+			import {CSG} from "csg/CSG.js"; 
+
+			
+			var renderer = new THREE.WebGLRenderer( {antialias: true} );
+			renderer.setSize( window.innerWidth, window.innerHeight );
+			renderer.setAnimationLoop( drawFrame );
+			document.body.appendChild( renderer.domElement );
+
+			var scene = new THREE.Scene();
+			scene.background = new THREE.Color( 'lightsteelblue' );
+			
+			var aspect = window.innerWidth/window.innerHeight;
+			var camera = new THREE.PerspectiveCamera( 30, aspect );
+			camera.position.set( 0, 4, 20 );
+			camera.lookAt( new THREE.Vector3() );
+
+
+			// профил на къща
+			var shape = new THREE.Shape();
+			shape.moveTo(   -4, -2 );
+			shape.lineTo(   -4,  4 );
+			shape.lineTo(   -1.25,  4 );
+			shape.lineTo(   0,  2.5 ); //top slice
+			shape.lineTo(   1.25,  4 );
+			shape.lineTo(   4,  4 );
+			shape.lineTo(   4,  -2 );
+			shape.lineTo(   1.25,  -2 );
+			shape.lineTo(   1.25,  2 );
+			shape.lineTo(   0,  .5 ); // down slice
+			shape.lineTo(   -1.25,  2 );
+			shape.lineTo(   -1.25,  -2 );
+
+			var extrudeSettings = {
+					depth: 6,
+					bevelEnabled: true,
+					bevelSegments: 2,
+					steps: 2,
+					bevelSize: 0.1,
+					bevelThickness: 0.1 
+				};
+				
+				var geometry = new THREE.ExtrudeGeometry( shape, extrudeSettings );
+				
+				var M = new THREE.Mesh( geometry, new THREE.MeshPhongMaterial({shininess: 140, specular: 'red'}) );
+				scene.add( M );
+				M.position.set(-2,0,-2);
+				
+			//bolt - iso
+				
+
+				var topPart = new THREE.CylinderGeometry( .1, 0.5, .5 );
+				var longPart =  new THREE.CylinderGeometry( .2, .2, 1.5, 32 );
+				var longPartMesh = new THREE.Mesh( longPart );
+				var topPartMesh = new THREE.Mesh( topPart );
+
+				
+				longPartMesh.position.set(0,0,0);
+				topPartMesh.position.set(0,0.5,0);
+				topPartMesh.rotation.z = (Math.PI);
+				// scene.add(temp);
+				// scene.add(longPartMesh);
+				// scene.add(topPartMesh);
+				
+				var newBolt = new CSG();
+
+				// newBolt.union( [topPartMesh] );
+				newBolt.union( [longPartMesh,topPartMesh] );
+
+				var cut =  new THREE.BoxGeometry( .15,.3,1 );
+				var cutMesh = new THREE.Mesh(cut);
+				cutMesh.position.set(0,0.75,0);
+				newBolt.subtract([cutMesh]);
+
+
+				var resultMesh = newBolt.toMesh();
+				resultMesh.material = new THREE.MeshPhongMaterial({shininess: 140, specular: 'white'}) ;
+				// resultMesh.position.z = 10;
+				// scene.add(resultMesh);
+
+
+				const rPI = Math.PI/180;
+				var CloneBolt = resultMesh.clone();
+				CloneBolt.position.set(0.45,2,4.7);
+				CloneBolt.rotation.set(rPI*90,rPI*30,0);
+				var scale = 0.85;
+				CloneBolt.scale.set(scale,scale,scale);
+				scene.add(CloneBolt);
+			
+
+				var CloneBolt = resultMesh.clone();
+				CloneBolt.position.set(-5.5,3.5,3.8);
+				CloneBolt.rotation.set(rPI*90,rPI*-10,0);
+				var scale = 0.8;
+				CloneBolt.scale.set(scale,scale,scale);
+				scene.add(CloneBolt);
+
+
+				var CloneBolt = resultMesh.clone();
+				CloneBolt.position.set(-5.5,-1.5,3.8);
+				CloneBolt.rotation.set(rPI*90,rPI*-85,0);
+				var scale = 0.5;
+				CloneBolt.scale.set(scale,scale,scale);
+				scene.add(CloneBolt);
+			
+
+
+				var CloneBolt = resultMesh.clone();
+				CloneBolt.position.set(1.65,1,4.8);
+				CloneBolt.rotation.set(rPI*90,rPI*-35,0);
+				var scale = 0.55;
+				CloneBolt.scale.set(scale,scale,scale);
+				scene.add(CloneBolt);
+
+
+
+				var CloneBolt = resultMesh.clone();
+				CloneBolt.position.set(1.9,-0.5,4.9);
+				CloneBolt.rotation.set(rPI*90,rPI*-35,0);
+				var scale = 0.45;
+				CloneBolt.scale.set(scale,scale,scale);
+				scene.add(CloneBolt);
+
+
+				var CloneBolt = resultMesh.clone();
+				CloneBolt.position.set(2.0,3.5,3.8);
+				CloneBolt.rotation.set(rPI*15,0,rPI*-90);
+				var scale = 1;
+				CloneBolt.scale.set(scale,scale,scale);
+				scene.add(CloneBolt);
+
+
+
+
+			var shape = new THREE.Shape();
+			shape.moveTo(  .25, 0 );
+			shape.quadraticCurveTo( 0.6,-0.2, 1,0 ); // donw partr
+			shape.quadraticCurveTo( 1.25,2, 1, 3.5 ); // right down part
+			
+			shape.quadraticCurveTo( 2,4, 3,4 ); // right under part
+			shape.quadraticCurveTo( 3.75,4.25, 3,4.75 ); // round
+			shape.quadraticCurveTo( 2,4.8, 0.9, 4.25 ); // right upper part
+
+			shape.quadraticCurveTo( 0.75,4.85, 0.75,4.85 ); // upper right wall
+			shape.quadraticCurveTo( 0.5,5.25, 0,5 ); // round top
+			shape.quadraticCurveTo( -0.35,4.75, -.15,4 ); // upper left wall
+			
+			shape.quadraticCurveTo( -1, 3.8, -2,3 ); // upper left wall
+			shape.quadraticCurveTo( -2.4, 2.4, -1.5,2.5 ); // round
+			shape.quadraticCurveTo( 0.25,3.25, 0,3.25 ); // left under wall
+
+			shape.quadraticCurveTo( 0.25,3, .25,0 ); // down left wall
+
+			var extrudeSettings = {
+					depth: 1,
+					bevelEnabled: true,
+					bevelSegments: 2,
+					steps: 2,
+					bevelSize: 0.1,
+					bevelThickness: 0.1,
+					curveSegments: 60
+				};
+			var geometry = new THREE.ExtrudeGeometry( shape, extrudeSettings );
+			
+			var T = new THREE.Mesh( geometry, new THREE.MeshPhongMaterial( {specular: 'blue', shininess: 100} ) );
+			T.position.set(-0,-1.8,4);
+
+			scene.add( T );
+
+
+
+
+
+			var shape = new THREE.Shape();
+			shape.moveTo(  0, 0 );
+			shape.quadraticCurveTo( .5,-.5, 1,0 ); // donw partr
+			
+			shape.quadraticCurveTo( 2,2, 4,3 ); //right under
+			shape.quadraticCurveTo( 4.5,3.5, 4,3.5 ); // round
+			shape.quadraticCurveTo( 3,3.5, 0.5,0.9 ); // right upper
+			
+			shape.quadraticCurveTo( 0, 0, -0.25 ,3 ); // right round
+			shape.quadraticCurveTo( -0.5, 3.75, -0.8,3.25 ); // round
+			shape.quadraticCurveTo(  -1, 2, 0,0 ); // round dwn
+
+			var extrudeSettings = {
+					depth: 1,
+					bevelEnabled: true,
+					bevelSegments: 2,
+					steps: 2,
+					bevelSize: 0.1,
+					bevelThickness: 0.1,
+					curveSegments: 60
+				};
+			var geometry = new THREE.ExtrudeGeometry( shape, extrudeSettings );
+			
+			var V = new THREE.Mesh( geometry, new THREE.MeshPhongMaterial( {specular: 'blue', shininess:25} ) );
+			V.position.set(2.2,-2,4);
+
+			scene.add( V );
+
+
+
+
+			var light = new THREE.PointLight( 'white', 1000 );
+			light.position.set( 0, 5, 100 );
+			light.rotation.set(0,3,0);
+			scene.add( light );
+
+			function drawFrame( t )
+			{
+				scene.rotation.y = 0.20*Math.sin(t/400);
+				renderer.render( scene, camera );
+			}
+			
+		</script>
+	</body>
+</html>
