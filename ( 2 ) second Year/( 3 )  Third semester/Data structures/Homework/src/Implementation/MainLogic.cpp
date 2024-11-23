@@ -81,7 +81,6 @@ bool MainLogic::TryLettingNextStudentIn(int time){
 
     Student curr = studentQueue.front(time);
     if(time < curr.TimeComing) return false;
-
     
 
     curr.TimeComing = time;
@@ -110,8 +109,6 @@ short MainLogic::CheckForFinishingStudents(int time){
         TakingTestStudents.pop();
         ToBeChecked.push(curr.Id);
         ++count;
-
-    
     }
     return count;
 }

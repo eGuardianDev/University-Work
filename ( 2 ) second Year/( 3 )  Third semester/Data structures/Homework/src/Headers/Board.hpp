@@ -11,8 +11,8 @@
 class Board{
 private:
 
-    int Board_Rows = 8;
-    int Board_Collums = 8;
+    int Board_Rows = 0;
+    int Board_Collums = 0;
 
     std::vector<std::vector<char>> board;
 
@@ -26,7 +26,7 @@ public:
         return Board_Collums;
     }
     bool isInited() const{
-        return !board.empty();
+        return Board_Rows >0;
     }
  
 
@@ -37,6 +37,7 @@ public:
     void PrintBoard(std::ostream& stream) const;
 
     void Clean();
+    void Destruct();
 
     bool isValidPos(const int &row, const int &collum) const;
 

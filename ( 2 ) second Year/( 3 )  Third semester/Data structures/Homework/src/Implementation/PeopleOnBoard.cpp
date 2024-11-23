@@ -51,7 +51,7 @@ int removePerson(Board &board, int row, int collum){
 }
 
 
-int SetPerson(Board& board,int row, int collum){
+int setPerson(Board& board,int row, int collum){
     assert(board.isValidPos(row, collum));
     int placed = 0;
     board.setOnPosition(row,collum,Person);
@@ -74,14 +74,14 @@ int SetPerson(Board& board,int row, int collum){
 
 // #define _Using_Altered_Algorithm
 
-#ifndef _Using_Altered_Algorithm
+#if !defined(_Using_Altered_Algorithm)
 int findPeopleInRoom(Board board, Board& outputBoard, int outputCount, int count){
     int localRec = 9;
     for(int i =0;i<board.getRows();++i){
         for(int j =0 ;j<board.getCollums();++j){
             if(board.canPlaceOnPos(i,j)){
                 ++count;
-                int current= SetPerson(board, i,j);
+                int current= setPerson(board, i,j);
 
                 if(localRec > current) {
                     if(outputCount < count){

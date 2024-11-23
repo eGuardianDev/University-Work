@@ -34,7 +34,7 @@ void Board::InitBoard(int rows, int collums){
 }
 
 void Board::PrintBoard(std::ostream& stream) const{
-    if(board.size() == 0) throw std::underflow_error("Printing empty board");
+    if(board.size() == 0) throw std::underflow_error("Cannot print empty board");
     for(std::vector<char> row : board){
         for(int i =0 ;i <row.size();++i){
             stream << row[i];
@@ -44,10 +44,17 @@ void Board::PrintBoard(std::ostream& stream) const{
 }
 
 void Board::Clean(){
-    for(int i =0;i<board.size();++i){
-        board[i].clear();
+    for(int i =0; i< getRows()*getCollums(); ++i){
+            setOnPosition(i,valid);
+    }
+}
+void Board::Destruct(){
+    for(std::vector<char> rows : board){
+        rows.clear();
     }
     board.clear();
+    this->Board_Rows = 0;
+    this->Board_Collums = 0;
 }
 
 bool Board::isValidPos(const int &row, const int &collum) const{

@@ -8,7 +8,7 @@ bool checkIfAroundIsPerson(Board board, int row, int collum);
 
 int removePerson(Board &board, int row, int collum);
 
-int SetPerson(Board& board,int row, int collum);
+int setPerson(Board& board,int row, int collum);
 
 int findPeopleInRoom(Board board, Board& outputBoard, int outputCount=0, int count = 0);
 
