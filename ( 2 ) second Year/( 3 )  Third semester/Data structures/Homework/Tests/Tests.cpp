@@ -3,14 +3,18 @@
 #include "../src/Headers/Student.hpp"
 #include "../src/Headers/Board.hpp"
 #include "../src/Headers/PeopleOnBoard.hpp"
+#include "../src/Headers/StudentQueue.hpp"
+#include "../src/Headers/MainLogic.hpp"
 
 
 
 #include "catch_amalgamated.hpp"
 
 #include <cassert>
+#include <sstream>
 
 
+// Taking Test List
 TEST_CASE( "TakingTestList - Push, Pop, Empty")
 {
     TakingTestList list;
@@ -76,6 +80,8 @@ TEST_CASE("TakingTestList - Testing copy operator="){
     REQUIRE(list.empty() == false);
 }
 
+// Board
+
 TEST_CASE("Board - Initialization and cleaning 1x1"){
    
     Board b;
@@ -108,14 +114,44 @@ TEST_CASE("Board - Testing rows and collums if correct 2x1"){
     REQUIRE(b.getRows() == 2);
     REQUIRE(b.getCollums() == 1);
 
+    
     b.Destruct();
     REQUIRE(b.isInited() == false);
     REQUIRE(b.getRows() == 0);
     REQUIRE(b.getCollums() == 0);
 }
+
+
+TEST_CASE("Board - Index to Pair/Cordinates"){
+    
+    Board b;
+
+    b.InitBoard(2,2);
+
+    Pair<short> a = b.IndexToPair(0);
+
+    REQUIRE(a.first ==0);
+    REQUIRE(a.second == 0);
+
+    a = b.IndexToPair(2);
+
+    REQUIRE(a.first ==1);
+    REQUIRE(a.second == 0);
+
+
+    b.setOnPosition(0,0, Person);
+    REQUIRE(b.getOnPosition(0) == Person);
+
+    b.Clean();
+
+    b.setOnPosition(0, Person);
+    REQUIRE(b.getOnPosition(0,0) == Person);
+
+    
+
+}
 TEST_CASE("Board - 1x1 Get,Set,Check position"){
     Board b;
-    REQUIRE(b.isInited() == false);
     b.InitBoard(1,1);
 
     REQUIRE(b.canPlaceOnPos(0) == true);
@@ -144,7 +180,6 @@ TEST_CASE("Board - 1x1 Get,Set,Check position"){
 
 TEST_CASE("Board - 2x2 Get,Set,Check position"){
     Board b;
-    REQUIRE(b.isInited() == false);
     b.InitBoard(2,2);
 
     REQUIRE(b.canPlaceOnPos(0) == true);
@@ -171,11 +206,11 @@ TEST_CASE("Board - 2x2 Get,Set,Check position"){
     REQUIRE(b.canPlaceOnPos(2) == true);
     REQUIRE(b.canPlaceOnPos(3) == true);
 }
+
 TEST_CASE("Board - Cleaning 2x2"){
     
     Board b;
 
-    REQUIRE(b.isInited() == false);
 
     b.InitBoard(2,2);
 
@@ -196,7 +231,6 @@ TEST_CASE("Board - Cleaning 2x2"){
 
 TEST_CASE("PeopleOnBoard - 2x2 - Placing and removing people"){
     Board b;
-    REQUIRE(b.isInited() == false);
     b.InitBoard(2,2);
 
     REQUIRE(b.canPlaceOnPos(0) == true);
@@ -224,7 +258,6 @@ TEST_CASE("PeopleOnBoard - 2x2 - Placing and removing people"){
 }
 TEST_CASE("PeopleOnBoard - 2x3 - Placing and removing people"){
     Board b;
-    REQUIRE(b.isInited() == false);
     b.InitBoard(2,3);
 
 
@@ -253,7 +286,6 @@ TEST_CASE("PeopleOnBoard - 2x3 - Placing and removing people"){
 
 TEST_CASE("PeopleOnBoard - 3x3- Running algorthim for configurations"){
     Board b;
-    REQUIRE(b.isInited() == false);
     b.InitBoard(3,3);
 
     REQUIRE(findPeopleInRoom(b) == 4);
@@ -278,5 +310,229 @@ TEST_CASE("PeopleOnBoard - 3x3- Running algorthim for configurations"){
     b.setOnPosition(2,Broken);
 
     REQUIRE(findPeopleInRoom(b) ==2);
+ b.Clean();
 
+    b.setOnPosition(0,Broken);
+    b.setOnPosition(1,Broken);
+
+    REQUIRE(findPeopleInRoom(b) ==3);
+
+    b.Clean();
+
+    b.setOnPosition(0,Broken);
+    b.setOnPosition(1,Broken);
+    b.setOnPosition(2,Broken);
+    b.setOnPosition(3,Broken);
+    b.setOnPosition(4,Broken);
+    b.setOnPosition(6,Broken);
+    b.setOnPosition(7,Broken);
+    b.setOnPosition(8,Broken);
+
+    REQUIRE(findPeopleInRoom(b) ==1);
+
+}
+TEST_CASE("Board - Printing"){
+    
+    Board b;
+    
+
+    short count = 1;
+
+    std::stringstream output;
+    std::stringstream desiredOuput;
+    for(int j =1; j<=3;++j){
+
+        count=j;
+
+        b.InitBoard(count,count);
+
+        //generate for test case
+        for(int i =0;i<count;++i){
+            desiredOuput << std::string(count, valid);
+            if(i < count) desiredOuput << std::endl;
+        }
+
+        b.PrintBoard(output);
+
+        REQUIRE(desiredOuput.str() == output.str());
+        
+        b.Destruct(); 
+    }
+
+    b.InitBoard(3,3);
+
+    setPerson(b, 0, 0);
+    
+    b.setOnPosition(8, Broken);
+    b.PrintBoard(output);
+
+
+}
+
+//Student queue
+
+TEST_CASE("Student queue - main functions"){
+    StudentQueue sq;
+    
+    REQUIRE(sq.isEmpty());
+
+    sq.push(Student(1,2,3,4));
+
+    REQUIRE_FALSE(sq.isEmpty());
+
+    Student stud = sq.front(0);
+
+    REQUIRE(stud.getId() == 2);
+
+    sq.pop(0);
+
+    REQUIRE(sq.isEmpty());
+
+}
+TEST_CASE("Student queue - priority test"){
+    StudentQueue sq;
+    
+    REQUIRE(sq.isEmpty());
+
+    sq.push(Student(1,4,3,4));
+    sq.push(Student(1,2,3,2));
+
+    REQUIRE_FALSE(sq.isEmpty());
+
+    Student stud = sq.front(3);
+
+    REQUIRE(stud.getId() == 2);
+
+    sq.pop(3);
+
+    REQUIRE_FALSE(sq.isEmpty());
+
+    stud = sq.front(3);
+    sq.pop(3);
+    REQUIRE(stud.getId() == 4);
+
+
+
+    REQUIRE(sq.isEmpty());
+
+    sq.push(Student(1,4,3,4));
+    sq.push(Student(1,2,3,2));
+
+    REQUIRE_FALSE(sq.isEmpty());
+    stud = sq.front(0);
+
+    REQUIRE(stud.getId() == 4);
+
+    sq.pop(0);
+
+    REQUIRE_FALSE(sq.isEmpty());
+
+    stud = sq.front(3);
+
+    REQUIRE(stud.getId() == 2);
+    REQUIRE_FALSE(sq.isEmpty());
+
+}
+
+
+//Main logic
+
+
+TEST_CASE("Main logic - default parameters - Read file"){
+
+    MainLogic ml;
+    
+    REQUIRE_THROWS(ml.ReadFromFileCommands("randomTextForTestingPleaseDontCreateThis.txt"));
+
+    std::queue<uint8_t> test = ml.ReadFromFileCommands("inputDefault.txt");
+
+    REQUIRE(test.front() ==6); test.pop();
+    REQUIRE(test.front() ==7); test.pop();
+    for(int i =0;i<6;++i) test.pop();
+    REQUIRE(test.front() ==0); 
+    for(int i =0;i<3;++i) test.pop();
+    REQUIRE(test.front() ==2);
+
+}
+
+TEST_CASE("Main logic - default parameters - Board"){
+
+    MainLogic ml;
+    
+    std::stringstream output;
+    std::stringstream desiredOutput;
+    
+    ml.LoadInputFromFile("inputDefault.txt");
+
+    ml.getBoard().PrintBoard(output);
+        //generate for test case
+    desiredOutput
+    << std::string(7,valid) << std::endl
+    << (char)valid<<(char)valid<<(char)Broken<<std::string(4,valid)<< std::endl
+    <<std::string(5,valid)<<(char)Broken<<(char)valid << std::endl
+    <<std::string(7,valid) << std::endl
+    <<(char)valid<<(char)Broken<<std::string(5,valid) << std::endl
+    << std::string(7,valid)<< std::endl;
+
+    REQUIRE(output.str() == desiredOutput.str());
+
+
+    REQUIRE(ml.FindPlacesForPeople()==12);
+
+    ml.getBoard().PrintBoard(output);
+
+    desiredOutput.clear();
+
+    desiredOutput << "OFOFOFO"<< std::endl
+                  << "FFBFFFF"<< std::endl
+                  << "OFOFOBO"<< std::endl
+                  << "FFFFFFF"<< std::endl
+                  << "OBOFOFO"<< std::endl
+                  << "FFFFFFF"<< std::endl;
+    REQUIRE(output.str() == desiredOutput.str());
+
+}
+
+TEST_CASE("Main logic - default parameters - Student finish queue"){
+
+    MainLogic ml;
+    ml.LoadInputFromFile("inputDefault.txt");
+    ml.FindPlacesForPeople();
+
+    REQUIRE_FALSE(ml.canOutput());
+
+    int time =0;
+    for( ;;++time){
+        ml.CheckForFinishingStudents(time);
+        while(ml.TryLettingNextStudentIn(time));
+        ml.LectureCheck(time);
+        if(ml.isEveryoneFinished()) break;
+    }
+
+    
+    std::stringstream output;
+    std::stringstream desiredOutput;
+    desiredOutput <<"246"<< std::endl
+                    << "119"<< std::endl
+                    << "5"<< std::endl
+                    << "180"<< std::endl
+                    << "203"<< std::endl
+                    << "159"<< std::endl
+                    << "221"<< std::endl
+                    << "40"<< std::endl
+                    << "235"<< std::endl
+                    << "72"<< std::endl
+                    << "101"<< std::endl
+                    << "62"<< std::endl
+                    << "234"<< std::endl
+                    << "231"<< std::endl
+                    << "176"<< std::endl
+                    << "53"<< std::endl
+                    << "208"<< std::endl
+                    << "34"<< std::endl
+                    << "213"<< std::endl
+                    << "167"<< std::endl;
+    REQUIRE(ml.canOutput());
+    ml.outputFinished(output);
+    REQUIRE(desiredOutput.str() == output.str());
 }

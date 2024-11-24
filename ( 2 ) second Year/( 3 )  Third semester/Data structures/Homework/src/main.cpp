@@ -1,15 +1,17 @@
 
+#include <exception>
 #include <iostream>
+#include <stdexcept>
 
 // #include "Headers/Board.hpp"
 #include "Headers/MainLogic.hpp"
 
 MainLogic ml;
-int Timer= 0;
+int Timer = 0;
 
 void Initialize(std::string InputFile = "./input.txt"){
     ml.LoadInputFromFile(InputFile);
-    int peopleInRoom = ml.FindPlacesForPeople();
+    ml.FindPlacesForPeople();
 }
 
 void RunLogic(){
@@ -26,6 +28,9 @@ void RunLogic(){
 void OutputData(std::ostream& stream ){
     
     ml.getBoard().PrintBoard(stream);
+    if(!ml.canOutput()){
+        throw std::invalid_argument("The data was outputed or there is nothing to output yet");
+    }
     ml.outputFinished(stream);
     int minutes = Timer;
     int hours = 0;

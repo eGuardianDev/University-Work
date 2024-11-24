@@ -1,8 +1,10 @@
 
 #include "../Headers/Board.hpp"
+#include <stdexcept>
 
 
-Pair<int> Board::IndexToPair(int index) const{
+Pair<short> Board::IndexToPair(int index) const{
+    assert(isInited());
     int row = 0;
     int collum = 0;
     while(index >=Board_Collums){
@@ -10,7 +12,8 @@ Pair<int> Board::IndexToPair(int index) const{
         index -= Board_Collums;
     }
     collum = index;
-    return Pair<int>(row,collum);
+
+    return Pair<short>(row,collum);
 }
 
 
@@ -70,7 +73,7 @@ bool Board::canPlaceOnPos(const int &row, const int &collum) const {
 }
 
 bool Board::canPlaceOnPos(int index)const {
-    Pair<int> temp = IndexToPair(index);
+    Pair<short> temp = IndexToPair(index);
     return canPlaceOnPos(temp.first, temp.second);
 }
 
@@ -82,7 +85,7 @@ bool Board::setOnPosition(int row, int collum, const char& character) {
 }
 
 void Board::setOnPosition(int index, const char &character){
-    Pair<int> temp = IndexToPair(index);
+    Pair<short> temp = IndexToPair(index);
     setOnPosition(temp.first,temp.second,character);
 }
 
@@ -92,6 +95,6 @@ const char Board::getOnPosition(int row, int collum) const{
 }
 
 const char Board::getOnPosition(int index) const{
-    Pair<int> temp = IndexToPair(index);
+    Pair<short> temp = IndexToPair(index);
     return getOnPosition(temp.first,temp.second);
 }

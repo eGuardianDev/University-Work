@@ -30,7 +30,7 @@ public:
     }
  
 
-    Pair<int> IndexToPair(int index) const;
+    Pair<short> IndexToPair(int index) const;
 
     void InitBoard(int rows = 8, int collums = 8);
 

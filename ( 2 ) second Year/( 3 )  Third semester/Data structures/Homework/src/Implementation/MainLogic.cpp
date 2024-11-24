@@ -11,7 +11,7 @@ std::queue<uint8_t> MainLogic::ReadFromFileCommands(std::string path){
 
     if(!File.is_open())
     {
-        throw std::invalid_argument("File \"input.txt\" doesn't exist");
+        throw std::invalid_argument("File \"" + path+ "\" doesn't exist");
     }
     
     std::queue<uint8_t> commands;
@@ -60,7 +60,7 @@ void MainLogic::LoadInputFromFile(std::string path){
     while(!cmd.empty())
     {
         int timeComing = cmd.front(); cmd.pop();
-        int id = cmd.front()-1; cmd.pop();
+        int id = cmd.front(); cmd.pop();
         int timeNeeded = cmd.front(); cmd.pop();
         int course = cmd.front(); cmd.pop();
 
@@ -80,7 +80,7 @@ bool MainLogic::TryLettingNextStudentIn(int time){
     if(studentQueue.isEmpty()) return false;
 
     Student curr = studentQueue.front(time);
-    if(time < curr.TimeComing) return false;
+    if(time < curr.getTimeComing()) return false;
     
 
     curr.TimeComing = time;
@@ -149,12 +149,16 @@ void MainLogic::LectureCheck(int time){
 }
 
 void MainLogic::outputFinished(std::ostream& stream){
+    assert(canOutput());
     while(!Finished.empty())
     {
         stream << (int)Finished.top()+1 << '\n'; Finished.pop();
     }
 }
 
+bool MainLogic::canOutput(){
+    return !Finished.empty();
+}
 
 
 bool MainLogic::isEveryoneFinished() const{

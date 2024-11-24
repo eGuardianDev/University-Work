@@ -12,7 +12,6 @@ struct Student{
     uint8_t Course;
     short TimeNeeded;
 
-
     // * Use this functions when outputing to console
     int getTimeNeeded(){return (int)TimeNeeded;}
     // * getId() or just add 1 to id to be correct
@@ -21,7 +20,7 @@ struct Student{
     int getTimeComing(){return (int)TimeComing;}
    
 
-    Student(uint8_t timeComing, uint8_t id,uint8_t timeNeeded, uint8_t course) : TimeComing(timeComing), Id(id), Course(course), TimeNeeded(timeNeeded) {}
+    Student(uint8_t timeComing, uint8_t id,uint8_t timeNeeded, uint8_t course) : TimeComing(timeComing), Id(id-1), Course(course), TimeNeeded(timeNeeded) {}
 };
 
 #endif

@@ -9,6 +9,6 @@ echo "Done compiling - Running tests:"
 
 
 cd ./Tests/bin/
-./testProgram.out
+time ./testProgram.out
 
 echo "End of bash"

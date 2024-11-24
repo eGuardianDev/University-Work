@@ -32,8 +32,9 @@ public:
     void LectureCheck(int time);
 
     void outputFinished(std::ostream& stream);
+    bool canOutput();
 
-    // * Debug purposes
+    // * Debug and testing purposes
     // * Please remove The lecturer checking in main code to use use this
     // void outputToCheck(std::ostream& stream){
     //     while(!ToBeChecked.empty())
@@ -41,8 +42,7 @@ public:
     //         stream << (int)ToBeChecked.top()+1 << '\n'; ToBeChecked.pop();
     //     }
     // }
-
-    //
+    
 
     bool isEveryoneFinished() const;
     short EmptySeats() const ;

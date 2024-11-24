@@ -3,6 +3,7 @@
 #include "../Headers/addons.hpp"
 #include "../Headers/Board.hpp"
 
+#include <cstdint>
 #include <stdexcept>
 
 bool checkIfAroundIsPerson(Board board, int row, int collum){
@@ -72,7 +73,7 @@ int setPerson(Board& board,int row, int collum){
 
 
 
-// #define _Using_Altered_Algorithm
+#define _Using_Altered_Algorithm
 
 #if !defined(_Using_Altered_Algorithm)
 int findPeopleInRoom(Board board, Board& outputBoard, int outputCount, int count){
@@ -105,15 +106,15 @@ int findPeopleInRoom(Board board, Board& outputBoard, int outputCount, int count
 #endif
 
 #ifdef _Using_Altered_Algorithm
-std::vector<int> currentlyInRecursion;
+std::vector<uint8_t> currentlyInRecursion;
 int findPeopleInRoom(Board board, Board& outputBoard, int outputCount, int count){
     for(int i =0;i<board.getRows();++i){
         for(int j =0 ;j<board.getCollums();++j){
             if(board.canPlaceOnPos(i,j)){
                 ++count;
-                int current= SetPerson(board, i,j);
+                short current= setPerson(board, i,j);
                 
-                    int temp = (count > 1 ? currentlyInRecursion[count-2] : 0);
+                    short temp = (count > 1 ? currentlyInRecursion[count-2] : 0);
                     while(currentlyInRecursion.size() < count){
                         currentlyInRecursion.push_back(temp+9);
                     }
@@ -134,6 +135,7 @@ int findPeopleInRoom(Board board, Board& outputBoard, int outputCount, int count
             }
         }
     }
+    if(count ==0) currentlyInRecursion.clear();
     return outputCount;
 }
 
