@@ -1,0 +1,184 @@
+<html>
+	<head>
+		<style>
+			body { margin: 0; }
+			canvas { width: 100%; height: 100% }
+		</style>
+		<script type="importmap">
+			{ "imports": {
+				"three": "https://cdn.jsdelivr.net/npm/three@0.164.0/build/three.module.js",
+				"csg/": "https://cdn.jsdelivr.net/gh/looeee/threejs-csg@main/src/CSG/"
+
+			} }
+		</script>
+	</head>
+	<body>
+		<script type="module">
+		
+			import {CSG} from "csg/CSG.js"; 
+			import * as THREE from "three"; 
+
+
+            const tableMat = new THREE.MeshPhongMaterial( {color: '#B4864D'} )
+			
+			var renderer = new THREE.WebGLRenderer({antialias:true});
+			renderer.setSize( window.innerWidth, window.innerHeight );
+			renderer.setAnimationLoop( drawFrame );
+			document.body.appendChild( renderer.domElement );
+
+			var scene = new THREE.Scene();
+			scene.background = new THREE.Color( 'grey' );
+		
+			var aspect = window.innerWidth/window.innerHeight;
+			var camera = new THREE.PerspectiveCamera( 30, aspect );
+			camera.position.set( 0, 3, 5 );
+			camera.lookAt( new THREE.Vector3() );
+
+
+
+            const tableHeight = 0.71
+
+			var shape = new THREE.Shape();
+			shape.moveTo(  0.1,tableHeight-0.01 );
+			shape.quadraticCurveTo(0.2,tableHeight/2+tableHeight/4,0,tableHeight/2);
+			shape.quadraticCurveTo(-0.15,tableHeight/4,0,0);
+            
+			shape.quadraticCurveTo(0.08/2,-0.05/2,0.15/2,0);
+			shape.quadraticCurveTo(0.2/2,0.05/2,0.15/2,0.1/2);
+			shape.quadraticCurveTo(0.08/2,0.15/2,0.05/2,0.05/2);
+			
+            shape.quadraticCurveTo(-0.15,0.1    ,0.1,tableHeight/2);
+			shape.quadraticCurveTo(0.25,tableHeight-0.1 ,0.15,tableHeight-0.01);
+
+			var extrudeSettings = {
+					depth: 0.02,
+					bevelEnabled: true,
+					bevelSegments: 10,
+					steps: 5,
+					bevelSize: 0.03,
+					bevelThickness: 0.02,
+					curveSegments: 100,
+				};
+			var geometry = new THREE.ExtrudeGeometry( shape, extrudeSettings );
+			
+			var leg = new THREE.Mesh( geometry, tableMat);
+            var leg1 = leg.clone();
+            const offset = 0.1;
+			leg1.position.set(1.1-offset,-0.01,-0.4+offset);
+            leg1.rotation.set(0,Math.PI/180*20,0);
+            var leg2 = leg.clone();
+			leg2.position.set(-1.1+offset,-0.01,-0.4+offset);
+            leg2.rotation.set(0,Math.PI/180*(180-20),0);
+			var leg3 = leg.clone();
+			leg3.position.set(1.1-offset,-0.01,0.4-offset);
+            leg3.rotation.set(0,Math.PI/180*-20,0);
+            var leg4 = leg.clone();
+			leg4.position.set(-1.1+offset,-0.01,0.4-offset);
+            leg4.rotation.set(0,Math.PI/180*(180+20),0);
+
+            //2.743, 1.016 
+			var shape = new THREE.Shape();
+			shape.moveTo(  2.743/2,0);
+			shape.quadraticCurveTo(1.7, 1.016*3/4,  0,1.016/2);
+
+			shape.quadraticCurveTo(-1.7,1.016*3/4,  -2.743/2,0);
+			shape.quadraticCurveTo(-1.7,-1.016*3/4,  0,-1.016/2);
+			shape.quadraticCurveTo(1.7,-1.016*3/4,2.743/2,0);
+		
+			var extrudeSettings = {
+					depth: 0.02,
+					bevelEnabled: true,
+					bevelSegments: 10,
+					steps: 5,
+					bevelSize: 0.03,
+					bevelThickness: 0.02,
+					curveSegments: 100,
+				};
+			var geometry = new THREE.ExtrudeGeometry( shape, extrudeSettings );
+			
+			var top = new THREE.Mesh( geometry,tableMat);
+            top.rotation.set(Math.PI/180*90,0,0);
+            top.position.set(0,tableHeight,0);
+            
+
+            const table = new THREE.Group(); 
+            table.add( top ); 
+            table.add( leg1 ); 
+            table.add( leg2 ); 
+            table.add( leg3 ); 
+            table.add( leg4 );
+				
+
+			var vase = new CSG();
+			var geometry = new THREE.CylinderGeometry( 0.06, 0.08, 0.3, 32 ); 
+			var cylinder1 = new THREE.Mesh(geometry); 
+			// cylinder.position.set(0,tableHeight+0.06,0);
+			// table.add(cylinder);
+			
+			var geometry = new THREE.CylinderGeometry( 0.07, 0.06, 0.1, 32 ); 
+			var cylinder2 = new THREE.Mesh(geometry);
+			cylinder2.position.set(0,0.2,0);
+			//, new THREE.MeshPhongMaterial( {color: 'aqua',opacity:0.5, transparent:true} )
+			// cylinder.position.set(0,tableHeight+0.02+0.18,0);
+			vase.union([cylinder1,cylinder2]);
+			
+			
+			var geometry = new THREE.BoxGeometry( 0.50, 0.001, 0.30 ); 
+			var box = new THREE.Mesh(geometry);
+			box.material = new THREE.MeshPhongMaterial( {color: '#ccf3ff'} )
+			box.position.set(-0.5,tableHeight+0.02,0.3);
+			table.add(box);
+			box = box.clone();
+			box.position.set(0.5,tableHeight+0.02,0.3);
+			table.add(box);
+			box = box.clone();
+			box.position.set(0.5,tableHeight+0.02,-0.3);
+			table.add(box);
+			box = box.clone();
+			box.position.set(-0.5,tableHeight+0.02,-0.3);
+			table.add(box);
+
+
+			var geometry = new THREE.BoxGeometry( 0.30, 0.001, 0.50 ); 
+			var box = new THREE.Mesh(geometry);
+			box.material = new THREE.MeshPhongMaterial( {color: '#ccf3ff'} )
+			box.position.set(-1.1,tableHeight+0.02,0);
+			table.add(box);
+			box = box.clone();
+			box.position.set(1.1,tableHeight+0.02,0);
+			table.add(box);
+
+			var vaseMesh = vase.toMesh();
+			vaseMesh.material = new THREE.MeshPhongMaterial( {color: 'aqua',opacity:0.5, transparent:true} )
+			vaseMesh.position.set(0,tableHeight+0.06,0);
+			table.add(vaseMesh);
+
+
+            scene.add(table);
+
+            // var tem =table.clone();
+            // scene.add(tem);
+            // var tableMesh = csgTable.toMesh();
+			// tableMesh.material = new THREE.MeshPhongMaterial( {specular: 'white'} );//new THREE.MeshLambertMaterial( {color:'crimson'} );
+			// scene.add(tableMesh);
+
+			// светлини
+			var light = new THREE.PointLight( 'white', 35000 );
+			light.position.set( 100, 10, 0 );
+			scene.add( light );
+			
+			light = new THREE.PointLight( 'white', 35000 );
+			light.position.set( -100, 10, 10 );
+			scene.add( light );
+			
+			
+			function drawFrame( t )
+			{
+				scene.rotation.y = t/1000;
+				
+				renderer.render( scene, camera );
+			}
+			
+		</script>
+	</body>
+</html>

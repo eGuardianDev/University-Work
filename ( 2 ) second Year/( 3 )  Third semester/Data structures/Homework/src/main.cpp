@@ -31,13 +31,14 @@ void OutputData(std::ostream& stream ){
     if(!ml.canOutput()){
         throw std::invalid_argument("The data was outputed or there is nothing to output yet");
     }
+    std::cout << std::endl;
     ml.outputFinished(stream);
     int minutes = Timer;
     int hours = 0;
     while(minutes >= 60) {
         ++hours; minutes-=60;
     }
-    std::cout << "Time: " << 8+hours << ":";
+    std::cout << "Finish time: " << 8+hours << ":";
     if(minutes< 10) std::cout << "0";
     std::cout <<minutes << '\n';
 }
