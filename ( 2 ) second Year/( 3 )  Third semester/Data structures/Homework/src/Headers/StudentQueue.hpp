@@ -9,7 +9,7 @@
 class StudentQueue{
 
 public:
-    Student front(int time);
+    Student& front(int time);
 
     void pop(int time);
     

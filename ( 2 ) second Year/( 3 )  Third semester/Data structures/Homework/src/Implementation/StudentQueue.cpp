@@ -3,7 +3,7 @@
 #include "../Headers/StudentQueue.hpp"
 
 
-Student StudentQueue::front(int time){
+Student& StudentQueue::front(int time){
     if(!priority.empty() && (priority.front().getTimeComing() <= time)){
         return priority.front();
     }
