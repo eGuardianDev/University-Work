@@ -33,6 +33,8 @@ public:
                 }
                 return count;
             }
+            std::cout << name << " "<< Size << "\n";
+            
             return Size;
         }
 
@@ -96,10 +98,41 @@ public:
         return true;
     }
     
+
+    bool remove(std::vector<std::string> data){
+        Node* curr;
+        std::string last ;
+        if(data.size() >1){
+            last = data[data.size()-1];
+            data.pop_back();
+            curr = findFolder(data);
+        }else return false;
+        if(!curr) return false;
+        for(int i =0; i< curr->childrens.size(); ++i ){
+            Node* child = curr->childrens[i];
+            if(child->name == last){
+                std::string response;
+                std::cout << "are you sure you want to delete " << (child->isFile ? "file ": "folder " )<< child->name << "? ";
+                std::getline(std::cin, response);
+                if(response == "yes") 
+                {
+                    std::cout << "deleted " << child->name <<"\n" ;
+                    child->clean();
+                    curr->childrens.erase(std::next(curr->childrens.begin(),i));
+                    delete child;
+                }
+                else std::cout << "Not deleted\n";
+             
+            }
+        }
+        return false;
+    }
+
     void printSizes(std::vector<std::string> data, int _tabs = 0){
         Node* curr = root;
         if(data.size() != 0) curr = findFolder(data);
-        std::cout << curr->size() << '\n';
+        int a =curr->size();
+        std::cout << curr->name << "/ " <<a << '\n';
         
     }
 };
@@ -126,7 +159,8 @@ enum Commands{
     cmd_exit = 0,
     cmd_save = 1,
     cmd_print = 2,
-    cmd_size = 3
+    cmd_size = 3,
+    cmd_remove = 4
 };
 
 Commands CommandTranslate(std::string data){
@@ -134,6 +168,7 @@ Commands CommandTranslate(std::string data){
     if(data == "save") return cmd_save;
     if(data == "print") return cmd_print;
     if(data == "size") return cmd_size;
+    if(data == "delete") return cmd_remove;
     return cmd_invalid;
 }
 
@@ -163,6 +198,10 @@ int main(){
                 std::cout << "exitting program\n";
                 break;
 
+            case cmd_remove:
+                if(tree.remove(args)) std::cout << "deleted succesful\n";
+                else std::cout << "Something failed\n";
+                break;
             case cmd_size:
                 
                 tree.printSizes(args);
