@@ -1,22 +1,61 @@
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <vector>
 
 
-class N_Tree{
+class Serializable{
+    public:
+    virtual void Serialize( std::ostream&)  =0;
+    virtual void Deserialize(std::istream&)=0;
+    virtual ~Serializable() {};
+};
+
+
+class N_Tree : public Serializable{
 public:
 
     
-    struct Node{
-        
+    class Node : public Serializable{
+    public:
+
+        void Serialize( std::ostream& stream)  override{
+            stream << name;
+            for(Node* t : childrens){
+                if(childrens.size() > 0){
+                    stream << " ";
+                }
+                t->Serialize(stream);
+            }
+            stream << ')';
+        }
+        void Deserialize(std::istream& stream) override{
+            char received;
+
+            while(stream.get(received)){
+                if(received == ' '){
+                    Node* temp = new Node();
+                    temp->Deserialize(stream);
+                    this->childrens.push_back(temp);
+                    continue;
+                }
+                if(received == ')'){
+                    return;
+                }
+                name += received;         
+            }
+            std::cout << name;
+            
+        }
+
         std::string name;
         bool isFile;
         int Size;
 
         std::vector<Node*> childrens;
 
-        Node(std::string _name,bool _isFile = false,int _size =0) : name(_name), isFile(_isFile), Size(_size) {}
-        ~Node(){}
+        Node(std::string _name = "",bool _isFile = false,int _size =0) : name(_name), isFile(_isFile), Size(_size) {}
+        ~Node() override {}
 
         void clean(){
             for(int i =0;i<childrens.size();++i){
@@ -44,11 +83,45 @@ public:
     };
 private:
     Node* root;
-
 public:
 
+    void Serialize( std::ostream& stream)  override{
+        std::cout << "starting serializaiton\n";
+        Node* curr = root;
+        if(!curr) {
+            std::cout << "Cannot serialize empty tree\n";
+            return;
+        }
+        if (!stream) {
+            std::cout << "Unable to open file\n";
+            return;
+        }       
+        curr->Serialize(stream);
+        std::cout << "done";
+    }
+    void Deserialize(std::istream& stream) override{
+        std::cout << "starting Deserialization\n";
+        if (!stream) {
+            std::cout << "Unable to open file";
+            return;
+        }
+        
+        if(root != nullptr) {
+            root->clean();
+            delete root;
+            // root = nullptr;
+        }
+
+        root = new Node();
+        root->Deserialize(stream);
+
+        // Check if the file was opened successfully
+      
+        std::cout << "Done";
+        }
+
     N_Tree(std::string default_name) : root(new Node(default_name, false)){}
-    ~N_Tree(){root->clean(); delete root;}
+    ~N_Tree() override {root->clean(); delete root;}
 
     void print(Node* curr = nullptr, int _tabs = 0){
         if(curr == nullptr) curr = root;
@@ -160,7 +233,9 @@ enum Commands{
     cmd_save = 1,
     cmd_print = 2,
     cmd_size = 3,
-    cmd_remove = 4
+    cmd_remove = 4,
+    cmd_ser = 5,
+    cmd_deser = 6
 };
 
 Commands CommandTranslate(std::string data){
@@ -169,12 +244,15 @@ Commands CommandTranslate(std::string data){
     if(data == "print") return cmd_print;
     if(data == "size") return cmd_size;
     if(data == "delete") return cmd_remove;
+    if(data == "ser") return cmd_ser;
+    if(data == "deser") return cmd_deser;
     return cmd_invalid;
 }
 
 
 int main(){
-
+      std::ofstream myfile;
+      std::ifstream myfile2;
     N_Tree tree = N_Tree("main");
     std::string cmd;
     for(;;){
@@ -191,9 +269,19 @@ int main(){
         if(output.size() >=3 && output[3] == "-c") generateFlag = true; 
         if(output.size() >=2)  args = Split(output[1], '/');
 
-
+        
         switch(CommandTranslate(cmd)){
-            
+            case cmd_ser:
+                myfile.open("./test.txt");
+                tree.Serialize(myfile);
+                myfile.close();
+                break;
+                case cmd_deser:
+                myfile2.open("./test.txt");
+                tree.Deserialize(myfile2);
+                myfile2.close();
+                break;
+
             case cmd_exit:
                 std::cout << "exitting program\n";
                 break;
