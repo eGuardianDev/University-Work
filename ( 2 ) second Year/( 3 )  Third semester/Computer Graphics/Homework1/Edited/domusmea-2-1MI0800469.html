@@ -17,7 +17,8 @@
 			} }
 		</script>
 	</head>
-	<style>#info {
+	<style>
+	#info {
 		position: absolute;
 		top: 10px;
 		left: 15px;
@@ -28,7 +29,8 @@
 		display:block;
 		color:white;
 		line-height: 0.2;
-	}</style>
+	}
+	</style>
 	
 	<body>
 		<div id="info">
@@ -74,7 +76,7 @@
 			}
 			const rot = Math.PI/180;
 
-			const RoomHeight = 2.75; //average hight of room 2.4
+			const RoomHeight = 3;	
 			
 			const DoorHeight = 2.1; //average hight of doors 2.1
 			
@@ -199,51 +201,120 @@
 
 			var geometry = new THREE.BoxGeometry( 0.9, DoorHeight ,0.9 );
 			var cube = new THREE.Mesh( geometry );
-			cube.material = new THREE.MeshLambertMaterial( {color:'crimson'} );
 			cube.position.set(1, 0, -1.05);
-			scene.add(cube);
+			csgWalls.subtract([cube]);
+
 			var geometry = new THREE.BoxGeometry( 0.9, DoorHeight ,0.9 );
 			var cube = new THREE.Mesh( geometry );
-			cube.material = new THREE.MeshLambertMaterial( {color:'crimson'} );
 			cube.position.set(-1, 0, 1.05);
-			scene.add(cube);
+			csgWalls.subtract([cube]);
+
 			var geometry = new THREE.BoxGeometry( 0.9, DoorHeight ,0.9 );
 			var cube = new THREE.Mesh( geometry );
-			cube.material = new THREE.MeshLambertMaterial( {color:'crimson'} );
 			cube.position.set(-1, 0, -1.05);
-			scene.add(cube);
+			csgWalls.subtract([cube]);
+
 
 			var geometry = new THREE.BoxGeometry( 0.9, DoorHeight ,0.9 );
 			var cube = new THREE.Mesh( geometry );
-			cube.material = new THREE.MeshLambertMaterial( {color:'crimson'} );
 			cube.position.set(1, 0, -6.45);
-			scene.add(cube);
+			csgWalls.subtract([cube]);
+
 
 			var geometry = new THREE.BoxGeometry( 0.9, DoorHeight ,0.9 );
 			var cube = new THREE.Mesh( geometry );
-			cube.material = new THREE.MeshLambertMaterial( {color:'crimson'} );
 			cube.position.set(0.15, 0, -8);
-			scene.add(cube);
+			csgWalls.subtract([cube]);
+			
 
 			const GarageDoorHeight = 2.7
 			var geometry = new THREE.BoxGeometry( 2.4, GarageDoorHeight ,0.9 );
 			var cube = new THREE.Mesh( geometry );
-			cube.material = new THREE.MeshLambertMaterial( {color:'crimson'} );
 			cube.position.set(3.4, 0, -8);
-			scene.add(cube);
-			// csgWalls.union([cube0,cube]);
 			
+			csgWalls.subtract([cube]);
+
+	
+
+
+
+			//windows holes
+
+			var geometry = new THREE.BoxGeometry( 0.5, RoomHeight-0.5 ,4.5 );
+			var cube = new THREE.Mesh( geometry );
+			cube.material = new THREE.MeshPhongMaterial( {color: 'red'} );
+			
+			cube.position.set(7, 0, 1);
+			csgWalls.subtract([cube]);
+	
+
+			var geometry = new THREE.BoxGeometry( 2, RoomHeight/3-0.5 ,0.5 );
+			var cube = new THREE.Mesh( geometry );
+			cube.material = new THREE.MeshPhongMaterial( {color: 'red'} );
+			
+			cube.position.set(3,RoomHeight/4+0.25,6);
+			csgWalls.subtract([cube]);
+			
+			
+
+			var geometry = new THREE.BoxGeometry( 0.5, RoomHeight-0.5 ,3 );
+			var cube = new THREE.Mesh( geometry );
+			cube.material = new THREE.MeshPhongMaterial( {color: 'red'} );
+			
+			cube.position.set(-6, 0, 1.95);
+			csgWalls.subtract([cube]);
+	
+
+			var geometry = new THREE.BoxGeometry( 0.5, RoomHeight-0.5 ,3 );
+			var cube = new THREE.Mesh( geometry );
+			cube.material = new THREE.MeshPhongMaterial( {color: 'red'} );
+			
+			cube.position.set(-6, 0, -1.925);
+			csgWalls.subtract([cube]);
 
 			var WallMesh = csgWalls.toMesh();
 			WallMesh.material = WallMaterial;//new THREE.MeshLambertMaterial( {color:'crimson'} );
+			addShadows(WallMesh);
 			scene.add(WallMesh);
 
 
 
+			const windowColor = new THREE.MeshPhongMaterial( {color: 'aqua',opacity:0.5, transparent:true} );
+			const windowsWidth = 0.1;
+
+			var geometry = new THREE.BoxGeometry( windowsWidth, RoomHeight-0.5 ,4.5 );
+			var cube = new THREE.Mesh( geometry );
+			cube.material = windowColor;
+			cube.position.set(7-0.1, 0, 1);
+			scene.add(cube);
+
+			var geometry = new THREE.BoxGeometry( 2, RoomHeight/3-0.5 ,windowsWidth );
+			var cube = new THREE.Mesh( geometry );
+			cube.material = windowColor;
+			
+			cube.position.set(3,RoomHeight/4+0.25,6-0.1);
+			scene.add(cube);
+			
+			
+
+			var geometry = new THREE.BoxGeometry( windowsWidth, RoomHeight-0.5 ,3 );
+			var cube = new THREE.Mesh( geometry );
+			cube.material = windowColor;
+
+			
+			cube.position.set(-6+0.1, 0, 1.95);
+			scene.add(cube);
 
 
+			var geometry = new THREE.BoxGeometry( windowsWidth, RoomHeight-0.5 ,3 );
+			var cube = new THREE.Mesh( geometry );
+			cube.material = windowColor;
 
+			
+			cube.position.set(-6+0.1, 0, -1.925);
+			scene.add(cube);
 
+			// csgWalls.subtract([cube]);
 
 
 
@@ -323,6 +394,12 @@
             table.add( leg2 ); 
             table.add( leg3 ); 
             table.add( leg4 );
+			
+			addShadows( top ); 
+            addShadows( leg1 ); 
+            addShadows( leg2 ); 
+            addShadows( leg3 ); 
+            addShadows( leg4 );
 				
 
 			var vase = new CSG();
@@ -360,8 +437,8 @@
 			table.add(box);
 
 			var vaseMesh = vase.toMesh();
-			vaseMesh.material = new THREE.MeshPhongMaterial( {color: 'aqua',opacity:0.5, transparent:true} )
-			vaseMesh.position.set(0,tableHeight+0.06,0);
+			vaseMesh.material = new THREE.MeshPhongMaterial( {color: '#ccf3ff',opacity:0.9, transparent:true} )
+			vaseMesh.position.set(0,tableHeight+0.1,0);
 			table.add(vaseMesh);
 
 				
@@ -369,7 +446,6 @@
 
 			tableToPlace.position.set(5,0,1);
 			tableToPlace.rotation.set(0,Math.PI/2,0);
-
 
             scene.add(tableToPlace);
 
@@ -420,10 +496,14 @@
 			var geometry = new THREE.ExtrudeGeometry( shape, extrudeSettings );
 				
 			var leg = new THREE.Mesh( geometry, ChairMaterial);
+			addShadows( leg ); 
+            addShadows( box ); 
+            addShadows( cylinder ); 
 			chairLeg.add(leg);
 			chairLeg.add(box);
 			chairLeg.add(cylinder);
 			
+				
 			var Leg1 = chairLeg.clone();
 			Leg1.position.set(0,0.08,-0.02);
 			SpinningChair.add(Leg1);
@@ -449,24 +529,29 @@
 			SpinningChair.add(Leg5);
 
 
-			const chairUp = 0.18;
+			const chairUp = 0.05 ;
 
 			var geometry = new THREE.CylinderGeometry( 0.05, 0.05, 0.11, 32 ); 
 			var cylinder = new THREE.Mesh( geometry, ChairMaterial ); 
 			cylinder.position.set(0,0.1,0);
+			addShadows(cylinder);
 			SpinningChair.add(cylinder);
 			var geometry = new THREE.CylinderGeometry( 0.04, 0.04, 0.18, 32 ); 
 			var cylinder = new THREE.Mesh( geometry, ChairMaterial ); 
 			cylinder.position.set(0,0.2,0);
+			addShadows(cylinder);
 			SpinningChair.add(cylinder);
+			
 			var geometry = new THREE.CylinderGeometry( 0.04, 0.04, 0.18, 32 ); 
 			var cylinder = new THREE.Mesh( geometry, ChairMaterial ); 
 			cylinder.position.set(0,0.2,0);
+			addShadows(cylinder);
 			SpinningChair.add(cylinder);
+
 			var geometry = new THREE.CylinderGeometry( 0.02, 0.02, 0.25, 32 ); 
-			var cylinder = new THREE.Mesh( geometry, new THREE.MeshPhongMaterial( {color: 'silver'} )
-			); 
+			var cylinder = new THREE.Mesh( geometry, new THREE.MeshPhongMaterial( {color: 'silver'} )); 
 			cylinder.position.set(0,0.35,0);
+			addShadows(cylinder);
 			SpinningChair.add(cylinder);
 
 
@@ -502,7 +587,8 @@
 				};
 			var geometry = new THREE.ExtrudeGeometry( shape, extrudeSettings );
 			var cusion = new THREE.Mesh( geometry, ChairCusionMaterial);
-			cusion.position.set(-0.15,0.5,-0.25);
+			cusion.position.set(-0.15,0.4,-0.25);
+			addShadows(cusion);
 			SpinningChair.add(cusion);
 
 
@@ -519,7 +605,7 @@
 			shape.holes.push( hole );
 			
 			var extrudeSettings = {
-					depth: 0.05,
+					depth: 0.04,
 					bevelEnabled: true,
 					bevelSegments: 10,
 					steps: 5,
@@ -529,22 +615,89 @@
 				};
 				var geometry = new THREE.ExtrudeGeometry( shape, extrudeSettings );
 			var armRest = new THREE.Mesh( geometry, ChairMaterial);
-			armRest.position.set(0,0.030,-0.33);
+			addShadows(armRest);
+			armRest.position.set(0,-0.07,-0.33);
 			// SpinningChair.add(cusion);
 			SpinningChair.add(armRest);
 			var geometry = new THREE.ExtrudeGeometry( shape, extrudeSettings );
 			var armRest = new THREE.Mesh( geometry, ChairMaterial);
-			armRest.position.set(0,0.030,0.28);
+			addShadows(armRest);
+			armRest.position.set(0,-0.07,0.28);
 			// SpinningChair.add(cusion);
 			SpinningChair.add(armRest);
 			
 
 			var Chair = SpinningChair.clone();
-
-			Chair.position.set(5,0,-4);
+			
+			Chair.position.set(2.5,0,-3);
 			Chair.rotation.set(0,Math.PI/180*164,0);
+			addShadows(Chair);
+			Chair.scale.set(.9,.9,.9);
 			scene.add(Chair);
 
+
+
+
+
+			var material = new THREE.MeshPhongMaterial({color: '#c1702c'});
+			var geometry = new THREE.BoxGeometry(2.5,1,0.1 ) 
+			var box = new THREE.Mesh( geometry, material ); 
+			box.position.set(-3.5,.6,3.8);
+			scene.add( box );
+
+			var material = new THREE.MeshPhongMaterial({color: '#c1702c'});
+			var geometry = new THREE.BoxGeometry(2,.6,2 ) 
+			var box = new THREE.Mesh( geometry, material ); 
+			box.position.set(-3.5,.3,2.8);
+			scene.add( box );
+
+
+
+			var material = new THREE.MeshPhongMaterial({color: '#c1702c'});
+			var geometry = new THREE.BoxGeometry(2.5,1,0.1 ) 
+			var box = new THREE.Mesh( geometry, material ); 
+			box.position.set(-3.5,.5,3.8-7.6);
+			scene.add( box );
+
+			var material = new THREE.MeshPhongMaterial({color: '#c1702c'});
+			var geometry = new THREE.BoxGeometry(2,.5,2 ) 
+			var box = new THREE.Mesh( geometry, material ); 
+			box.position.set(-3.5,.25,2.8-5.6);
+			scene.add( box );
+
+
+
+			var material = new THREE.MeshPhongMaterial({color: '#c1702c'});
+			var geometry = new THREE.BoxGeometry(1,0.05,1.8 ) 
+			var box = new THREE.Mesh( geometry, material ); 
+			box.position.set(6.4,0.5,-3);
+			scene.add( box );
+
+
+			var material = new THREE.MeshPhongMaterial({color: '#c1702c'});
+			var geometry = new THREE.BoxGeometry(1,0.05,1.8 ) 
+			var box = new THREE.Mesh( geometry, material ); 
+			box.position.set(6.4,1,-3);
+			scene.add( box );
+
+
+			var material = new THREE.MeshPhongMaterial({color: '#c1702c'});
+			var geometry = new THREE.BoxGeometry(.7,0.05,1.8 ) 
+			var box = new THREE.Mesh( geometry, material ); 
+			box.position.set(1.6,0.5,-3.5);
+			scene.add( box );
+
+			var material = new THREE.MeshPhongMaterial({color: '#c1702c'});
+			var geometry = new THREE.BoxGeometry(0.7,0.5,.02 ) 
+			var box = new THREE.Mesh( geometry, material ); 
+			box.position.set(1.6,0.25,-2.8);
+			scene.add( box );
+
+			var material = new THREE.MeshPhongMaterial({color: '#c1702c'});
+			var geometry = new THREE.BoxGeometry(.7,0.5,.02 ) 
+			var box = new THREE.Mesh( geometry, material ); 
+			box.position.set(1.6,0.25,-4.25);
+			scene.add( box );
 
 
 

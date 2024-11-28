@@ -176,12 +176,12 @@
 				};
 				var geometry = new THREE.ExtrudeGeometry( shape, extrudeSettings );
 			var armRest = new THREE.Mesh( geometry, ChairMaterial);
-			armRest.position.set(0,0.030,-0.33);
+			armRest.position.set(0,0,-0.33);
 			// ChairWhole.add(cusion);
 			ChairWhole.add(armRest);
 			var geometry = new THREE.ExtrudeGeometry( shape, extrudeSettings );
 			var armRest = new THREE.Mesh( geometry, ChairMaterial);
-			armRest.position.set(0,0.030,0.28);
+			armRest.position.set(0,0,0.28);
 			// ChairWhole.add(cusion);
 			ChairWhole.add(armRest);
 			scene.add(ChairWhole);

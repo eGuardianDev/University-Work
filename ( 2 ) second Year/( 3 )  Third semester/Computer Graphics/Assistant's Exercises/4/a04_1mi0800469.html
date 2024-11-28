@@ -64,7 +64,6 @@
 				
 			//bolt - iso
 				
-
 				var topPart = new THREE.CylinderGeometry( .1, 0.5, .5 );
 				var longPart =  new THREE.CylinderGeometry( .2, .2, 1.5, 32 );
 				var longPartMesh = new THREE.Mesh( longPart );
@@ -78,6 +77,14 @@
 				// scene.add(longPartMesh);
 				// scene.add(topPartMesh);
 				
+
+
+
+
+
+
+
+				var boltGroup = new THREE.Group();
 				var newBolt = new CSG();
 
 				// newBolt.union( [topPartMesh] );
@@ -89,14 +96,61 @@
 				newBolt.subtract([cutMesh]);
 
 
+
+
+
+
+
+				class myCarving extends THREE.Curve
+				{
+					getPoint( t )
+					{
+						var r = 0.19;
+						var z = t*0.1;
+						var x = r*Math.cos(2*Math.PI*t);
+						var y = r*Math.sin(2*Math.PI*t);
+						
+						return new THREE.Vector3( x, y, z );
+					}
+				}
+				const sprintSize = 0.03;
+				var carvingGroup = new THREE.Group();
+				for(let i =0;i<1;i+=0.1){
+					var geometry = new THREE.TubeGeometry( new myCarving(), 360, sprintSize, 16 );
+					var material = new THREE.MeshPhongMaterial();
+					var surface = new THREE.Mesh( geometry, material );
+					surface.position.z = i;
+					carvingGroup.add(surface);
+
+				}
+
+	
+				carvingGroup.position.set(0,0.4,0);
+				carvingGroup.rotation.set(Math.PI/2,0,0);
+				
+				boltGroup.add(carvingGroup);
+				
+				
 				var resultMesh = newBolt.toMesh();
 				resultMesh.material = new THREE.MeshPhongMaterial({shininess: 140, specular: 'white'}) ;
-				// resultMesh.position.z = 10;
+				
+				boltGroup.add(resultMesh);
+				
+				// newBolt.union([carvingMesh]);
+				
+
+
+
+
+
+			// resultMesh.position.z = 10;
 				// scene.add(resultMesh);
 
+				
+				
 
 				const rPI = Math.PI/180;
-				var CloneBolt = resultMesh.clone();
+				var CloneBolt = boltGroup.clone();
 				CloneBolt.position.set(0.45,2,4.7);
 				CloneBolt.rotation.set(rPI*90,rPI*30,0);
 				var scale = 0.85;
@@ -104,7 +158,7 @@
 				scene.add(CloneBolt);
 			
 
-				var CloneBolt = resultMesh.clone();
+				var CloneBolt = boltGroup.clone();
 				CloneBolt.position.set(-5.5,3.5,3.8);
 				CloneBolt.rotation.set(rPI*90,rPI*-10,0);
 				var scale = 0.8;
@@ -112,7 +166,7 @@
 				scene.add(CloneBolt);
 
 
-				var CloneBolt = resultMesh.clone();
+				var CloneBolt = boltGroup.clone();
 				CloneBolt.position.set(-5.5,-1.5,3.8);
 				CloneBolt.rotation.set(rPI*90,rPI*-85,0);
 				var scale = 0.5;
@@ -121,7 +175,7 @@
 			
 
 
-				var CloneBolt = resultMesh.clone();
+				var CloneBolt = boltGroup.clone();
 				CloneBolt.position.set(1.65,1,4.8);
 				CloneBolt.rotation.set(rPI*90,rPI*-35,0);
 				var scale = 0.55;
@@ -130,7 +184,7 @@
 
 
 
-				var CloneBolt = resultMesh.clone();
+				var CloneBolt = boltGroup.clone();
 				CloneBolt.position.set(1.9,-0.5,4.9);
 				CloneBolt.rotation.set(rPI*90,rPI*-35,0);
 				var scale = 0.45;
@@ -138,10 +192,25 @@
 				scene.add(CloneBolt);
 
 
-				var CloneBolt = resultMesh.clone();
+				var CloneBolt = boltGroup.clone();
 				CloneBolt.position.set(2.0,3.5,3.8);
 				CloneBolt.rotation.set(rPI*15,0,rPI*-90);
 				var scale = 1;
+				CloneBolt.scale.set(scale,scale,scale);
+				scene.add(CloneBolt);
+
+				
+				var CloneBolt = boltGroup.clone();
+				CloneBolt.position.set(-5,-2,6);
+				CloneBolt.rotation.set(rPI*0,rPI*210,rPI*-90);
+				var scale = 1;
+				CloneBolt.scale.set(scale,scale,scale);
+				scene.add(CloneBolt);
+
+				var CloneBolt = boltGroup.clone();
+				CloneBolt.position.set(-4,-2,6);
+				CloneBolt.rotation.set(rPI*25,rPI*240,rPI*-70);
+				var scale = .75;
 				CloneBolt.scale.set(scale,scale,scale);
 				scene.add(CloneBolt);
 
