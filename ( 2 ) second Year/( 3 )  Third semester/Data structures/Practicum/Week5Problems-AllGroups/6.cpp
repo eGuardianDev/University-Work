@@ -63,7 +63,6 @@ ListNode* mergeKLists(vector<ListNode*>& lists) {
         ListNode *smallest = nullptr;
         int smallestIndex = -1;
         
-        //get smallest
         for(int i = 0; i < lists.size();++i){
             if(lists[i] == nullptr) continue;
             if(smallest == nullptr || smallest->val > lists[i]->val){
