@@ -1,14 +1,20 @@
-
 import Data.Char
+ 
+reduceStrOnce :: String -> String -> String
+reduceStrOnce output [] = output
+reduceStrOnce output (x:[]) = output ++ [x]
+reduceStrOnce output (x:y:ys)
+  | chr (ord x +32 ) == y || chr (ord x-32) == y = reduceStrOnce output ys
+  | otherwise = reduceStrOnce (output ++ [x]) (y:ys)
 
 reduceStr :: String -> String
-reduceStr a = helper "" a
+reduceStr a = runner a ""
  where 
-    helper :: String -> String -> String
-    helper toReturn [] = toReturn
-    helper toReturn (x:y:xs)
-      | x== toLower y || y == toLower x = helper toReturn (y:xs)
-      | otherwise = helper (x:toReturn) (y:xs) 
+    runner :: String -> String -> String
+    runner a last
+     | last == reduceStrOnce "" a = last
+     | otherwise = runner (reduceStrOnce "" a) (reduceStrOnce "" a)
 
 main = do 
     print $ reduceStr "dabAcCaCBAcCcaDD" == "dabCBAcaDD"
+    print $ reduceStr "AeeaAbsSB" == "Aee" -- my test

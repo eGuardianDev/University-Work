@@ -1,7 +1,5 @@
-
-
 isPrime :: Int -> Bool
-isPrime n = [1,n] == [x | x<-[1..n], (mod n x == 0)] 
+isPrime n = [1,n] == [x | x<-[1..n], mod n x == 0] 
 
 primesInRange :: Int -> Int -> [Int]
 primesInRange a b = [x | x <- [min a b .. max a b], isPrime x] 

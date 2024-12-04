@@ -2,7 +2,7 @@ import Data.List
 import Data.Char
 
 duplicateCount :: String -> Int
-duplicateCount xs = length $ filter (\x -> (length x) > 1 ) $ group $ sort $ map toLower xs
+duplicateCount xs = length $ filter (\x -> length x > 1 ) $ group $ sort $ map toLower xs
 
 main = do
     print $ duplicateCount "" == 0 -- no characters repeats more than once
@@ -16,3 +16,4 @@ main = do
     print $ duplicateCount "Indivisibilities" == 2 -- 'i' occurs seven times and 's' occurs twice
     print $ duplicateCount ['a'..'z'] == 0
     print $ duplicateCount (['a'..'z'] ++ ['A'..'Z']) == 26
+    print $ duplicateCount (['a'..'c'] ++ ['d'..'z']) == 0 -- my test
