@@ -320,314 +320,316 @@
 
 			//============================= table
 
-
-            const tableMat = new THREE.MeshPhongMaterial( {color: '#B4864D'} )
+			function MakeTable(){
+				
+				const tableMat = new THREE.MeshPhongMaterial( {color: '#B4864D'} )
 			
-            const tableHeight = 0.71
+				const tableHeight = 0.71
 
-			var shape = new THREE.Shape();
-			shape.moveTo(  0.1,tableHeight-0.01 );
-			shape.quadraticCurveTo(0.2,tableHeight/2+tableHeight/4,0,tableHeight/2);
-			shape.quadraticCurveTo(-0.15,tableHeight/4,0,0);
-            
-			shape.quadraticCurveTo(0.08/2,-0.05/2,0.15/2,0);
-			shape.quadraticCurveTo(0.2/2,0.05/2,0.15/2,0.1/2);
-			shape.quadraticCurveTo(0.08/2,0.15/2,0.05/2,0.05/2);
+				var shape = new THREE.Shape();
+				shape.moveTo(  0.1,tableHeight-0.01 );
+				shape.quadraticCurveTo(0.2,tableHeight/2+tableHeight/4,0,tableHeight/2);
+				shape.quadraticCurveTo(-0.15,tableHeight/4,0,0);
+				
+				shape.quadraticCurveTo(0.08/2,-0.05/2,0.15/2,0);
+				shape.quadraticCurveTo(0.2/2,0.05/2,0.15/2,0.1/2);
+				shape.quadraticCurveTo(0.08/2,0.15/2,0.05/2,0.05/2);
+				
+				shape.quadraticCurveTo(-0.15,0.1    ,0.1,tableHeight/2);
+				shape.quadraticCurveTo(0.25,tableHeight-0.1 ,0.15,tableHeight-0.01);
+
+				var extrudeSettings = {
+						depth: 0.02,
+						bevelEnabled: true,
+						bevelSegments: 10,
+						steps: 5,
+						bevelSize: 0.03,
+						bevelThickness: 0.02,
+						curveSegments: 100,
+					};
+				var geometry = new THREE.ExtrudeGeometry( shape, extrudeSettings );
+				
+				var leg = new THREE.Mesh( geometry, tableMat);
+				var leg1 = leg.clone();
+				const offset = 0.1;
+				leg1.position.set(1.1-offset,-0.01,-0.4+offset);
+				leg1.rotation.set(0,Math.PI/180*20,0);
+				var leg2 = leg.clone();
+				leg2.position.set(-1.1+offset,-0.01,-0.4+offset);
+				leg2.rotation.set(0,Math.PI/180*(180-20),0);
+				var leg3 = leg.clone();
+				leg3.position.set(1.1-offset,-0.01,0.4-offset);
+				leg3.rotation.set(0,Math.PI/180*-20,0);
+				var leg4 = leg.clone();
+				leg4.position.set(-1.1+offset,-0.01,0.4-offset);
+				leg4.rotation.set(0,Math.PI/180*(180+20),0);
+
+				//2.743, 1.016 
+				var shape = new THREE.Shape();
+				shape.moveTo(  2.743/2,0);
+				shape.quadraticCurveTo(1.7, 1.016*3/4,  0,1.016/2);
+
+				shape.quadraticCurveTo(-1.7,1.016*3/4,  -2.743/2,0);
+				shape.quadraticCurveTo(-1.7,-1.016*3/4,  0,-1.016/2);
+				shape.quadraticCurveTo(1.7,-1.016*3/4,2.743/2,0);
 			
-            shape.quadraticCurveTo(-0.15,0.1    ,0.1,tableHeight/2);
-			shape.quadraticCurveTo(0.25,tableHeight-0.1 ,0.15,tableHeight-0.01);
-
-			var extrudeSettings = {
-					depth: 0.02,
-					bevelEnabled: true,
-					bevelSegments: 10,
-					steps: 5,
-					bevelSize: 0.03,
-					bevelThickness: 0.02,
-					curveSegments: 100,
-				};
-			var geometry = new THREE.ExtrudeGeometry( shape, extrudeSettings );
-			
-			var leg = new THREE.Mesh( geometry, tableMat);
-            var leg1 = leg.clone();
-            const offset = 0.1;
-			leg1.position.set(1.1-offset,-0.01,-0.4+offset);
-            leg1.rotation.set(0,Math.PI/180*20,0);
-            var leg2 = leg.clone();
-			leg2.position.set(-1.1+offset,-0.01,-0.4+offset);
-            leg2.rotation.set(0,Math.PI/180*(180-20),0);
-			var leg3 = leg.clone();
-			leg3.position.set(1.1-offset,-0.01,0.4-offset);
-            leg3.rotation.set(0,Math.PI/180*-20,0);
-            var leg4 = leg.clone();
-			leg4.position.set(-1.1+offset,-0.01,0.4-offset);
-            leg4.rotation.set(0,Math.PI/180*(180+20),0);
-
-            //2.743, 1.016 
-			var shape = new THREE.Shape();
-			shape.moveTo(  2.743/2,0);
-			shape.quadraticCurveTo(1.7, 1.016*3/4,  0,1.016/2);
-
-			shape.quadraticCurveTo(-1.7,1.016*3/4,  -2.743/2,0);
-			shape.quadraticCurveTo(-1.7,-1.016*3/4,  0,-1.016/2);
-			shape.quadraticCurveTo(1.7,-1.016*3/4,2.743/2,0);
-		
-			var extrudeSettings = {
-					depth: 0.02,
-					bevelEnabled: true,
-					bevelSegments: 10,
-					steps: 5,
-					bevelSize: 0.03,
-					bevelThickness: 0.02,
-					curveSegments: 100,
-				};
-			var geometry = new THREE.ExtrudeGeometry( shape, extrudeSettings );
-			
-			var top = new THREE.Mesh( geometry,tableMat);
-            top.rotation.set(Math.PI/180*90,0,0);
-            top.position.set(0,tableHeight,0);
-            
-
-            const table = new THREE.Group(); 
-            table.add( top ); 
-            table.add( leg1 ); 
-            table.add( leg2 ); 
-            table.add( leg3 ); 
-            table.add( leg4 );
-			
-			addShadows( top ); 
-            addShadows( leg1 ); 
-            addShadows( leg2 ); 
-            addShadows( leg3 ); 
-            addShadows( leg4 );
+				var extrudeSettings = {
+						depth: 0.02,
+						bevelEnabled: true,
+						bevelSegments: 10,
+						steps: 5,
+						bevelSize: 0.03,
+						bevelThickness: 0.02,
+						curveSegments: 100,
+					};
+				var geometry = new THREE.ExtrudeGeometry( shape, extrudeSettings );
+				
+				var top = new THREE.Mesh( geometry,tableMat);
+				top.rotation.set(Math.PI/180*90,0,0);
+				top.position.set(0,tableHeight,0);
 				
 
-			var vase = new CSG();
-			var geometry = new THREE.CylinderGeometry( 0.06, 0.08, 0.3, 32 ); 
-			var cylinder1 = new THREE.Mesh(geometry); 
-			var geometry = new THREE.CylinderGeometry( 0.07, 0.06, 0.1, 32 ); 
-			var cylinder2 = new THREE.Mesh(geometry);
-			cylinder2.position.set(0,0.2,0);
-			vase.union([cylinder1,cylinder2]);
-			
-			
-			var geometry = new THREE.BoxGeometry( 0.50, 0.001, 0.30 ); 
-			var box = new THREE.Mesh(geometry);
-			box.material = new THREE.MeshPhongMaterial( {color: '#ccf3ff'} )
-			box.position.set(-0.5,tableHeight+0.03,0.3);
-			table.add(box);
-			box = box.clone();
-			box.position.set(0.5,tableHeight+0.03,0.3);
-			table.add(box);
-			box = box.clone();
-			box.position.set(0.5,tableHeight+0.03,-0.3);
-			table.add(box);
-			box = box.clone();
-			box.position.set(-0.5,tableHeight+0.03,-0.3);
-			table.add(box);
-
-
-			var geometry = new THREE.BoxGeometry( 0.30, 0.001, 0.50 ); 
-			var box = new THREE.Mesh(geometry);
-			box.material = new THREE.MeshPhongMaterial( {color: '#ccf3ff'} )
-			box.position.set(-1.1,tableHeight+0.02,0);
-			table.add(box);
-			box = box.clone();
-			box.position.set(1.1,tableHeight+0.02,0);
-			table.add(box);
-
-			var vaseMesh = vase.toMesh();
-			vaseMesh.material = new THREE.MeshPhongMaterial( {color: '#ccf3ff',opacity:0.9, transparent:true} )
-			vaseMesh.position.set(0,tableHeight+0.1,0);
-			table.add(vaseMesh);
-
+				const table = new THREE.Group(); 
+				table.add( top ); 
+				table.add( leg1 ); 
+				table.add( leg2 ); 
+				table.add( leg3 ); 
+				table.add( leg4 );
 				
-			var tableToPlace = table.clone();
+				addShadows( top ); 
+				addShadows( leg1 ); 
+				addShadows( leg2 ); 
+				addShadows( leg3 ); 
+				addShadows( leg4 );
+					
+
+				var vase = new CSG();
+				var geometry = new THREE.CylinderGeometry( 0.06, 0.08, 0.3, 32 ); 
+				var cylinder1 = new THREE.Mesh(geometry); 
+				var geometry = new THREE.CylinderGeometry( 0.07, 0.06, 0.1, 32 ); 
+				var cylinder2 = new THREE.Mesh(geometry);
+				cylinder2.position.set(0,0.2,0);
+				vase.union([cylinder1,cylinder2]);
+				
+				
+				var geometry = new THREE.BoxGeometry( 0.50, 0.001, 0.30 ); 
+				var box = new THREE.Mesh(geometry);
+				box.material = new THREE.MeshPhongMaterial( {color: '#ccf3ff'} )
+				box.position.set(-0.5,tableHeight+0.03,0.3);
+				table.add(box);
+				box = box.clone();
+				box.position.set(0.5,tableHeight+0.03,0.3);
+				table.add(box);
+				box = box.clone();
+				box.position.set(0.5,tableHeight+0.03,-0.3);
+				table.add(box);
+				box = box.clone();
+				box.position.set(-0.5,tableHeight+0.03,-0.3);
+				table.add(box);
+
+
+				var geometry = new THREE.BoxGeometry( 0.30, 0.001, 0.50 ); 
+				var box = new THREE.Mesh(geometry);
+				box.material = new THREE.MeshPhongMaterial( {color: '#ccf3ff'} )
+				box.position.set(-1.1,tableHeight+0.02,0);
+				table.add(box);
+				box = box.clone();
+				box.position.set(1.1,tableHeight+0.02,0);
+				table.add(box);
+
+				var vaseMesh = vase.toMesh();
+				vaseMesh.material = new THREE.MeshPhongMaterial( {color: '#ccf3ff',opacity:0.9, transparent:true} )
+				vaseMesh.position.set(0,tableHeight+0.15,0);
+				table.add(vaseMesh);
+
+					
+				return table.clone();
+
+			}
+
+			var tableToPlace = MakeTable();
 
 			tableToPlace.position.set(5,0,1);
 			tableToPlace.rotation.set(0,Math.PI/2,0);
-
-            scene.add(tableToPlace);
-
-
-
-
-
-
+			tableToPlace.scale.set(0.8,0.8,0.8);
+			scene.add(tableToPlace);
 
 
 			//========================= chair
 
 
+			function MakeChair(){
 
 
-			const ChairMaterial = new THREE.MeshPhongMaterial( 
-				{color: '#565655',
-				  side: THREE.DoubleSide
-			} )
-			
-			var SpinningChair = new THREE.Group();
-			var chairLeg = new THREE.Group();
-			var shape = new THREE.Shape();
-			shape.moveTo(  0,0.01);
-			shape.quadraticCurveTo(0.3,0.05,0.3,0);
-			shape.quadraticCurveTo(0,0,0,0);
-
-			var geometry = new THREE.CylinderGeometry( 0.03, 0.03, 0.03, 32 ); 
-			var cylinder = new THREE.Mesh( geometry, ChairMaterial ); 
-			cylinder.rotation.set(Math.PI/2,0,0);
-			cylinder.position.set(0.27,-0.05,0);
-			scene.add( cylinder );
-
-			var geometry = new THREE.BoxGeometry(0.05,0.06,0.03 ) 
-			var box = new THREE.Mesh( geometry, ChairMaterial ); 
-			box.position.set(0.27,0,0);
-			scene.add( box );
-            
-			var extrudeSettings = {
-					depth: 0.02,
-					bevelEnabled: true,
-					bevelSegments: 10,
-					steps: 5,
-					bevelSize: 0.03,
-					bevelThickness: 0.02,
-					curveSegments: 100,
-				};
-			var geometry = new THREE.ExtrudeGeometry( shape, extrudeSettings );
+				const ChairMaterial = new THREE.MeshPhongMaterial( 
+					{color: '#565655',
+					side: THREE.DoubleSide
+				} )
 				
-			var leg = new THREE.Mesh( geometry, ChairMaterial);
-			addShadows( leg ); 
-            addShadows( box ); 
-            addShadows( cylinder ); 
-			chairLeg.add(leg);
-			chairLeg.add(box);
-			chairLeg.add(cylinder);
-			
+				var SpinningChair = new THREE.Group();
+				var chairLeg = new THREE.Group();
+				var shape = new THREE.Shape();
+				shape.moveTo(  0,0.01);
+				shape.quadraticCurveTo(0.3,0.05,0.3,0);
+				shape.quadraticCurveTo(0,0,0,0);
+
+				var geometry = new THREE.CylinderGeometry( 0.03, 0.03, 0.03, 32 ); 
+				var cylinder = new THREE.Mesh( geometry, ChairMaterial ); 
+				cylinder.rotation.set(Math.PI/2,0,0);
+				cylinder.position.set(0.27,-0.05,0);
+				scene.add( cylinder );
+
+				var geometry = new THREE.BoxGeometry(0.05,0.06,0.03 ) 
+				var box = new THREE.Mesh( geometry, ChairMaterial ); 
+				box.position.set(0.27,0,0);
+				scene.add( box );
 				
-			var Leg1 = chairLeg.clone();
-			Leg1.position.set(0,0.08,-0.02);
-			SpinningChair.add(Leg1);
-			
-			var Leg2 = chairLeg.clone();
-			Leg2.position.set(0,0.08,-0.02);
-			Leg2.rotation.set(0,Math.PI/180*71,0);
-			SpinningChair.add(Leg2);
-
-			var Leg3 = chairLeg.clone();
-			Leg3.position.set(0,0.08,0);
-			Leg3.rotation.set(0,Math.PI/180*142,0);
-			SpinningChair.add(Leg3);
-
-			var Leg4 = chairLeg.clone();
-			Leg4.position.set(0.02,0.08,0);
-			Leg4.rotation.set(0,Math.PI/180*213,0);
-			SpinningChair.add(Leg4);
-
-			var Leg5 = chairLeg.clone();
-			Leg5.position.set(0.02,0.08,0);
-			Leg5.rotation.set(0,Math.PI/180*284,0);
-			SpinningChair.add(Leg5);
-
-
-			const chairUp = 0.05 ;
-
-			var geometry = new THREE.CylinderGeometry( 0.05, 0.05, 0.11, 32 ); 
-			var cylinder = new THREE.Mesh( geometry, ChairMaterial ); 
-			cylinder.position.set(0,0.1,0);
-			addShadows(cylinder);
-			SpinningChair.add(cylinder);
-			var geometry = new THREE.CylinderGeometry( 0.04, 0.04, 0.18, 32 ); 
-			var cylinder = new THREE.Mesh( geometry, ChairMaterial ); 
-			cylinder.position.set(0,0.2,0);
-			addShadows(cylinder);
-			SpinningChair.add(cylinder);
-			
-			var geometry = new THREE.CylinderGeometry( 0.04, 0.04, 0.18, 32 ); 
-			var cylinder = new THREE.Mesh( geometry, ChairMaterial ); 
-			cylinder.position.set(0,0.2,0);
-			addShadows(cylinder);
-			SpinningChair.add(cylinder);
-
-			var geometry = new THREE.CylinderGeometry( 0.02, 0.02, 0.25, 32 ); 
-			var cylinder = new THREE.Mesh( geometry, new THREE.MeshPhongMaterial( {color: 'silver'} )); 
-			cylinder.position.set(0,0.35,0);
-			addShadows(cylinder);
-			SpinningChair.add(cylinder);
-
-
-
-
-			var shape = new THREE.Shape();
-			shape.moveTo(  0,0.05);
-			shape.quadraticCurveTo(1,0.1,0.3,0);
-
-
-            const MaterialCusionChair = new THREE.MeshPhongMaterial( {color: '##b5b5b5'} )
-		
-
-			var shape = new THREE.Shape();
-			shape.moveTo(  0,0.1);
-			shape.quadraticCurveTo(0.3,0.15, 0.4,0.1);
-			shape.quadraticCurveTo(0.5,0.1 ,0.45,0);
-			shape.quadraticCurveTo(0,0,-.1,0);
-			shape.quadraticCurveTo(-.1,0.6, -.1,0.6);
-			shape.quadraticCurveTo(0.05,0.6, 0,0.1);
-
-            const ChairCusionMaterial = new THREE.MeshPhongMaterial( {color: '#b5b5b5'} )
-		
-		
-			var extrudeSettings = {
-					depth: 0.5,
-					bevelEnabled: true,
-					bevelSegments: 10,
-					steps: 5,
-					bevelSize: 0.03,
-					bevelThickness: 0.02,
-					curveSegments: 100,
-				};
-			var geometry = new THREE.ExtrudeGeometry( shape, extrudeSettings );
-			var cusion = new THREE.Mesh( geometry, ChairCusionMaterial);
-			cusion.position.set(-0.15,0.4,-0.25);
-			addShadows(cusion);
-			SpinningChair.add(cusion);
-
-
-			var shape = new THREE.Shape();
-			shape.moveTo(  -0.2,.75);
-			shape.quadraticCurveTo(0.4,0.8, 0.2,0.55);
-			shape.quadraticCurveTo(-0.25,0.5, -0.2,0.75);
-			
-			var hole = new THREE.Path();
-				var offset1 = 0.04;
-			hole.moveTo(  -0.22 +offset1,.76-offset1);
-			hole.quadraticCurveTo(0.4-offset1,0.8-offset1, 0.2 -offset1,0.53+offset1);
-			hole.quadraticCurveTo(-0.25+offset1,0.5+offset1, -0.22+offset1,0.75-offset1);
-			shape.holes.push( hole );
-			
-			var extrudeSettings = {
-					depth: 0.04,
-					bevelEnabled: true,
-					bevelSegments: 10,
-					steps: 5,
-					bevelSize: 0.03,
-					bevelThickness: 0.02,
-					curveSegments: 100,
-				};
+				var extrudeSettings = {
+						depth: 0.02,
+						bevelEnabled: true,
+						bevelSegments: 10,
+						steps: 5,
+						bevelSize: 0.03,
+						bevelThickness: 0.02,
+						curveSegments: 100,
+					};
 				var geometry = new THREE.ExtrudeGeometry( shape, extrudeSettings );
-			var armRest = new THREE.Mesh( geometry, ChairMaterial);
-			addShadows(armRest);
-			armRest.position.set(0,-0.07,-0.33);
-			// SpinningChair.add(cusion);
-			SpinningChair.add(armRest);
-			var geometry = new THREE.ExtrudeGeometry( shape, extrudeSettings );
-			var armRest = new THREE.Mesh( geometry, ChairMaterial);
-			addShadows(armRest);
-			armRest.position.set(0,-0.07,0.28);
-			// SpinningChair.add(cusion);
-			SpinningChair.add(armRest);
+					
+				var leg = new THREE.Mesh( geometry, ChairMaterial);
+				addShadows( leg ); 
+				addShadows( box ); 
+				addShadows( cylinder ); 
+				chairLeg.add(leg);
+				chairLeg.add(box);
+				chairLeg.add(cylinder);
+				
+					
+				var Leg1 = chairLeg.clone();
+				Leg1.position.set(0,0.08,-0.02);
+				SpinningChair.add(Leg1);
+				
+				var Leg2 = chairLeg.clone();
+				Leg2.position.set(0,0.08,-0.02);
+				Leg2.rotation.set(0,Math.PI/180*71,0);
+				SpinningChair.add(Leg2);
+
+				var Leg3 = chairLeg.clone();
+				Leg3.position.set(0,0.08,0);
+				Leg3.rotation.set(0,Math.PI/180*142,0);
+				SpinningChair.add(Leg3);
+
+				var Leg4 = chairLeg.clone();
+				Leg4.position.set(0.02,0.08,0);
+				Leg4.rotation.set(0,Math.PI/180*213,0);
+				SpinningChair.add(Leg4);
+
+				var Leg5 = chairLeg.clone();
+				Leg5.position.set(0.02,0.08,0);
+				Leg5.rotation.set(0,Math.PI/180*284,0);
+				SpinningChair.add(Leg5);
+
+
+				const chairUp = 0.05 ;
+
+				var geometry = new THREE.CylinderGeometry( 0.05, 0.05, 0.11, 32 ); 
+				var cylinder = new THREE.Mesh( geometry, ChairMaterial ); 
+				cylinder.position.set(0,0.1,0);
+				addShadows(cylinder);
+				SpinningChair.add(cylinder);
+				var geometry = new THREE.CylinderGeometry( 0.04, 0.04, 0.18, 32 ); 
+				var cylinder = new THREE.Mesh( geometry, ChairMaterial ); 
+				cylinder.position.set(0,0.2,0);
+				addShadows(cylinder);
+				SpinningChair.add(cylinder);
+				
+				var geometry = new THREE.CylinderGeometry( 0.04, 0.04, 0.18, 32 ); 
+				var cylinder = new THREE.Mesh( geometry, ChairMaterial ); 
+				cylinder.position.set(0,0.2,0);
+				addShadows(cylinder);
+				SpinningChair.add(cylinder);
+
+				var geometry = new THREE.CylinderGeometry( 0.02, 0.02, 0.25, 32 ); 
+				var cylinder = new THREE.Mesh( geometry, new THREE.MeshPhongMaterial( {color: 'silver'} )); 
+				cylinder.position.set(0,0.35,0);
+				addShadows(cylinder);
+				SpinningChair.add(cylinder);
+
+
+
+
+				var shape = new THREE.Shape();
+				shape.moveTo(  0,0.05);
+				shape.quadraticCurveTo(1,0.1,0.3,0);
+
+
+				const MaterialCusionChair = new THREE.MeshPhongMaterial( {color: '##b5b5b5'} )
 			
 
-			var Chair = SpinningChair.clone();
+				var shape = new THREE.Shape();
+				shape.moveTo(  0,0.1);
+				shape.quadraticCurveTo(0.3,0.15, 0.4,0.1);
+				shape.quadraticCurveTo(0.5,0.1 ,0.45,0);
+				shape.quadraticCurveTo(0,0,-.1,0);
+				shape.quadraticCurveTo(-.1,0.6, -.1,0.6);
+				shape.quadraticCurveTo(0.05,0.6, 0,0.1);
+
+				const ChairCusionMaterial = new THREE.MeshPhongMaterial( {color: '#b5b5b5'} )
+			
+			
+				var extrudeSettings = {
+						depth: 0.5,
+						bevelEnabled: true,
+						bevelSegments: 10,
+						steps: 5,
+						bevelSize: 0.03,
+						bevelThickness: 0.02,
+						curveSegments: 100,
+					};
+				var geometry = new THREE.ExtrudeGeometry( shape, extrudeSettings );
+				var cusion = new THREE.Mesh( geometry, ChairCusionMaterial);
+				cusion.position.set(-0.15,0.4,-0.25);
+				addShadows(cusion);
+				SpinningChair.add(cusion);
+
+
+				var shape = new THREE.Shape();
+				shape.moveTo(  -0.2,.75);
+				shape.quadraticCurveTo(0.4,0.8, 0.2,0.55);
+				shape.quadraticCurveTo(-0.25,0.5, -0.2,0.75);
+				
+				var hole = new THREE.Path();
+					var offset1 = 0.04;
+				hole.moveTo(  -0.22 +offset1,.76-offset1);
+				hole.quadraticCurveTo(0.4-offset1,0.8-offset1, 0.2 -offset1,0.53+offset1);
+				hole.quadraticCurveTo(-0.25+offset1,0.5+offset1, -0.22+offset1,0.75-offset1);
+				shape.holes.push( hole );
+				
+				var extrudeSettings = {
+						depth: 0.04,
+						bevelEnabled: true,
+						bevelSegments: 10,
+						steps: 5,
+						bevelSize: 0.03,
+						bevelThickness: 0.02,
+						curveSegments: 100,
+					};
+					var geometry = new THREE.ExtrudeGeometry( shape, extrudeSettings );
+				var armRest = new THREE.Mesh( geometry, ChairMaterial);
+				addShadows(armRest);
+				armRest.position.set(0,-0.07,-0.33);
+				// SpinningChair.add(cusion);
+				SpinningChair.add(armRest);
+				var geometry = new THREE.ExtrudeGeometry( shape, extrudeSettings );
+				var armRest = new THREE.Mesh( geometry, ChairMaterial);
+				addShadows(armRest);
+				armRest.position.set(0,-0.07,0.28);
+				// SpinningChair.add(cusion);
+				SpinningChair.add(armRest);
+				
+				return SpinningChair.clone();
+			}
+
+			var Chair = MakeChair();
 			
 			Chair.position.set(2.5,0,-3);
 			Chair.rotation.set(0,Math.PI/180*164,0);
@@ -638,6 +640,8 @@
 
 
 
+
+			//sample objects
 
 			var material = new THREE.MeshPhongMaterial({color: '#c1702c'});
 			var geometry = new THREE.BoxGeometry(2.5,1,0.1 ) 
@@ -701,13 +705,105 @@
 
 
 
-
-			// var geometry = new THREE.BoxGeometry( 2, 2, 2 ),
-			// 	material = new THREE.MeshPhongMaterial( {color: 'crimson'} );
-				
-			// var cube = new THREE.Mesh( geometry, material );
-			// 	cube.position.set( 0, 1, 0 );
+			function MakeDoor(){
+				var g = new THREE.Group();
+				var material = new THREE.MeshPhongMaterial({color: 'white'});
+				var geometry = new THREE.BoxGeometry(.1,0.05,.2 ) 
+				var box = new THREE.Mesh( geometry, material ); 
+				box.position.set(0.3,(DoorHeight/4),0)
+				addShadows(box);
+				g.add(box);
+				var box = new THREE.Mesh( geometry, material ); 
+				var material = new THREE.MeshPhongMaterial({color: '#c1702c'});
+				var geometry = new THREE.BoxGeometry(.9,DoorHeight,.1 ) 
+				var box = new THREE.Mesh( geometry, material ); 
+				addShadows(box);
+				g.add(box);
+				return g.clone();
+			}
 			
+			var door = MakeDoor();
+			scene.add(door);
+			door.position.set(-0.4,0,-8.25);
+			door.rotation.set(0,Math.PI/180*(-60+180),0);
+
+
+			var door = MakeDoor();
+			scene.add(door);
+			door.position.set(-1.25,0,0.5);
+			door.rotation.set(0,Math.PI/180*(-15+180),0);
+
+			var door = MakeDoor();
+			scene.add(door);
+			door.position.set(-1.25,0,-0.45);
+			door.rotation.set(0,Math.PI/180*(25+180),0);
+
+			var door = MakeDoor();
+			scene.add(door);
+			door.position.set(1.55,0,-1.5);
+			door.rotation.set(0,Math.PI/180*10,0);
+
+			var door = MakeDoor();
+			scene.add(door);
+			door.position.set(1.55,0,-7.0);
+			door.rotation.set(0,Math.PI/180*20,0);
+
+
+
+			var material = new THREE.MeshPhongMaterial({color: '#c1702c'});
+			var geometry = new THREE.BoxGeometry(3,GarageDoorHeight,.1 ) 
+			var box = new THREE.Mesh( geometry, material ); 
+			box.position.set(3.2,0,-7.9);
+			addShadows(box);
+			scene.add(box);
+		
+			var material = new THREE.MeshPhongMaterial({color: 'white'});
+			var geometry = new THREE.BoxGeometry(.1,0.05,.2 ) 
+			var box = new THREE.Mesh( geometry, material ); 
+			box.position.set(3.4,0.1,-7.9)
+			scene.add(box);
+
+
+
+			var material = new THREE.MeshPhongMaterial({color: '#B4864D'});
+			var geometry = new THREE.BoxGeometry(6.7,.5,.7 ) 
+			var box = new THREE.Mesh( geometry, material ); 
+			box.position.set(2.5,.25,5.45)
+			scene.add(box);
+
+			var material = new THREE.MeshPhongMaterial({color: '#e1ddd1'});
+			var geometry = new THREE.BoxGeometry(6.7,.1,0.9 ) 
+			var box = new THREE.Mesh( geometry, material ); 
+			box.position.set(2.5,.5,5.42)
+			scene.add(box);
+
+			
+			var material = new THREE.MeshPhongMaterial({color: '#B4864D'});
+			var geometry = new THREE.BoxGeometry(1.4,.5,.3 ) 
+			var box = new THREE.Mesh( geometry, material ); 
+			box.position.set(1.2,.25,2.7)
+			box.rotation.set(0, Math.PI/180*-60,0);
+			scene.add(box);
+
+			var material = new THREE.MeshPhongMaterial({color: '#B4864D'});
+			var geometry = new THREE.BoxGeometry(2,.5,.3 ) 
+			var box = new THREE.Mesh( geometry, material ); 
+			box.position.set(2.42,.25,3.24)
+			scene.add(box);
+
+
+			var material = new THREE.MeshPhongMaterial({color: '#e1ddd1'});
+			var geometry = new THREE.BoxGeometry(1.4,.1,.3 ) 
+			var box = new THREE.Mesh( geometry, material ); 
+			box.position.set(1.2,.5,2.7)
+			box.rotation.set(0, Math.PI/180*-60,0);
+			scene.add(box);
+
+			var material = new THREE.MeshPhongMaterial({color: '#e1ddd1'});
+			var geometry = new THREE.BoxGeometry(2,.1,.3 ) 
+			var box = new THREE.Mesh( geometry, material ); 
+			box.position.set(2.42,.5,3.24)
+			scene.add(box);
 
 
 			

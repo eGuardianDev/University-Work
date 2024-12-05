@@ -70,29 +70,63 @@
           [currX (cdr last-pos)])
 
       (cond
-         [(and (> count 0) (equal? current-symbol "S")) (cons count furthest-pos)] ; finded loop with S in it and save it
-         [(> count size) (cons 0 (cons 0 0))] ; currently in loop that doesn't end with S, because it passed more than the board size
-         [(> (get-diff starting-pos current-pos) (get-diff starting-pos furthest-pos )) ; continue to next step but check if furthest value is this and save it
-          (map (λ (x) (search x current-pos (add1 count) size starting-pos current-pos)) nexts)] ; save it
-         [else (map (λ (x) (search x current-pos (add1 count) size starting-pos furthest-pos)) nexts)]))) ; don't save it
+         [(and (> count 0) (equal? current-symbol "S")) (cons count furthest-pos)]
+         [(> count size) (cons 0 (cons 0 0))]
+         [(> (get-diff starting-pos current-pos) (get-diff starting-pos furthest-pos ))
+          (map (λ (x) (search x current-pos (add1 count) size starting-pos current-pos)) nexts)]
+         [else (map (λ (x) (search x current-pos (add1 count) size starting-pos furthest-pos)) nexts)])))
   
-       (let* ([beginWalk (custom-zip (flatten (search (find-start player-map)
+       (let* ([begi (custom-zip (flatten (search (find-start player-map)
                                 (find-start player-map)
                                 0
                                 (* (length (car player-map)) (length player-map))
                                 (find-start player-map)
-                                (find-start player-map))))] ; start the search/walk
-             [fin  (sort (map (λ (x) (cons (car x)(get-diff (cons (cadr x) (cddr x)) (find-start player-map) ))) beginWalk) (λ (a b) (> (cdr a) (cdr b))))])
-         ;get furthest positions
-           (quotient (caar fin) 2))) ; filter data and
+                                (find-start player-map))))]
+             [fin  (sort (map (λ (x) (cons (car x)(get-diff (cons (cadr x) (cddr x)) (find-start player-map) ))) begi) (λ (a b) (> (cdr a) (cdr b))))])
+           fin) )
 
 
-(num-steps-farthest-away '(("F" "S" "-" "7")
-                           ("|" "." "." "|")
-                           ("|" "F" "7" "|")
-                           ("|" "L" "J" "|")
-                           ("|" "J" "-" "J")))
+(define (custom-flatten xs)
+  (cond
+    [(null? xs) null]
+    [(not (list? (car xs))) xs]
+    [else (custom-flatten (car xs))]
+  ))
 
+(define (symbol-on-map player-map x y)
+ (car (drop (car (drop player-map x))
+            y)))
+
+
+(define (group xs)
+  (cond
+    [(null? xs) null]
+    [(ormap (λ (x) (equal? x (car xs))) (cdr xs)) (append (list (car xs)) (group (cdr xs) ))]
+    [else (group (cdr xs))]))
+#;
+(define (num-steps-farthest-away player-map)
+  (define (get-all-next step) (get-next-steps player-map step))
+  (define (search current-pos last-pos count size curr-path paths)
+
+    (let ([nexts (remove last-pos (get-all-next current-pos))]
+          [current-symbol (car (drop (car (drop player-map (car current-pos)))  (cdr current-pos)))]
+          [currY (car last-pos)]
+          [currX (cdr last-pos)])
+
+      (cond
+         [(and (> count 0) (equal? current-symbol "S")) (reverse (cdr (reverse curr-path)))]
+         [(> count size) 0]
+         [else (map (λ (x) (search x current-pos (add1 count) size (append (list (symbol-on-map player-map (car current-pos) (cdr current-pos))) curr-path ) paths)) nexts)])))
+  
+       (let* ([begi (search (find-start player-map)
+                                (find-start player-map)
+                                0
+                                (* (length (car player-map)) (length player-map))
+                                null null)]
+             [fin (map (λ (x) (custom-flatten x)) begi)])
+          (group (append fin (map reverse fin)))))
+
+         
 (num-steps-farthest-away '(("7" "-" "F" "7" "-")
                           ("." "F" "J" "|" "7")
                           ("S" "J" "L" "L" "7")
