@@ -1,6 +1,6 @@
 ﻿<!DOCTYPE html>
 
-<!-- Име Фамилиев, група X, ф.н. XXXXX -->
+<!-- Цветомир Стайков, група 2, ф.н. 1MI0800469 -->
 
 <html>
 	<head>
@@ -67,7 +67,6 @@
 			// 6. горд съм как коментарите са равно дълги
 
 			
-			// куб 2х2х2 метра
 
 			function addShadows(object){
 				object.receiveShadow = true;
@@ -78,7 +77,7 @@
 
 			const RoomHeight = 3;	
 			
-			const DoorHeight = 2.1; //average hight of doors 2.1
+			const DoorHeight = 2.1; 
 			
 			var WallMaterial = new THREE.MeshPhongMaterial( {color: 'white'} );
 			
@@ -273,7 +272,7 @@
 			csgWalls.subtract([cube]);
 
 			var WallMesh = csgWalls.toMesh();
-			WallMesh.material = WallMaterial;//new THREE.MeshLambertMaterial( {color:'crimson'} );
+			WallMesh.material = WallMaterial;
 			addShadows(WallMesh);
 			scene.add(WallMesh);
 
@@ -314,15 +313,16 @@
 			cube.position.set(-6+0.1, 0, -1.925);
 			scene.add(cube);
 
-			// csgWalls.subtract([cube]);
 
+			const ceramicColor = '#e1ddd1'
 
+			const woodColor = '#B4864D'
 
 			//============================= table
 
 			function MakeTable(){
 				
-				const tableMat = new THREE.MeshPhongMaterial( {color: '#B4864D'} )
+				const tableMat = new THREE.MeshPhongMaterial( {color: woodColor} )
 			
 				const tableHeight = 0.71
 
@@ -412,23 +412,23 @@
 				vase.union([cylinder1,cylinder2]);
 				
 				
-				var geometry = new THREE.BoxGeometry( 0.50, 0.001, 0.30 ); 
+				var geometry = new THREE.BoxGeometry( 0.50, 0.01, 0.30 ); 
 				var box = new THREE.Mesh(geometry);
 				box.material = new THREE.MeshPhongMaterial( {color: '#ccf3ff'} )
-				box.position.set(-0.5,tableHeight+0.03,0.3);
+				box.position.set(-0.5,tableHeight+0.02,0.3);
 				table.add(box);
 				box = box.clone();
-				box.position.set(0.5,tableHeight+0.03,0.3);
+				box.position.set(0.5,tableHeight+0.02,0.3);
 				table.add(box);
 				box = box.clone();
-				box.position.set(0.5,tableHeight+0.03,-0.3);
+				box.position.set(0.5,tableHeight+0.02,-0.3);
 				table.add(box);
 				box = box.clone();
-				box.position.set(-0.5,tableHeight+0.03,-0.3);
+				box.position.set(-0.5,tableHeight+0.02,-0.3);
 				table.add(box);
 
 
-				var geometry = new THREE.BoxGeometry( 0.30, 0.001, 0.50 ); 
+				var geometry = new THREE.BoxGeometry( 0.30, 0.01, 0.50 ); 
 				var box = new THREE.Mesh(geometry);
 				box.material = new THREE.MeshPhongMaterial( {color: '#ccf3ff'} )
 				box.position.set(-1.1,tableHeight+0.02,0);
@@ -643,64 +643,64 @@
 
 			//sample objects
 
-			var material = new THREE.MeshPhongMaterial({color: '#c1702c'});
+			var material = new THREE.MeshPhongMaterial({color: woodColor});
 			var geometry = new THREE.BoxGeometry(2.5,1,0.1 ) 
 			var box = new THREE.Mesh( geometry, material ); 
-			box.position.set(-3.5,.6,3.8);
+			box.position.set(-3.5,.4,3.8);
+			addShadows(box);
 			scene.add( box );
 
-			var material = new THREE.MeshPhongMaterial({color: '#c1702c'});
-			var geometry = new THREE.BoxGeometry(2,.6,2 ) 
+			var geometry = new THREE.BoxGeometry(2,.4,2 ) 
 			var box = new THREE.Mesh( geometry, material ); 
-			box.position.set(-3.5,.3,2.8);
+			box.position.set(-3.5,.2,2.8);
+			addShadows(box);
 			scene.add( box );
 
 
 
-			var material = new THREE.MeshPhongMaterial({color: '#c1702c'});
 			var geometry = new THREE.BoxGeometry(2.5,1,0.1 ) 
 			var box = new THREE.Mesh( geometry, material ); 
 			box.position.set(-3.5,.5,3.8-7.6);
+			addShadows(box);
 			scene.add( box );
 
-			var material = new THREE.MeshPhongMaterial({color: '#c1702c'});
-			var geometry = new THREE.BoxGeometry(2,.5,2 ) 
+			var geometry = new THREE.BoxGeometry(2,.4,2 ) 
 			var box = new THREE.Mesh( geometry, material ); 
-			box.position.set(-3.5,.25,2.8-5.6);
+			box.position.set(-3.5,.2,2.8-5.6);
+			addShadows(box);
 			scene.add( box );
 
 
-
-			var material = new THREE.MeshPhongMaterial({color: '#c1702c'});
 			var geometry = new THREE.BoxGeometry(1,0.05,1.8 ) 
 			var box = new THREE.Mesh( geometry, material ); 
 			box.position.set(6.4,0.5,-3);
+			addShadows(box);
 			scene.add( box );
 
 
-			var material = new THREE.MeshPhongMaterial({color: '#c1702c'});
 			var geometry = new THREE.BoxGeometry(1,0.05,1.8 ) 
 			var box = new THREE.Mesh( geometry, material ); 
 			box.position.set(6.4,1,-3);
+			addShadows(box);
 			scene.add( box );
 
 
-			var material = new THREE.MeshPhongMaterial({color: '#c1702c'});
 			var geometry = new THREE.BoxGeometry(.7,0.05,1.8 ) 
 			var box = new THREE.Mesh( geometry, material ); 
-			box.position.set(1.6,0.5,-3.5);
+			box.position.set(1.6,0.65,-3.5);
+			addShadows(box);
 			scene.add( box );
 
-			var material = new THREE.MeshPhongMaterial({color: '#c1702c'});
-			var geometry = new THREE.BoxGeometry(0.7,0.5,.02 ) 
+			var geometry = new THREE.BoxGeometry(0.7,0.65,.02 ) 
 			var box = new THREE.Mesh( geometry, material ); 
-			box.position.set(1.6,0.25,-2.8);
+			box.position.set(1.6,0.325,-2.8);
+			addShadows(box);
 			scene.add( box );
 
-			var material = new THREE.MeshPhongMaterial({color: '#c1702c'});
-			var geometry = new THREE.BoxGeometry(.7,0.5,.02 ) 
+			var geometry = new THREE.BoxGeometry(.7,0.65,.02 ) 
 			var box = new THREE.Mesh( geometry, material ); 
-			box.position.set(1.6,0.25,-4.25);
+			box.position.set(1.6,0.325,-4.25);
+			addShadows(box);
 			scene.add( box );
 
 
@@ -714,7 +714,7 @@
 				addShadows(box);
 				g.add(box);
 				var box = new THREE.Mesh( geometry, material ); 
-				var material = new THREE.MeshPhongMaterial({color: '#c1702c'});
+				var material = new THREE.MeshPhongMaterial({color: woodColor});
 				var geometry = new THREE.BoxGeometry(.9,DoorHeight,.1 ) 
 				var box = new THREE.Mesh( geometry, material ); 
 				addShadows(box);
@@ -750,7 +750,7 @@
 
 
 
-			var material = new THREE.MeshPhongMaterial({color: '#c1702c'});
+			var material = new THREE.MeshPhongMaterial({color: woodColor});
 			var geometry = new THREE.BoxGeometry(3,GarageDoorHeight,.1 ) 
 			var box = new THREE.Mesh( geometry, material ); 
 			box.position.set(3.2,0,-7.9);
@@ -761,48 +761,52 @@
 			var geometry = new THREE.BoxGeometry(.1,0.05,.2 ) 
 			var box = new THREE.Mesh( geometry, material ); 
 			box.position.set(3.4,0.1,-7.9)
+			addShadows(box);
 			scene.add(box);
 
 
 
-			var material = new THREE.MeshPhongMaterial({color: '#B4864D'});
-			var geometry = new THREE.BoxGeometry(6.7,.5,.7 ) 
+			var material = new THREE.MeshPhongMaterial({color: woodColor});
+			var geometry = new THREE.BoxGeometry(3.7,.5,.7 ) 
 			var box = new THREE.Mesh( geometry, material ); 
-			box.position.set(2.5,.25,5.45)
+			box.position.set(3,.25,5.45)
 			scene.add(box);
 
-			var material = new THREE.MeshPhongMaterial({color: '#e1ddd1'});
-			var geometry = new THREE.BoxGeometry(6.7,.1,0.9 ) 
+			var material = new THREE.MeshPhongMaterial({color: ceramicColor});
+			var geometry = new THREE.BoxGeometry(3.7,.1,0.9 ) 
 			var box = new THREE.Mesh( geometry, material ); 
-			box.position.set(2.5,.5,5.42)
+			box.position.set(3,.5,5.42)
 			scene.add(box);
+
 
 			
-			var material = new THREE.MeshPhongMaterial({color: '#B4864D'});
+			var material = new THREE.MeshPhongMaterial({color: woodColor});
 			var geometry = new THREE.BoxGeometry(1.4,.5,.3 ) 
 			var box = new THREE.Mesh( geometry, material ); 
 			box.position.set(1.2,.25,2.7)
 			box.rotation.set(0, Math.PI/180*-60,0);
+			addShadows(box);
 			scene.add(box);
 
-			var material = new THREE.MeshPhongMaterial({color: '#B4864D'});
 			var geometry = new THREE.BoxGeometry(2,.5,.3 ) 
 			var box = new THREE.Mesh( geometry, material ); 
 			box.position.set(2.42,.25,3.24)
+			addShadows(box);
 			scene.add(box);
 
 
-			var material = new THREE.MeshPhongMaterial({color: '#e1ddd1'});
-			var geometry = new THREE.BoxGeometry(1.4,.1,.3 ) 
+			var material = new THREE.MeshPhongMaterial({color: ceramicColor});
+			var geometry = new THREE.BoxGeometry(1.5,.1,.4 ) 
 			var box = new THREE.Mesh( geometry, material ); 
 			box.position.set(1.2,.5,2.7)
 			box.rotation.set(0, Math.PI/180*-60,0);
+			addShadows(box);
 			scene.add(box);
 
-			var material = new THREE.MeshPhongMaterial({color: '#e1ddd1'});
-			var geometry = new THREE.BoxGeometry(2,.1,.3 ) 
+			var geometry = new THREE.BoxGeometry(2.1,.1,.4 ) 
 			var box = new THREE.Mesh( geometry, material ); 
 			box.position.set(2.42,.5,3.24)
+			addShadows(box);
 			scene.add(box);
 
 
