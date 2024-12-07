@@ -10,4 +10,4 @@ removeFirst el (x:xs)
 main = do
     print $ removeFirst 5 [5, 1, 5, 3, 5] == [1, 5, 3, 5]
     print $ removeFirst 3 [5, 1, 5, 3, 5] == [5, 1, 5, 5]
-    print $ removeFirst 3 [5, 1, 5, 3, 5] == [5, 1, 5, 5]
+    print $ removeFirst 1 [5, 1, 5, 3, 5] == [5, 5, 3, 5] -- my test
