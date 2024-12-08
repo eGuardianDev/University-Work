@@ -1,23 +1,16 @@
-
 #lang racket
 
-; ex 1
 (define (find-start xs)
   (let* ([newMap (map (λ (x) (member "S" x)) xs)]
          [Final (member (car (filter (λ (x) (list? x)) newMap)) newMap)])
     (cons (abs( - (length Final) (length xs))) (abs (- (length (car Final)) (length (car xs)))))))
 
-(define (get-diff x y)
-  (+ (abs (- (car x) (car y)))  (abs (- (cdr x) (cdr y)))))
-
-
-; ex 2
-(define (valid-position? player-map position) ; additional function
+(define (valid-position? player-map position)
   (and (>= (car position) 0) (>= (cdr position) 0)
        (< (car position) (length player-map)) (< (cdr position) (length player-map))))
 
 (define (get-next-steps player-map current-position)
-  (define (pos-checking x) ; this function is very specific for get-next-steps, so I won't be global
+  (define (pos-checking x) ; this function is very specific for get-next-steps, so It won't be global
     (if (valid-position? player-map x)
         (list x)
         null))
@@ -51,14 +44,13 @@
                                     (pos-checking (cons currY (add1 currX))))])))
 
 
+(define (get-diff x y)
+  (+ (abs (- (car x) (car y)))  (abs (- (cdr x) (cdr y)))))
+
 (define (custom-zip xs)
   (if (null? xs)
       null
       (cons (cons (car xs) (cons (cadr xs) (caddr xs))) (custom-zip (cdddr xs)))))
-
-
-
-; ex 3
 
 (define (num-steps-farthest-away player-map)
   (define (get-all-next step) (get-next-steps player-map step))
@@ -71,27 +63,22 @@
 
       (cond
          [(and (> count 0) (equal? current-symbol "S")) (cons count furthest-pos)] ; finded loop with S in it and save it
-         [(> count size) (cons 0 (cons 0 0))] ; currently in loop that doesn't end with S, because it passed more than the board size
+         [(> count size) (cons 0 (cons 0 0))] ; currently in loop that doesn't end with S, because it passed more places than the board size
          [(> (get-diff starting-pos current-pos) (get-diff starting-pos furthest-pos )) ; continue to next step but check if furthest value is this and save it
           (map (λ (x) (search x current-pos (add1 count) size starting-pos current-pos)) nexts)] ; save it
          [else (map (λ (x) (search x current-pos (add1 count) size starting-pos furthest-pos)) nexts)]))) ; don't save it
   
        (let* ([beginWalk (custom-zip (flatten (search (find-start player-map)
-                                (find-start player-map)
-                                0
-                                (* (length (car player-map)) (length player-map))
-                                (find-start player-map)
-                                (find-start player-map))))] ; start the search/walk
-             [fin  (sort (map (λ (x) (cons (car x)(get-diff (cons (cadr x) (cddr x)) (find-start player-map) ))) beginWalk) (λ (a b) (> (cdr a) (cdr b))))])
+                                                      (find-start player-map)
+                                                      0
+                                                      (* (length (car player-map)) (length player-map))
+                                                      (find-start player-map)
+                                                      (find-start player-map))))] ; start the search/walk
+              [final  (sort (map (λ (x) (cons (car x) (get-diff (cons (cadr x) (cddr x)) (find-start player-map) ))) beginWalk) (λ (a b) (> (cdr a) (cdr b))))])
          ;get furthest positions
-           (quotient (caar fin) 2))) ; filter data and
+         (quotient (caar final) 2))) ; filter data and
 
 
-(num-steps-farthest-away '(("F" "S" "-" "7")
-                           ("|" "." "." "|")
-                           ("|" "F" "7" "|")
-                           ("|" "L" "J" "|")
-                           ("|" "J" "-" "J")))
 
 (num-steps-farthest-away '(("7" "-" "F" "7" "-")
                           ("." "F" "J" "|" "7")
