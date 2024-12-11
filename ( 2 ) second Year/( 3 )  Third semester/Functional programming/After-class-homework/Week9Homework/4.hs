@@ -1,6 +1,7 @@
 type Rat a = (a,a)
 
 fixRat :: (Integral a, Ord a)=> Rat a -> Rat a
+fixRat (x,0) =  error "Division by 0"
 fixRat (x,y) = (div x  theGcd, div y theGcd)
     where 
         theGcd = gcd x y

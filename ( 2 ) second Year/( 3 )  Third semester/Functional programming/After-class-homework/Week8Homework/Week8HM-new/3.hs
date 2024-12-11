@@ -10,7 +10,7 @@ mergeLinearRec (x:xs) (y:ys)
 
 
 mergeXs :: [Int] -> [Int] -> [Int]
-mergeXs xs ys =  sort $ nub (xs ++ ys)
+mergeXs xs ys =  sort $ nub $ xs ++ ys
 
 
 

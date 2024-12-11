@@ -16,7 +16,6 @@ std::string serialize(TreeNode* root) {
     std::string res;
     if(!root) return res;
 
-    
     std::queue<TreeNode*> toCreate;
 
     toCreate.push(root);
@@ -27,16 +26,17 @@ std::string serialize(TreeNode* root) {
 
         if(curr != nullptr){
             res+=std::to_string(curr->val) + " ";
+            toCreate.push(curr->left);
+            toCreate.push(curr->right);
+
         }else{
             res += "=";
         }
         
-        toCreate.push(curr->left);
-        toCreate.push(curr->right);
+        // std::cout << curr->left;
 
     }
 
-    // std::cout << res << std::endl;
         
     return res;
 }
@@ -44,42 +44,62 @@ std::string serialize(TreeNode* root) {
 // Decodes your encoded data to tree.
 TreeNode* deserialize(std::string data) {
 
-    int num = 0;
-    bool more = false;
-    std::queue<int> a;
-    std::queue<TreeNode*> tree;
-    TreeNode* root;
-    tree.push(root);
-    for(char ch : data){
+    if(data == "") return nullptr;
+    int ch =0;
+    std::queue<int> vals;
 
-        if(ch == '='){  
-            TreeNode* curr = tree.front(); 
-            tree.pop();
-            curr = nullptr;
+    for(int  j = 0;j<data.length();++j){
+        if(data[j] == ' '){
+            vals.push(ch);
+            ch = -1;
         }
-        else if(ch != ' '){
-            num*=10;
-            num+=ch-'0';
-            more = true;
-        }else{
+        else if(data[j] == '='){
+            vals.push(-1);
+        }
+        else{
+            if(ch == -1) ch = 0;
+            ch *=10;
+            ch += data[j] - '0';
+        }
+    }
+    if(ch >=0){
+        vals.push(ch);
+    }
 
-            TreeNode* curr = tree.front(); 
-            curr = new TreeNode(num);
-            tree.pop();
-            tree.push(curr->left);
-            tree.push(curr->right);
-            num = 0;
-            more = false;
+    std::queue<TreeNode*> nodes;
+    TreeNode* head;
+    if(!vals.empty())
+    {
+        int val = vals.front(); vals.pop();
+        head = new TreeNode(val);
+        nodes.push(head);
+    }
+    while(!vals.empty())
+    {
+        TreeNode* curr = nodes.front(); nodes.pop();
+        int val = vals.front(); vals.pop();
+        if(val != -1){
+            curr->left = new TreeNode(val);
+            nodes.push(curr->left);
+        }
+        if(vals.empty())break;
+      
+        val = vals.front(); vals.pop();
+        
+        if(val != -1){
+            curr->right = new TreeNode(val);
+            nodes.push(curr->right);
         }
     }
 
-   
-    return root;
+    return head;
+    return nullptr;
 }
 
 void print(TreeNode* a){
     if(!a) {
         std::cout << "empty tree\n";
+        return;
     }
 
     if(a->left) print(a->left);
@@ -93,9 +113,11 @@ int main(){
     TreeNode* a = new TreeNode(1);
     TreeNode* b = new TreeNode(2);
     TreeNode* c = new TreeNode(3);
-    a->left = b; a->right = c;
-    // std::string in =serialize(a);
+    a->left = b;
+    a->right = c;
+    std::string in =serialize(a);
 
+    // std::cout << serialize(a);
 
     TreeNode* out = deserialize("1 2 3");
 

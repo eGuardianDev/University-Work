@@ -5,7 +5,7 @@ crossProduct :: (Num a) => Vector a -> Vector a -> Vector a
 crossProduct (a1,a2,a3) (b1,b2,b3) = ( a2*b3-a3*b2, a3*b1-a1*b3, a1*b2-a2*b1)
 
 magnitude :: (Floating a) => Vector a -> a
-magnitude (x,y,z) = sqrt ( x^2 +y^2 +z^2)
+magnitude (x,y,z) = sqrt $ x^2 +y^2 +z^2
 
 main = do 
     print $ crossProduct (1, 2, 3) (7, 4, 1) == (-10, 20, -10)

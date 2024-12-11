@@ -2,7 +2,7 @@
 
 
 rf :: (Num a, Ord a) => (a -> a) -> (a -> a) -> ([a]-> (a->a) -> [a])
-rf f g  = (\ xs fun -> map fun [ x | x <- xs, (f x)>(g x)] )
+rf f g  = (\ xs fun ->  [ fun x | x <- xs, (f x)>(g x)] )
 
 
 main = do
