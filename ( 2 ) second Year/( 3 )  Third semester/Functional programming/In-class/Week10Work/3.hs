@@ -5,12 +5,6 @@ data Shape a = Circle a | Rectangle a a | Triangle a a a | Cylinder a a
 f :: String -> Shape Int
 f = read
 
-area :: Shape a -> a
-area a = a * a
-
-(<) :: Shape a -> Shape a -> Bool
-(<) f1 f2 = area f1 < area f2
-
 main = do
     print $ Circle 5
     print $ Triangle 1 2 3 
