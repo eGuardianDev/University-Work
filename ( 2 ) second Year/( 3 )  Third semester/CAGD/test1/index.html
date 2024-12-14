@@ -1,0 +1,40 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    
+   <h1>Bézier curves - demo</h1>
+   <p>by Tsvetomir Staykov</p>
+
+   <main>
+
+    <canvas id="DisplayBox" width="600" height="400">
+        Your browser doesn't support this format
+    </canvas>
+          
+
+    <div id="ControlPanel">
+
+        <select name="modesSelector" id="modesSelectorId">
+            <option value="Add">Add</option>
+            <option value="Move">Move</option>
+            <option value="Delete">Delete</option>
+        </select> 
+        <br>
+        <input type="checkbox" checked="true" onchange="updateControlPoligon(this);" >Visible control poligon</input>
+        <input type="button"  value = "Draw" onclick="drawCurve(this);"/>
+    
+    </div>
+    </main>
+</body>
+    <script src="Interface.js"></script>
+    <script src="Debug.js"></script>
+    <script src="Algorithms.js"></script>
+</html>

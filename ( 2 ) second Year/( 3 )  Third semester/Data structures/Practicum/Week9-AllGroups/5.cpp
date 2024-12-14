@@ -76,6 +76,10 @@ class TreeSet : public Set<int>{
         }
 
     }
+
+    void collapse(){
+        if(head)head->Destruct();
+    }
     int size() const override{
         return count;
     }
@@ -143,9 +147,8 @@ class TreeSet : public Set<int>{
 
         T_Node* n = root;
         root = root->right;
-        
-        return n;
 
+        return n;
     }
 
     void print_helper(T_Node* curr)const{
@@ -172,11 +175,15 @@ bool twoSum(const std::vector<int>& data, int target){
     TreeSet a;
     for(int num : data){
         bool b =a.contains(target-num);
-        if(b) return b;
+        if(b)
+        {
+            a.collapse();
+            return b;
+        } 
         a.add(num);
     }
 
-    
+    a.collapse();
     return false;
 }
 
@@ -186,33 +193,16 @@ int countUniques(const std::vector<int>& data)
     for(int num : data){
         a.add(num);
     }
-    return a.size();
+    int count = a.size();
+    a.collapse();
+    return count;
 }
 
 int main(){
     TreeSet a;
-
-    // a.add(2);
-    // a.add(5);
-    // a.add(3);
-    // a.add(4);
-    // a.add(1);
-    // a.add(0);
-    // a.print();
-    // std::cout << std::endl;
-    // a.remove(5);
-    // a.print();
-
     std::cout << countUniques({1,2,3,3,4});
     std::cout << twoSum({1,2,4,4,5}, 12);
-    // std::cout << a.contains(2);
-    // std::cout << a.contains(3);
-    // a.add(3);
-    // std::cout << a.contains(3);
 
-    // std::cout << a.contains(1);
-
-    // a.add(1);
-    // std::cout << a.contains(1);
+    a.collapse();
     return 0;
 }
