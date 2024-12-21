@@ -37,6 +37,54 @@
 			import * as MANNEQUIN from "mannequin";
 			import * as THREE from 'three';
 			MANNEQUIN.createStage( animate ); 
+
+			var woodMat = new THREE.MeshPhongMaterial();
+			woodMat.color.set(0xA1662F);
+			var leafMat = new THREE.MeshPhongMaterial();
+			leafMat.color.set(0x6db33f);	
+			var Bush= new THREE.Group(); 
+			var cylinder = new THREE.CylinderGeometry(.5,.5,4);
+			var cyl = new THREE.Mesh( cylinder, woodMat);
+			cyl.position.set(0,1,0);
+			Bush.add(cyl);
+			const R_PI = Math.PI/180;
+			for(let i =0 ;i<7;i++){
+				var details = new THREE.BoxGeometry(2,2,4.5);
+				var det = new THREE.Mesh( details, leafMat);
+				det.rotation.set(R_PI* (Math.random() *360),R_PI* (Math.random() *360),R_PI* (Math.random() *360));
+				det.position.set(0,4,0);
+				Bush.add(det);
+			}
+			var sphere = new THREE.SphereGeometry(2);
+			var sp = new THREE.Mesh( sphere, leafMat);
+			sp.position.set(0,4,0);
+			Bush.add(sp);
+			var scale = 0.5;
+			Bush.scale.set(scale,scale,scale);
+			var scene = MANNEQUIN.getStage().scene; // взимане на сцената на Mannequin.js
+			var groundPos = -0.3;
+			for(let i =0;i<40;i++){
+				var temp = Bush.clone();
+				
+
+				temp.rotation.set(0,R_PI* (Math.random() *360),0);
+				temp.position.set(Math.cos(i)*20 +Math.random()*10-10,groundPos,Math.sin(i)*20 + Math.random()*10-10);
+				scene.add(temp);
+			}
+			scale = 0.25
+			groundPos = -0.5;
+			Bush.scale.set(scale,scale,scale);
+			for(let i =0;i<40;i++){
+
+				var temp = Bush.clone();
+				temp.rotation.set(0,R_PI* (Math.random() *360),0);
+				temp.position.set(Math.cos(i)*20 +Math.random()*10-10,groundPos,Math.sin(i)*20 + Math.random()*10-10);
+				scene.add(temp);
+			}
+
+
+
+
 			var a= 0;
 			var count =0;
 			var output = 0;
@@ -125,7 +173,6 @@
 			var b = 0
 			var count2 =0
 
-			var scene = MANNEQUIN.getStage().scene; // взимане на сцената на Mannequin.js
 
 			var daSword = sword.clone();
 			daSword.receiveShadow = true;
