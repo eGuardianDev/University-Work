@@ -5,19 +5,25 @@ body{
 }
 
 main{
-    margin: 1rem;
+    margin: 0;
 }
 canvas {
     background-color: white;
     border: 2px solid black;
+    /* image-rendering: pixelated; */
+    image-rendering: crisp-edges;
+    float:right;
 }
 
 .DisplayBox{
-    float:left;
+    position: absolute;
+    float:right;
+    
 }
 
 
 #ControlPanel{
-    float:right;
-    text-align: right;
+    position: absolute;
+    float:left;
+    font-family: Arial, Helvetica, sans-serif;
 }

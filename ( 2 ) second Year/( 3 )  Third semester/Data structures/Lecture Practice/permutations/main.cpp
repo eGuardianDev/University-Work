@@ -6,7 +6,7 @@
 std::vector<std::vector<int>> permutations;
 
 void Permutations(int n, std::vector<int>& curr, std::vector<bool>& used){
-    if(curr.size() == n){
+    if(curr.size() == n){ 
         permutations.push_back(curr);
         return;
     }
@@ -74,10 +74,8 @@ void print(){
             std::cout << perm[i] << " ";
         }
         std::cout << countInversions(permutations[k]) << '\n';
-
         k++;    
     }
-   
     
 }
 

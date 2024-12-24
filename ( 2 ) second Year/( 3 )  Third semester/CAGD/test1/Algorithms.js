@@ -25,13 +25,33 @@ function calculateAtPos(t){
 function drawCurve(event){
     // controlPoints
     
+    let pos =calculateAtPos(0);
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = "grey";
     for(let i =0;i<=1;i+=0.001){
         
-        let pos =calculateAtPos(i);
+        
+        pos =calculateAtPos(i);
+        // behold - the bad anti-aliasing 
         ctx.beginPath();
-        ctx.fillRect(pos.resX, pos.resY, 1, 1);
+        ctx.moveTo(pos.resX, pos.resY); 
+        pos =calculateAtPos(i+0.001);
+        ctx.lineTo(pos.resX, pos.resY); 
         ctx.stroke();
     }
+    ctx.strokeStyle = "black";
+    ctx.lineWidth = 0.5;
+    for(let i =0;i<=1;i+=0.001){        
+        pos =calculateAtPos(i);
+        ctx.beginPath();
+        ctx.moveTo(pos.resX, pos.resY); 
+        pos =calculateAtPos(i+0.001);
+        ctx.lineTo(pos.resX, pos.resY); 
+        ctx.stroke();
+    }
+    ctx.strokeStyle = "black";
+
+   
 
 
 }

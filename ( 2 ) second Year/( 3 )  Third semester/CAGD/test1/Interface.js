@@ -2,25 +2,37 @@
 const circleRadius = 10;
 const offset_Selector = 0.1;
 
+
+
 let VisibleControlPoligon = true;
 
 function updateControlPoligon(caller){
-  VisibleControlPoligon = caller.checked;
+  CleanCanvas();
+  Redraw();
+}
+function updateDrawingCurve(caller){
   CleanCanvas();
   Redraw();
 }
 
-
 const canvas = document.getElementById("DisplayBox");
+document.addEventListener("DOMContentLoaded", function () {
+  canvas.width = window.innerWidth * 70 / 100;
+  canvas.height = window.innerHeight * 97 / 100;
+});
+
 var ctx;
 function draw() {
   if (canvas.getContext) {
     ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth * 70 / 100;
+    canvas.height = window.innerHeight * 97 / 100;
   }else{
     DebugLog("This browser doesn't support canvas functionality in 2D");
 
   }
 }
+
 window.addEventListener("load", draw);
 
 
@@ -141,28 +153,48 @@ function ReleaseElementFromMoving(event){
 
 
 
-
-
 //  * === Standart Drawing Functions ===
 function CleanCanvas(){
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
 
 function Redraw(){
+  ctx.font = "25px Arial";
   for(let i =0;i<controlPoints.length; ++i){
     // console.log(controlPoints[i]);
     ctx.beginPath();
+
+
+    var tempX = controlPoints[i].x;
+    if(i <controlPoints.length-1){
+      tempX -= controlPoints[i+1].x;
+    }else{
+      if(controlPoints.length >1){
+        tempX -= controlPoints[i-1].x;
+      }
+    }
+
+    var offsetX =10
+    if(tempX < 0) offsetX = -40;
+
+  
+    ctx.fillText("b"+i,controlPoints[i].x + offsetX, controlPoints[i].y);
+
+    ctx.arc(controlPoints[i].x, controlPoints[i].y, circleRadius, 0, 2 * Math.PI, true);
     ctx.arc(controlPoints[i].x, controlPoints[i].y, circleRadius, 0, 2 * Math.PI, true);
     ctx.stroke();
   }
 
-  if(VisibleControlPoligon){
+  if(document.getElementById("ControlPoligonCheckbox").checked){
     for(let i =1;i<controlPoints.length; ++i){
       ctx.beginPath(); // Start a new path
       ctx.moveTo(controlPoints[i-1].x, controlPoints[i-1].y); // Move the pen to (30, 50)
       ctx.lineTo(controlPoints[i].x, controlPoints[i].y); // Draw a line to (150, 100)
       ctx.stroke(); // Render the path
     }
+  }
+  if(document.getElementById("DrawingCurveCheckbox").checked){
+    drawCurve();
   }
   
 }

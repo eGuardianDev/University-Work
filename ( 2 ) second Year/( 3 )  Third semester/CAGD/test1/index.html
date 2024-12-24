@@ -7,29 +7,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="styles.css">
+    
 </head>
 <body>
     
-   <h1>Bézier curves - demo</h1>
-   <p>by Tsvetomir Staykov</p>
 
-   <main>
-
-    <canvas id="DisplayBox" width="600" height="400">
+    <main>
+    
+    <canvas id="DisplayBox">
         Your browser doesn't support this format
     </canvas>
-          
+    
 
     <div id="ControlPanel">
 
+        <h1>Bézier curves</h1>
+        <p>by Tsvetomir Staykov</p> 
         <select name="modesSelector" id="modesSelectorId">
             <option value="Add">Add</option>
             <option value="Move">Move</option>
             <option value="Delete">Delete</option>
         </select> 
         <br>
-        <input type="checkbox" checked="true" onchange="updateControlPoligon(this);" >Visible control poligon</input>
-        <input type="button"  value = "Draw" onclick="drawCurve(this);"/>
+        <input id="ControlPoligonCheckbox" type="checkbox" checked="true" onchange="updateControlPoligon(this);" >Visible control poligon</input>
+        <input id="DrawingCurveCheckbox" type="checkbox" checked="true" onchange="updateDrawingCurve(this);" >Drawing Curve</input>
+
     
     </div>
     </main>
