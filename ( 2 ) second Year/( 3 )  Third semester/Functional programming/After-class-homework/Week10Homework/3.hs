@@ -1,24 +1,20 @@
-import Distribution.Fields (PWarnType(PWTExperimental))
-
 
 data Shape a = Circle a | Rectangle a a | Triangle a a a | Cylinder a a 
  deriving (Show, Eq, Read, Ord)
 
-
-perimeter :: Shape Float -> Float
+perimeter :: Shape Double -> Double
 perimeter (Circle r) = pi * r *2
 perimeter (Cylinder r h) = 4*r+2*h 
 perimeter (Rectangle w h) = 2*w + 2*h 
 perimeter (Triangle a b c) = a + b +c 
 
-
-area :: Shape Float -> Float
+area :: Shape Double -> Double
 area (Circle r) = r*r* pi
 area (Cylinder r h) = 2*pi*r*h + 2*pi*r*r
 area (Rectangle w h) = w*h 
 area (Triangle a b c) =
-    let s = (a + b + c)/2
-    in  sqrt (s * (s-a)*(s-b)*(s-c))
+ let s = (a + b + c)/2
+ in  sqrt (s * (s-a)*(s-b)*(s-c))
 
 main = do 
     print $ perimeter (Circle 5) == 31.41592653589793
@@ -35,4 +31,4 @@ main = do
     print $ area (Triangle 5.3 3.9 4.89) == 9.127927385194024
     print $ area (Cylinder 20 30) == 6283.185307179587
 
-    print $ area (Triangle 2 4 5) == 3.799671 -- my test
+    print $ area (Triangle 3 4 5) == 6.0 -- my test
