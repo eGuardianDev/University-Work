@@ -6,6 +6,7 @@
 #include <cassert>
 #include <cmath>
 #include <iostream>
+#include <vector>
 
 class kHeap{
 
@@ -21,8 +22,11 @@ public:
     const bool isEmpty() const { return size == 0; }
     const int& returnCap() const { return cap; }
 
+
 private:
     void resize();
+
+    void Clean();
 
     int left(const unsigned int index) const {return index*kVariable +1;}
     int right(const unsigned int index) const { return (index+1)*kVariable; }

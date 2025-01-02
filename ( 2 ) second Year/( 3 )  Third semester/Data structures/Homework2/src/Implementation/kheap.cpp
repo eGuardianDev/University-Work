@@ -10,11 +10,7 @@ kHeap::kHeap(unsigned int k): level(0) {
     data = new Word[cap];
 }
 kHeap::~kHeap() {
-    for(int i =0;i<size;++i){
-        data[i].Destruction();
-    }
-
-    delete [] data;
+   Clean();
 }
 
 const Word kHeap::extractMin(){
@@ -39,6 +35,8 @@ void kHeap::insert(const Word& w){
     ++size;
 }
 
+
+
 // == private == 
 
 void kHeap::resize(){
@@ -51,7 +49,17 @@ void kHeap::resize(){
     }
     delete [] temp;
 }
+void kHeap::Clean(){
+    size = 0;
+    cap = 1;
+    level = 0;
+    
+    for(int i =0;i<size;++i){
+        data[i].Destruction();
+    }
 
+    delete [] data;
+}
 void kHeap::goUp(unsigned int index){
     while(index > 0 && data[index].val < data[parent(index)].val){
         std::swap(data[index],data[parent(index)]);
