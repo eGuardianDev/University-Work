@@ -11,6 +11,10 @@ struct Word{
         val = -1;
         count = 0;
     }
+
+    bool operator==(const Word& other) const {
+        return data == other.data && val == other.val && count == other.count;
+    }
 };
 
 #endif
