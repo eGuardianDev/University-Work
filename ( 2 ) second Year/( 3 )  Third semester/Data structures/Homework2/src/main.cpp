@@ -118,10 +118,11 @@ int main(){
         if(a.count != 0)
         {
             a.val *= a.count;
-            heap.insert(a);
+            // heap.insert(a);
         }
     }
 
+    heap.buildFromVector(words);
 
 
     int displayElements;

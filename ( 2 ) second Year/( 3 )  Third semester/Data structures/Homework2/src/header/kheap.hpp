@@ -22,6 +22,7 @@ public:
     const bool isEmpty() const { return size == 0; }
     const int& returnCap() const { return cap; }
 
+    void buildFromVector(std::vector<Word>&);
 
 private:
     void resize();

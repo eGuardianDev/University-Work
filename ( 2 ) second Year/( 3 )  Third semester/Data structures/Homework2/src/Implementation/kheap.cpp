@@ -35,6 +35,27 @@ void kHeap::insert(const Word& w){
     ++size;
 }
 
+void kHeap::buildFromVector(std::vector<Word>& vector){
+    Clean();
+
+    size = vector.size();
+    // kVariable
+    cap = 1;
+    while(cap <size){
+        ++level;
+        cap += std::pow(kVariable,level);
+    }
+    data = new Word[cap];
+
+    for(int i =0;i<vector.size();++i){
+        data[i] = vector[i];
+    }
+
+    for(int i =(size-1)/kVariable;i>=0;--i){
+        goDown(i);
+    }
+
+}
 
 
 // == private == 

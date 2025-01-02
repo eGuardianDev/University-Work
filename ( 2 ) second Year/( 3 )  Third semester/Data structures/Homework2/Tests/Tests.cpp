@@ -150,6 +150,29 @@ TEST_CASE( "Testing kheap - basic functions for k == 4 ")
     REQUIRE(heap.isEmpty());
 
 }
+TEST_CASE( "Testing kheap - build from vector ")
+{
+    std::vector<Word> words;
+    words.push_back(Word{"cat",15,0});
+    words.push_back(Word{"dog",19,0});
+    words.push_back(Word{"fish",3,0});
+    words.push_back(Word{"rat",20,0});
+    words.push_back(Word{"lion",21,0});
+
+    kHeap heap(3);
+
+    heap.buildFromVector(words);
+
+    REQUIRE_FALSE(heap.isEmpty());
+    REQUIRE(heap.Size() == 5);
+    REQUIRE(heap.returnCap() == 13);
+
+    REQUIRE(heap.extractMin() == words[2]);
+    REQUIRE(heap.extractMin() == words[0]);
+    REQUIRE(heap.extractMin() == words[1]);
+    REQUIRE(heap.extractMin() == words[3]);
+    REQUIRE(heap.extractMin() == words[4]);
+}
 TEST_CASE( "Testing Trie - basic functions ")
 {
     Trie tree;
