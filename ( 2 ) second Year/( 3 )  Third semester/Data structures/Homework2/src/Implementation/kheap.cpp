@@ -3,9 +3,9 @@
 
 // == public == 
 
-kHeap::kHeap(unsigned int k): level(0) {
-    if(k ==0){
-        throw std::invalid_argument("Heap with zero children isn't allowed");
+kHeap::kHeap(int k): level(0) {
+    if(k <=0){
+        throw std::invalid_argument("Heap with zero or negative children isn't allowed");
     }     
     kVariable = k;
     try{

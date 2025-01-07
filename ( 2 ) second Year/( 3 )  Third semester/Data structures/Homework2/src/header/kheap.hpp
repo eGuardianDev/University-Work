@@ -11,7 +11,7 @@
 class kHeap{
 
 public:
-    kHeap(unsigned int k=2);
+    kHeap(int k=2);
     ~kHeap(){destroy();}
 
     const Word extractMin();

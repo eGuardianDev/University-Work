@@ -80,6 +80,8 @@ TEST_CASE( "Testing heap - more items, all are compared by value")
 
 TEST_CASE( "Testing kheap - capacity check for diffrent variables ")
 {
+    REQUIRE_THROWS(kHeap(-5));
+    
     kHeap heap1(3);
     REQUIRE(heap1.isEmpty());
     REQUIRE(heap1.Size() == 0);
@@ -122,7 +124,7 @@ TEST_CASE( "Testing kheap - capacity check for diffrent variables ")
 }
 TEST_CASE( "Testing kheap - basic functions for k == 4 ")
 {
-
+    
     kHeap heap(4);
 
     Word a1 = Word{"cat",2,0};
