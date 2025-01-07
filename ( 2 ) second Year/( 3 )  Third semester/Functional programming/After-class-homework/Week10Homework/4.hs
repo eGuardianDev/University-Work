@@ -16,7 +16,7 @@ getAreas :: [Shape Float] -> [Float]
 getAreas = map area 
 
 maxArea :: [Shape Float] -> Shape Float
-maxArea shapes =  fst $ foldr1 (\x y -> if snd x >= snd y then x else y) $ map (\s -> (s, area s)) shapes
+maxArea = foldr1 (\x y -> if area x >= area y then x else y)
 
 
 main = do

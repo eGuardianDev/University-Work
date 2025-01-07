@@ -3,13 +3,8 @@ type Capital = Name
 type AvgYearlyTemperature = Double
 type Elevation = Int
 data City = City Name Elevation AvgYearlyTemperature
+    deriving Eq
 data Country = Country Name Capital [City] 
-
-getNameOfCity :: City -> Name
-getNameOfCity (City name _ _) = name
-
-getNameOfCountry :: Country -> Name
-getNameOfCountry (Country name _ _) = name
 
 getHigherCity :: City -> City -> City
 getHigherCity (City name1 elevation1 temp1) (City name2 elevation2 temp2)
@@ -17,10 +12,7 @@ getHigherCity (City name1 elevation1 temp1) (City name2 elevation2 temp2)
  | otherwise = (City name2 elevation2 temp2)
 
 highestCapital :: [Country] -> Name
-highestCapital arr = getNameOfCountry $ foldr1 (\ (Country n1 c1 cities1) (Country n2 c2 cities2) -> 
-    if getNameOfCity (getHigherCity (head cities1) (head cities2)) == getNameOfCity ( head cities1)
-    then Country n1 c1 cities1 
-    else Country n2 c2 cities2)  $ map getOnlyCapital arr
+highestCapital arr = let (Country name _ _) = foldr1 (\ (Country n1 c1 (city1:cities1)) (Country n2 c2 (city2:cities2)) -> if getHigherCity city1 city2 == city1 then Country n1 c1 (city1:cities1)  else Country n2 c2 (city2:cities2)) $ map getOnlyCapital arr in name
 
 getOnlyCapital :: Country -> Country
 getOnlyCapital (Country name1 capital cities) = Country name1 capital (filter (\ (City n el at) -> n == capital) cities)

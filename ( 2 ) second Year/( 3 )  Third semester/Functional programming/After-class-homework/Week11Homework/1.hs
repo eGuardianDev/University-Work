@@ -39,13 +39,7 @@ sumLeaves (Node val Nil Nil) = val
 sumLeaves (Node val left right) = sumLeaves left + sumLeaves right
 
 areEqual :: (Eq a)=> BTree a -> BTree a -> Bool
-areEqual Nil Nil = True
-areEqual tree Nil = False
-areEqual Nil tree = False
-areEqual (Node val1 left1 right1) (Node val2 left2 right2)
- | val1 == val2 = areEqual left1 left2   && areEqual right1 right2
- | otherwise = False
-
+areEqual t1 t2 = t1 == t2
 
 setLevels :: BTree a -> BTree (Int,a)
 setLevels tree = helper tree 0

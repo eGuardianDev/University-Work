@@ -1,7 +1,7 @@
 
 
 myPoly :: (Num a) => [a] -> (a-> Int -> a)
-myPoly arr = \x y -> product $ map (x-) $ take y arr
+myPoly arr = (\x y -> product $ map (x-) $ take y arr)
 
 
 main = do

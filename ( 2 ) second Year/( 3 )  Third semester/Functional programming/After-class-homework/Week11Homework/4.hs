@@ -8,7 +8,7 @@ t3 = Node 4 [Node 3 [Nil],Node 7 [Nil],Node 9 [Nil]]
 isEven :: [Tree] -> Bool
 isEven [] = True
 isEven [Nil] = True
-isEven xs = length xs `mod` 2 == 0
+isEven xs = even $ length xs
 
 isGraceful :: Tree -> Bool
 isGraceful Nil = True

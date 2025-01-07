@@ -12,23 +12,20 @@ t2 = Node (3,10) (Node (5,8) (Node (6,7) Nil Nil)
                              (Node (1,15) Nil Nil))
 
 
+compareIsIntervalGood :: Interval -> Interval-> Bool
+compareIsIntervalGood (a,b) (a1,b1) = (a <= a1 && b1 <= b) || (a1<=a && b <= b1)
 
 
-compareIntervalsInside :: Interval -> Tree -> Bool
-compareIntervalsInside _ Nil = True
-compareIntervalsInside (a,b) (Node (a1,b1) _ _) = a <= a1 && b1 <= b
+traverseDFS :: Tree -> [Interval] 
+traverseDFS Nil = []
+traverseDFS (Node interval left right) =  [interval] ++ traverseDFS left ++ traverseDFS right
 
-compareIntervalsOutside :: Interval -> Tree -> Bool
-compareIntervalsOutside _ Nil = True
-compareIntervalsOutside (a,b) (Node (a1,b1) _ _ ) = a1<=a && b <=b1 
 
 ordered :: Tree -> Bool
 ordered Nil = True
-ordered (Node (a,b) left right) = 
-    compareIntervalsInside (a,b) left 
-    && compareIntervalsOutside (a,b) right
-    && ordered left
-    && ordered right
+ordered tree = let dfs = traverseDFS tree in
+     all (\ (x, y) -> compareIsIntervalGood x y) $ zip dfs (tail dfs)
+
 
 main = do
     print $ ordered t1 == True

@@ -18,7 +18,7 @@ colorTree2 = Node Blue (Node Red (Node Green Empty
 
 
 maxDepthBlueNode :: Tree -> Int
-maxDepthBlueNode Empty = 0
+maxDepthBlueNode Empty = -1
 maxDepthBlueNode tree = helper 0 0 tree
     where
         helper :: Int -> Int ->Tree -> Int
@@ -30,3 +30,4 @@ maxDepthBlueNode tree = helper 0 0 tree
 main = do 
     print $ maxDepthBlueNode colorTree == 2
     print $ maxDepthBlueNode colorTree2 == 0 -- my test
+    print $ maxDepthBlueNode Empty == -1 -- my test

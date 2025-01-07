@@ -48,6 +48,7 @@ nextPositions (x,y) maze
  | otherwise = error "Invalid symbol found"
  where symbol = getSymbol (x,y) maze
 
+ -- p c 0
 
 perimeter :: Maze -> Int
 perimeter maze = let start = getStart maze
@@ -76,7 +77,6 @@ roads maze = let start = getStart maze
                 concatMap 
                 (\x -> perimeterHelper maze currPos x (getNextValid x maze) (if getSymbol x maze /= '.' then  passed ++ [x] else passed) ) filtered
 
-
 findDots :: Maze -> [Pos]
 findDots maze = helper maze 0 0 []
     where  
@@ -86,7 +86,6 @@ findDots maze = helper maze 0 0 []
          | y == length maze = res
          | getSymbol (x,y) maze == '.' = helper maze (x+1) y $ (x,y):res 
          | otherwise = helper maze (x+1) y res
-
 
 areNeighbors :: Pos -> Pos -> Bool
 areNeighbors (x,y) (a,b) = abs (x -  a) <=1 &&  abs (y - b) <=1 
@@ -136,66 +135,56 @@ getGlobalNeighbors (x,y) = [(x+1,y),(x-1,y),(x,y+1),(x,y-1)]
 getBorder :: [Pos] -> Maze -> [Pos]
 getBorder poses maze =  filter (`isValidPos` maze) $ concatMap getGlobalNeighbors poses
 
-
 isGroupLoopedInRoad :: [Pos] -> Maze -> Bool
 isGroupLoopedInRoad group maze = all (\x -> elem x (roads maze)) $ removeInList group (removeInList group $ getBorder group maze)
-
-
 
 numEnclosed :: Maze -> Int
 numEnclosed maze = length $ filter (\a -> (isGroupLoopedInRoad a maze) && (not $ touchingOutterWall maze a) )( groupNeighbors $ findDots maze) 
 
-
-
--- testmaze = ["...|.....|...",
---                         ".S---7..F--7.",
---                         ".|...|--|..|.",
---                         ".L---J..L--J.",
---                         "...|.....|..."]
 main = do
 --ex 1
-    print $ perimeter  ["7-F7-",
-                        ".FJ|7",
-                        "SJLL7",
-                        "|F--J",
-                        "LJ.LJ"] == 16 
+    print $ perimeter ["7-F7-",
+                      ".FJ|7",
+                      "SJLL7",
+                      "|F--J",
+                      "LJ.LJ"] == 16 
     print $ perimeter ["-.|F7",
-     ".S-7|",
-     "L|7||",
-     "-L-J|",
-     "L|-JF"] == 8
+                       ".S-7|",
+                       "L|7||",
+                       "-L-J|",
+                       "L|-JF"] == 8
     print $ perimeter ["F--7",
-     "|F-7",
-     ".S.|",
-     "|L-J"] == 8
+                       "|F-7",
+                       ".S.|",
+                       "|L-J"] == 8
 
 
 -- ex 2
     print $ numEnclosed ["...|.....|...",
-                        ".S---7..F--7.",
-                        ".|...|--|..|.",
-                        ".L---J..L--J.",
-                        "...|.....|..."] == 1
+                         ".S---7..F--7.",
+                         ".|...|--|..|.",
+                         ".L---J..L--J.",
+                         "...|.....|..."] == 1
     print $ numEnclosed [".F--S--7.",
-                        ".|F---7|.",
-                        ".||...||.",
-                        ".|L-7FJ|.",
-                        ".L--JL-J."]  == 1
+                         ".|F---7|.",
+                         ".||...||.",
+                         ".|L-7FJ|.",
+                         ".L--JL-J."]  == 1
     print $ numEnclosed [".S-------7.",
-                        ".|F-----7|.",
-                        ".||.....||.",
-                        ".|L-7.F-J|.",
-                        ".|..|.|..|.",
-                        ".L--J.L--J.",
-                        "..........."] == 2
+                         ".|F-----7|.",
+                         ".||.....||.",
+                         ".|L-7.F-J|.",
+                         ".|..|.|..|.",
+                         ".L--J.L--J.",
+                         "..........."] == 2
     print $ numEnclosed [".S--------7.",
-                        ".|.F----7.|.",
-                        ".|.|....|.|.",
-                        ".|.|....|.|.",
-                        ".|.L-7F-J.|.",
-                        ".|...||...|.",         
-                        ".L---JL---J."] == 3
+                         ".|.F----7.|.",
+                         ".|.|....|.|.",
+                         ".|.|....|.|.",
+                         ".|.L-7F-J.|.",
+                         ".|...||...|.",         
+                         ".L---JL---J."] == 3
     print $ numEnclosed ["..F-S-7.",
-                        ".FJF-7L7",
-                        "FJFJ.L7|",
-                        "L-J...LJ"]  == 0
+                         ".FJF-7L7",
+                         "FJFJ.L7|",
+                         "L-J...LJ"]  == 0
