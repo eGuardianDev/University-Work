@@ -24,21 +24,20 @@ public:
     const bool contains(char* word) const;
     const Word getWord(char* word);
 
-
 private:
     Node* root;
 
-    Word getWordNode(Node* root, char* word,std::string& curr) const;
+    Word getWordHelper(Node* root, char* word,std::string& curr) const;
 
-    const bool containsNode(Node* node, char* word) const;
+    const bool containsHelper(Node* node, char* word) const;
    
-    void getWordsNode(Node* node, std::string word, std::vector<Word>& res) const;
+    void getWordsHelper(Node* node, std::string word, std::vector<Word>& res) const;
    
-    void appendNode(Node* node, char* word, int& val,bool count = true);
+    void appendHelper(Node* node, char* word, int& val,bool count = true);
 
     struct Node{
         Node* next[COUNT_ALPHABET] = {0};
-        int grade = -1;
+        int grade = 1;
         int count = 0;
         bool isEndWord = false; 
 

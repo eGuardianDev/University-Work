@@ -1,13 +1,14 @@
 
 #include "../header/Trie.hpp"
 #include <cstring>
+#include <new>
 #include <stdexcept>
 
 // == public == 
 
 void Trie::print() const{
     std::vector<Word> res;
-    getWordsNode(root,"", res);
+    getWordsHelper(root,"", res);
     for(Word word : res){
         std::cout << word.data << " " << word.val << " " <<word.count <<'\n';
     }        
@@ -15,25 +16,28 @@ void Trie::print() const{
 
 std::vector<Word> Trie::getWords()const{
     std::vector<Word> res;
-    getWordsNode(root,"", res);
+    getWordsHelper(root,"", res);
     return res;
 }
 
 void Trie::append(char* word, int val, bool count) {
-    appendNode(root, word, val, count);
+    if(root == nullptr){ 
+        root = new Node;
+    }
+    appendHelper(root, word, val, count);
 }
 
 const bool Trie::contains(char* word) const {
-    return containsNode(root, word);
+    return containsHelper(root, word);
 }
 const Word Trie::getWord(char* word) {
     std::string res(word);
-    return getWordNode(root, word, res);
+    return getWordHelper(root, word, res);
 }
 
 
 // == private ==
-Word Trie::getWordNode(Node* node, char* word, std::string& toRet) const{
+Word Trie::getWordHelper(Node* node, char* word, std::string& toRet) const{
     assert(node != nullptr || word != nullptr);
 
     int index = int(*word -'a');
@@ -42,13 +46,13 @@ Word Trie::getWordNode(Node* node, char* word, std::string& toRet) const{
         return Word{toRet,node->grade,node->count};
     }
     if(node->next[index]){
-        return getWordNode(node->next[index], word+1, toRet);
+        return getWordHelper(node->next[index], word+1, toRet);
     }
     
     throw std::logic_error("Word doesn't exist");
 }
 
-const bool Trie::containsNode(Node* node, char* word) const {
+const bool Trie::containsHelper(Node* node, char* word) const {
     assert(node != nullptr || word != nullptr);
 
     int index = int(*word -'a');
@@ -57,13 +61,13 @@ const bool Trie::containsNode(Node* node, char* word) const {
         return true;
     }
     if(node->next[index]){
-        return containsNode(node->next[index], word+1);
+        return containsHelper(node->next[index], word+1);
     }
     
     return false;
     
 }
-void Trie::getWordsNode(Node* node, std::string word, std::vector<Word>& res) const{
+void Trie::getWordsHelper(Node* node, std::string word, std::vector<Word>& res) const{
     if(!node) return;
     if(node->isEndWord){
 
@@ -71,24 +75,20 @@ void Trie::getWordsNode(Node* node, std::string word, std::vector<Word>& res) co
     }
     for(int i =0 ;i<COUNT_ALPHABET;++i){
         if(node->next[i]){                
-            getWordsNode(node->next[i], (word + char(i+'a')),res);
+            getWordsHelper(node->next[i], (word + char(i+'a')),res);
         }
     }
 }
 
-void Trie::appendNode(Node* node, char* word, int& val,bool count){
+void Trie::appendHelper(Node* node, char* word, int& val, bool count){
     assert(node != nullptr || word != nullptr);
-
     if(*word == '\0')
     {
-        if(node->grade == -1){
-            node->grade = val;
-        }
         node->isEndWord = true;
         if(count){
-            
             node->count+=1;
         }else{
+            node->grade = val;
             node->count =0;
         }
         return;
@@ -97,9 +97,15 @@ void Trie::appendNode(Node* node, char* word, int& val,bool count){
     int index = *word - 'a';
 
     if(!node->next[index]){
-        node->next[index] = new Node;
+        try{
+            node->next[index] = new Node;
+        }catch(std::bad_alloc& e){
+            this->root->Destruct();
+            root = nullptr;
+            throw e;
+        }
     }
-    appendNode(node->next[index], word+1, val,count);
+    appendHelper(node->next[index], word+1, val,count);
 
     return;
 }

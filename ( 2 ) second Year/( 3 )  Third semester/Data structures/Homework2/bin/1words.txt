@@ -1,0 +1,12 @@
+game 3
+player 2
+fortune 9
+smart 5
+stupid 6
+january 1
+event -8
+global -2
+face -4
+laptop 3
+effort -5
+he -1

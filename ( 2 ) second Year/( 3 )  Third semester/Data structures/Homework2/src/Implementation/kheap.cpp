@@ -1,4 +1,5 @@
 #include "../header/kheap.hpp"
+#include <new>
 
 // == public == 
 
@@ -7,12 +8,13 @@ kHeap::kHeap(unsigned int k): level(0) {
         throw std::invalid_argument("Heap with zero children isn't allowed");
     }     
     kVariable = k;
-    data = new Word[cap];
+    try{
+        data = new Word[cap];    
+    }catch( std::bad_alloc& e){
+        std::cout << "Failed to initialize heap: " << e.what() << std::endl;
+        throw e;
+    }
 }
-kHeap::~kHeap() {
-   Clean();
-}
-
 const Word kHeap::extractMin(){
     if(size == 0)throw std::underflow_error("Empty heap");
     Word res = data[0];
@@ -35,21 +37,39 @@ void kHeap::insert(const Word& w){
     ++size;
 }
 
-void kHeap::buildFromVector(std::vector<Word>& vector){
-    Clean();
+void kHeap::buildFromVector(std::vector<Word>& vector, bool ignoreZeroCountWords){
+    destroy();
 
-    size = vector.size();
+    if(ignoreZeroCountWords){
+        for(int i =0;i<vector.size();++i){
+            if(vector[i].count != 0)
+                ++size;
+            }
+    }else size = vector.size();
+
     // kVariable
     cap = 1;
     while(cap <size){
         ++level;
         cap += std::pow(kVariable,level);
     }
-    data = new Word[cap];
 
-    for(int i =0;i<vector.size();++i){
-        data[i] = vector[i];
+    try{
+        data = new Word[cap];
+    }catch(std::bad_alloc& e){
+        cap = 0;
+        size = 0;
+        level = 0;
+        throw e;        
     }
+
+    int index = 0;
+    for(int i =0;i<vector.size();++i){
+        if(ignoreZeroCountWords && vector[i].count == 0)continue;
+
+        data[index++] = vector[i];
+    }
+    size = index;
 
     for(int i =(size-1)/kVariable;i>=0;--i){
         goDown(i);
@@ -70,7 +90,7 @@ void kHeap::resize(){
     }
     delete [] temp;
 }
-void kHeap::Clean(){
+void kHeap::destroy(){
     size = 0;
     cap = 1;
     level = 0;

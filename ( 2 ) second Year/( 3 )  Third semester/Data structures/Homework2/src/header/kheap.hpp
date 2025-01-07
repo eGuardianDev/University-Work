@@ -12,7 +12,7 @@ class kHeap{
 
 public:
     kHeap(unsigned int k=2);
-    ~kHeap();
+    ~kHeap(){destroy();}
 
     const Word extractMin();
     const Word& getMin() const;
@@ -22,12 +22,12 @@ public:
     const bool isEmpty() const { return size == 0; }
     const int& returnCap() const { return cap; }
 
-    void buildFromVector(std::vector<Word>&);
+    void buildFromVector(std::vector<Word>&, bool ignoreZeroCountWords = true);
 
 private:
     void resize();
 
-    void Clean();
+    void destroy(); 
 
     int left(const unsigned int index) const {return index*kVariable +1;}
     int right(const unsigned int index) const { return (index+1)*kVariable; }

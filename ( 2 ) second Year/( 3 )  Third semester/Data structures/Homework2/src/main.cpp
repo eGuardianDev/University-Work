@@ -37,6 +37,8 @@ void readDictionary(Trie& tree, const std::string& path ){
 
 
 std::string formatWord(std::string word){
+    
+    assert(word.size() > 0);
 
     for(int i =0;i<word.size();++i){
        word[i] = tolower(word[i]);
@@ -62,7 +64,6 @@ std::string formatWord(std::string word){
     }
 
     std::string res = "";
-
     for(int i =0; i<word.size();++i){
         if(i ==0 && removeStart) {
             continue;
@@ -114,15 +115,12 @@ int main(){
     readFromText(tree, pathToText);
 
     std::vector<Word> words = tree.getWords();
-    for(Word a : words){
-        if(a.count != 0)
-        {
-            a.val *= a.count;
-            // heap.insert(a);
-        }
+    for(int i =0 ;i< words.size();++i){
+
+        words[i].val *= words[i].count;
     }
 
-    heap.buildFromVector(words);
+    heap.buildFromVector(words, true);
 
 
     int displayElements;
@@ -130,6 +128,7 @@ int main(){
     std::cin >> displayElements;
 
     words.clear();
+    
     int longestWord = 0;
     while(displayElements >0 && !heap.isEmpty()){
         Word w = heap.extractMin();
@@ -139,7 +138,7 @@ int main(){
     }
 
 
-    std::cout << " Words" << std::string( std::max(0, longestWord-5),' ')<<"| Count | val" <<std::endl;
+    std::cout << " Words" << std::string( std::max(0, longestWord-5),' ') << "| Count | val" << std::endl;
     for(int i =0;i<words.size();++i){
         Word w = words[i];
         std::cout <<" "<< w.data <<std::string( std::max(0, int(longestWord-w.data.length())), ' ') << "| " << w.count << " | " << w.val<<"\n";
@@ -148,10 +147,4 @@ int main(){
     if(displayElements > 0){
         std::cout <<"Couldn't display " <<  displayElements<< " words, because the text doesn't have enought"  << std::endl;
     }
-
-
-
-
-    
-
 }

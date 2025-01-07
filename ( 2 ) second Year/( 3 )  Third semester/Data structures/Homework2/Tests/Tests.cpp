@@ -153,15 +153,15 @@ TEST_CASE( "Testing kheap - basic functions for k == 4 ")
 TEST_CASE( "Testing kheap - build from vector ")
 {
     std::vector<Word> words;
-    words.push_back(Word{"cat",15,0});
+    words.push_back(Word{"cat",15,1});
     words.push_back(Word{"dog",19,0});
-    words.push_back(Word{"fish",3,0});
-    words.push_back(Word{"rat",20,0});
+    words.push_back(Word{"fish",3,3});
+    words.push_back(Word{"rat",20,1});
     words.push_back(Word{"lion",21,0});
 
     kHeap heap(3);
 
-    heap.buildFromVector(words);
+    heap.buildFromVector(words, false);
 
     REQUIRE_FALSE(heap.isEmpty());
     REQUIRE(heap.Size() == 5);
@@ -172,6 +172,61 @@ TEST_CASE( "Testing kheap - build from vector ")
     REQUIRE(heap.extractMin() == words[1]);
     REQUIRE(heap.extractMin() == words[3]);
     REQUIRE(heap.extractMin() == words[4]);
+
+    REQUIRE(heap.isEmpty());
+    REQUIRE(heap.Size() == 0);
+    REQUIRE(heap.returnCap() == 13);
+}
+TEST_CASE( "Testing kheap - build from vector ignore zeros")
+{
+    std::vector<Word> words;
+    words.push_back(Word{"cat",15,1});
+    words.push_back(Word{"dog",19,0});
+    words.push_back(Word{"fish",3,3});
+    words.push_back(Word{"rat",20,1});
+    words.push_back(Word{"lion",21,0});
+
+    kHeap heap(3);
+
+    heap.buildFromVector(words, true);
+
+    REQUIRE_FALSE(heap.isEmpty());
+    REQUIRE(heap.Size() == 3);
+    REQUIRE(heap.returnCap() == 4);
+
+    REQUIRE(heap.extractMin() == words[2]);
+    REQUIRE(heap.extractMin() == words[0]);
+    REQUIRE(heap.extractMin() == words[3]);
+
+    REQUIRE(heap.isEmpty());
+    REQUIRE(heap.Size() == 0);
+    REQUIRE(heap.returnCap() == 4);
+}
+TEST_CASE( "Testing kheap - build from vector and add more")
+{
+    std::vector<Word> words;
+    words.push_back(Word{"cat",15,1});
+    words.push_back(Word{"dog",19,0});
+    words.push_back(Word{"fish",3,3});
+    words.push_back(Word{"rat",20,1});
+    words.push_back(Word{"lion",21,0});
+
+    kHeap heap(3);
+
+    heap.buildFromVector(words, true);
+
+    REQUIRE_FALSE(heap.isEmpty());
+    REQUIRE(heap.Size() == 3);
+    REQUIRE(heap.returnCap() == 4);
+
+    heap.insert(Word{"silverfish", 1,4});
+    REQUIRE_FALSE(heap.isEmpty());
+    REQUIRE(heap.Size() == 4);
+    REQUIRE(heap.returnCap() == 4);
+    heap.insert(Word{"goldfish", 4,15});
+    REQUIRE_FALSE(heap.isEmpty());
+    REQUIRE(heap.Size() == 5);
+    REQUIRE(heap.returnCap() == 13);
 }
 TEST_CASE( "Testing Trie - basic functions ")
 {
@@ -240,14 +295,18 @@ TEST_CASE( "Testing Trie - check counting")
 TEST_CASE( "Testing Trie - get word counting")
 {
     Trie tree;
-    tree.append("cat", 2);
-    tree.append("dog", 5);
+    tree.append("cat", 2, false);
+    tree.append("dog", 5, false);
 
     REQUIRE(tree.contains("cat"));
     REQUIRE_FALSE(tree.contains("fish"));
     Word w = tree.getWord("cat");
 
-    REQUIRE(w == Word{"cat",2,1});
+    REQUIRE(w == Word{"cat",2,0});
     REQUIRE_THROWS(tree.getWord("fish"));
+
+    tree.append("cat", 0, true);
+    // REQUIRE(w == Word{"cat",2,1});
+
 
 }
