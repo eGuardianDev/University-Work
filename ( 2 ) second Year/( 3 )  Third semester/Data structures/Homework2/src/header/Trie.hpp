@@ -5,6 +5,7 @@
 #include "./wordStruct.hpp"
 #include <cassert>
 #include <iostream>
+#include <new>
 #include <vector>
 const int COUNT_ALPHABET = 26;
 
@@ -26,6 +27,8 @@ public:
 
 private:
     Node* root;
+
+    void allocateRoot();
 
     Word getWordHelper(Node* root, char* word,std::string& curr) const;
 

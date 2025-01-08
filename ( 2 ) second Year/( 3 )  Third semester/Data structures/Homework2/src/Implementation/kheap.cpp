@@ -1,19 +1,15 @@
 #include "../header/kheap.hpp"
+#include <alloca.h>
 #include <new>
 
 // == public == 
 
-kHeap::kHeap(int k): level(0) {
+kHeap::kHeap(int k): level(0), size(0) {
     if(k <=0){
         throw std::invalid_argument("Heap with zero or negative children isn't allowed");
     }     
     kVariable = k;
-    try{
-        data = new Word[cap];    
-    }catch( std::bad_alloc& e){
-        std::cout << "Failed to initialize heap: " << e.what() << std::endl;
-        throw e;
-    }
+    allocateDataArr();
 }
 const Word kHeap::extractMin(){
     if(size == 0)throw std::underflow_error("Empty heap");
@@ -54,14 +50,7 @@ void kHeap::buildFromVector(std::vector<Word>& vector, bool ignoreZeroCountWords
         cap += std::pow(kVariable,level);
     }
 
-    try{
-        data = new Word[cap];
-    }catch(std::bad_alloc& e){
-        cap = 0;
-        size = 0;
-        level = 0;
-        throw e;        
-    }
+    allocateDataArr();
 
     int index = 0;
     for(int i =0;i<vector.size();++i){
@@ -74,32 +63,46 @@ void kHeap::buildFromVector(std::vector<Word>& vector, bool ignoreZeroCountWords
     for(int i =(size-1)/kVariable;i>=0;--i){
         goDown(i);
     }
-
 }
 
 
 // == private == 
 
+void kHeap::allocateDataArr(){
+    try{
+        if(cap == 0){
+            cap = 1;
+        }
+        data = new Word[cap];    
+    }catch(const std::bad_alloc& e){
+        data = nullptr;
+        cap = 0;
+        level = 0;
+        size = 0;
+        throw e;
+    }
+}
 void kHeap::resize(){
     Word *temp = data;
     ++level;
-    cap +=  std::pow(kVariable,level);
-    data = new Word[cap]; 
+    cap += std::pow(kVariable,level);
+    allocateDataArr();
     for(int i =0; i<size;++i){
         std::swap(temp[i],data[i]);
     }
     delete [] temp;
 }
 void kHeap::destroy(){
+    // * this is not needed, because no pointers are used, but still..
+    // for(int i =0;i<size;++i){
+        // data[i].Destruction();
+    // }
     size = 0;
-    cap = 1;
+    cap = 0;
     level = 0;
-    
-    for(int i =0;i<size;++i){
-        data[i].Destruction();
-    }
 
     delete [] data;
+    data = nullptr;
 }
 void kHeap::goUp(unsigned int index){
     while(index > 0 && data[index].val < data[parent(index)].val){

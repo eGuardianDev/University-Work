@@ -8,7 +8,7 @@ struct Word{
     int count = 0;
     void Destruction(){
         data = "";
-        val = -1;
+        val = 1;
         count = 0;
     }
 

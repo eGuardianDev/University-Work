@@ -3,6 +3,8 @@
 #include "header/wordStruct.hpp"
 #include <iostream>
 #include <fstream>
+#include <new>
+#include <stdexcept>
 #include <vector>
 
 void readDictionary(Trie& tree, const std::string& path ){
@@ -46,15 +48,17 @@ std::string formatWord(std::string word){
 
     bool removeEnd = false;
     bool removeStart = false;
-    switch(word[word.size()-1]){
-        case '.':
-        case ',':
-        case '!':
-        case ':':
-        case '\'':
-        case '\"': 
-        removeEnd = true;
-        break;
+    if(word.size()>1){
+        switch(word[word.size()-1]){
+            case '.':
+            case ',':
+            case '!':
+            case ':':
+            case '\'':
+            case '\"': 
+            removeEnd = true;
+            break;
+        }
     }
     switch(word[0]){
         case '\'':
@@ -94,9 +98,7 @@ void readFromText(Trie &tree, std::string& path){
     File.close();
 }
 
-
 int main(){
-
     Trie tree;
 
     std::string pathToDictinary;
@@ -107,7 +109,9 @@ int main(){
     int heapK;
     std::cout << "k-heap - size of k: ";
     std::cin >> heapK;
+    
     kHeap heap(heapK);
+   
 
     std::string pathToText;
     std::cout << "Name of text file: ";
@@ -120,7 +124,11 @@ int main(){
         words[i].val *= words[i].count;
     }
 
-    heap.buildFromVector(words, true);
+    try{
+        heap.buildFromVector(words, true);
+    }catch(std::bad_alloc& e){
+        std::cout << "Failed building from vector - bad alloc - " << e.what() << std::endl;
+    }
 
 
     int displayElements;

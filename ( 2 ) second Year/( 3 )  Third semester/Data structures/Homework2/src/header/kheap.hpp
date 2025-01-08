@@ -27,6 +27,9 @@ public:
 private:
     void resize();
 
+    void allocateDataArr();
+
+    // * this is called destory, because it deletes the whole array, it's not just cleaning.
     void destroy(); 
 
     int left(const unsigned int index) const {return index*kVariable +1;}

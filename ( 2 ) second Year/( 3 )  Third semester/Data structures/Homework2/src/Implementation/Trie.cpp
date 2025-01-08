@@ -37,6 +37,7 @@ const Word Trie::getWord(char* word) {
 
 
 // == private ==
+
 Word Trie::getWordHelper(Node* node, char* word, std::string& toRet) const{
     assert(node != nullptr || word != nullptr);
 
