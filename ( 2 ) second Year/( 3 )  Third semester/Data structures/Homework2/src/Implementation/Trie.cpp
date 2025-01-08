@@ -101,12 +101,28 @@ void Trie::appendHelper(Node* node, char* word, int& val, bool count){
         try{
             node->next[index] = new Node;
         }catch(std::bad_alloc& e){
-            this->root->Destruct();
-            root = nullptr;
+            // * old bad exception safety
+            // this->root->Destruct();
+            // root = nullptr;
             throw e;
         }
     }
-    appendHelper(node->next[index], word+1, val,count);
+    try{
+        appendHelper(node->next[index], word+1, val,count);
+    }catch(std::bad_alloc& e){
+        bool hasChildren = false;
+        for(int i =0 ;i<COUNT_ALPHABET;++i){
+            if(node->next[index]->next[i] != nullptr){
+                hasChildren = true;
+                break;
+            }
+        }
+        if(!hasChildren){
+            delete node->next[index];
+            node->next[index] = nullptr;
+        }
+        throw e;
+    }
 
     return;
 }

@@ -32,7 +32,11 @@ void readDictionary(Trie& tree, const std::string& path ){
         }catch(std::invalid_argument e){
             throw std::invalid_argument("The passed grade of word is bad (probably not an Int)");
         }
-        tree.append(word.data(), val, false);
+        try{
+            tree.append(word.data(), val, false);
+        }catch(std::bad_alloc& e){
+            std::cout << data << " wasn't added due to bad_alloc" << std::endl;
+        }
     }
     File.close();
 }
@@ -92,7 +96,11 @@ void readFromText(Trie &tree, std::string& path){
     std::string data;
     while(File >> data)
     {
-        tree.append(formatWord(data).data());
+        try{
+            tree.append(formatWord(data).data());
+        }catch(std::bad_alloc& e){
+            std::cout << data << " wasn't added due to bad_alloc" << std::endl;
+        }
     }
 
     File.close();
