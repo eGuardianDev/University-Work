@@ -1,9 +1,8 @@
-masm
 model small
 
 .data
 
-helpMessage db "Hello search! Help menu:", 0ah, 0dh, " h - help", 0ah, 0dh ," c - count sentences", 0ah, 0dh, " p - print currently opened text", 0ah, 0dh , " s - select word", 0ah, 0dh , " f - find word", 0ah, 0dh, " . (dot) - find symbols", 0ah, 0dh , " esc - exit", 0dh, 0ah, "$"
+helpMessage db "Help menu:", 0ah, 0dh, " h - help", 0ah, 0dh ," c - count sentences", 0ah, 0dh, " p - print currently opened text", 0ah, 0dh , " s - select word", 0ah, 0dh , " f - find word", 0ah, 0dh, " . (dot) - find symbols", 0ah, 0dh , " esc - exit", 0dh, 0ah, "$"
 invalidSearchWord db "The search is bad - contains space or is null", 0dh, 0ah, "$"
 findedWordTable db "Num | Row",0ah,0dh,"$"
 currCountSentencesMsg db "Current sentences are: $"
@@ -11,12 +10,18 @@ SelectSymbolToFindMsg db "You can search for this symbols by pressing them on th
 WordSelectMsg db "Select your word:",0ah, 0dh,"$"
 noWordFoundMsg db "Sadly, no words found.",0ah, 0dh,"$"
 badCharMsg db "Current selected character is not valid!",0ah, 0dh,"$"
+errorReadingMsg db "Something went wrong during file read.$"
+badPathMsg db "Your file was not found.",0ah, 0dh,"$"
+enterFileNameMessage db "Enter file name: $"
+noSymbolsAreFoundMsg db "Nothing was found for selected symbol symbol $"
+leavingProgramMsg db "Exiting program. $"
 	
 
 ;symbol counter
 wordBeforeSymbol db 251 dup(0)
 currentSymbol db 0 
 isMinusPresentFlag db 0
+areAnySymbolsFoundFlag db 0
 
 isCurrWordGoodFlag db 1
 hasNewWordFlag db 0 ; used for checking new words for exmaple " - Hello." only one word "Hello.", but " - " shoudn't be new word
@@ -39,7 +44,7 @@ sentencesCount db 0
 
 ; file system
 file_Handle dw 0
-inputFile db 'input.txt',0
+inputFile db 101 dup(0)
 point_inputFile	dd	inputFile
 
 buf db 502 dup(0)
@@ -54,12 +59,90 @@ main:
 	mov	ax,@data 
 	mov	ds,ax 
 
+
+	mov ah, 09h
+	mov dx, offset enterFileNameMessage
+	int 21h
+	; setup for read
+	mov cx, 100 
+WriteNextCharacter:
+	mov ah, 01h
+	int 21h
+
+	cmp al, 27 ; esc
+	jne notExiting
+	
+	mov ah, 02h
+	;make new line to look better
+	mov dl, 0ah
+	int 21h
+	mov dl, 0dh
+	int 21h
+
+	jmp exit
+
+	notExiting:
+
+	cmp al, 13 ; is new line
+	je exitFileNameWriting
+
+	cmp al, 08 ; backspace
+	jne dontRemoveOneCharFileName
+
+	cmp cx, 100
+	jne notBorderTouching
+	
+	mov ah, 02h
+	mov dl, 32
+	int 21h
+	jmp WriteNextCharacter
+	notBorderTouching:
+	;clean one character
+	inc cx
+	mov bx, 100
+	sub bx, cx
+	mov [inputFile+bx],0
+	inc cx
+
+	mov ah, 02h
+	mov dl, 32
+	int 21h
+	mov dl, 8
+	int 21h
+
+	;continue as normal
+	loop WriteNextCharacter
+
+dontRemoveOneCharFileName:
+
+	;save to buffer
+	mov bx, 100
+	sub bx, cx
+	mov [inputFile + bx],al
+	
+	loop WriteNextCharacter
+
+exitFileNameWriting:
+
+
 	; openning file
 	mov	al,02h 
 	lds	dx,point_inputFile
 	mov	ah,3dh 
 	int	21h
 	mov file_Handle, ax
+
+	jnc fileFound
+
+	;file is not found or something went wrong
+	mov ah, 09h
+	mov dx, offset badPathMsg
+	int 21h
+	mov ah, 02h
+
+	jmp exit
+
+	fileFound:
 
 	;read file
 	xor	al, al
@@ -70,6 +153,21 @@ main:
 	int	21h
 	jc	exit 
 	nop 
+
+	jnc fileReadsGood
+	
+	;files isn't read well
+	mov ah, 09h
+	mov dx, offset errorReadingMsg
+	int 21h
+	jmp exit
+	
+
+	fileReadsGood:
+	; close files
+	mov	ah,3Eh 
+	mov	bx,file_Handle
+	int	21h
 
 helpmsg:
 	mov ah, 09h
@@ -113,9 +211,9 @@ startFindSymbols:
 	mov ah, 09h
 	mov dx, offset SelectSymbolToFindMsg
 	int 21h
-
 	mov ah, 07h ; read keyboard pressed character (no echo)
 	int 21h
+	mov areAnySymbolsFoundFlag, 0
 
 	cmp al, 2Eh ; .
 	je validSymbolSelected
@@ -188,7 +286,7 @@ checkForEndOfSymbolFindForMinus:
 	cmp BYTE PTR [si], 0 	
 	jne checkingForMinusSpace
 
-	cmp anyWordsFoundFlag, 1
+	cmp areAnySymbolsFoundFlag, 1
 	je logicLoop
 
 	mov ah, 03h
@@ -197,7 +295,17 @@ checkForEndOfSymbolFindForMinus:
 	mov ah, 02h
 	int 10h
 	mov ah, 09h
-	mov dx, offset noWordFoundMsg
+	mov dx, offset noSymbolsAreFoundMsg
+	int 21h
+
+	mov ah, 02h
+	mov dl, currentSymbol
+	int 21h
+	mov ah, 02h
+	mov dl, 10
+	int 21h
+	mov ah, 02h
+	mov dl, 13
 	int 21h
 
 	jmp logicLoop
@@ -265,10 +373,10 @@ foundWordSymbol:
 
 	cmp dl, currentSymbol 
 	jne wordSymbolReset
-
+	
 	dontCheckForSymbol:
 
-	mov anyWordsFoundFlag, 1
+	mov areAnySymbolsFoundFlag, 1
 	mov ah, 0
 	mov al, wordNumber
 	
@@ -395,6 +503,9 @@ newSpaceFoundBetweenSymbols:
 	cmp isMinusPresentFlag, 0
 	je skipMinusRemoveEndSymbol
 	
+	cmp currentSymbol, 2Dh
+	jne skipMinusRemoveEndSymbol
+
 	dec di
 	mov byte ptr[di], 0h
 	inc di
@@ -435,7 +546,7 @@ checkForEndOfSymbolFind:
 	jne findWordSymbols
 
 
-	cmp anyWordsFoundFlag, 1
+	cmp areAnySymbolsFoundFlag, 1
 	je logicLoop
 
 
@@ -445,8 +556,18 @@ checkForEndOfSymbolFind:
 	mov ah, 02h
 	int 10h
 	mov ah, 09h
-	mov dx, offset noWordFoundMsg
+	mov dx, offset noSymbolsAreFoundMsg
 	int 21h
+	mov ah, 02h
+	mov dl, currentSymbol
+	int 21h
+	mov ah, 02h
+	mov dl, 10
+	int 21h
+	mov ah, 02h
+	mov dl, 13
+	int 21h
+
 
 		
 
@@ -827,7 +948,7 @@ searchReadChar:
 	int 21h
 
 	cmp al, 13 ; is new line
-	je searchWord
+	je startWritingWord
 
 	cmp al, 08
 	jne dontRemoveOneChar
@@ -859,20 +980,33 @@ dontRemoveOneChar:
 	
 	loop searchReadChar
 
-searchWord:
+startWritingWord:
 
-	;display word
-
-	
 	; check if word is null
 	cmp cx, 250
-	jne doneSearch
+	je wordIsBadInSomeWay
+	
+	mov cx, 250
+	mov di, offset readWordBuf
+	loopAndCheckWord:
+	cmp BYTE PTR [di], 0
+	je doneWord
+	
+	cmp BYTE PTR [di], 32 ; has space
+	je wordIsBadInSomeWay
+
+	inc di 
+	loop loopAndCheckWord
+
+
+	wordIsBadInSomeWay:
 	mov IsGoodWordFlag, 0 
 	mov ah, 09h
 	mov dx, offset invalidSearchWord
 	int 21h
+	
 
-doneSearch:
+doneWord:
 	xor cx,cx
 	jmp logicLoop
 
@@ -919,12 +1053,12 @@ skipCR:
 
 
 exit:
-	
-	; close files
-	mov	ah,3Eh 
-	mov	bx,file_Handle
-	int	21h
 
+	mov ah, 09h
+	mov dx, offset leavingProgramMsg
+	int 21h
+	
 	mov	ax,4c00h
 	int	21h
+
 end	main
