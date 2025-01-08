@@ -87,13 +87,15 @@ void kHeap::resize(){
     ++level;
     cap += std::pow(kVariable,level);
     allocateDataArr();
-    for(int i =0; i<size;++i){
-        std::swap(temp[i],data[i]);
+    if(temp != nullptr){
+        for(int i =0; i<size;++i){
+            std::swap(temp[i],data[i]);
+        }
     }
     delete [] temp;
 }
 void kHeap::destroy(){
-    // * this is not needed, because no pointers are used, but still..
+    // * this is not needed, because no pointers are used
     // for(int i =0;i<size;++i){
         // data[i].Destruction();
     // }

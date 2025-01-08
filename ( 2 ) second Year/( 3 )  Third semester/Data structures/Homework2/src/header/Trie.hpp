@@ -28,8 +28,6 @@ public:
 private:
     Node* root;
 
-    void allocateRoot();
-
     Word getWordHelper(Node* root, char* word,std::string& curr) const;
 
     const bool containsHelper(Node* node, char* word) const;
