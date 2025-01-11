@@ -3,16 +3,14 @@
 Please if you have hard subjects, don't write too many extra curriculum activities,
 because you won't have any free time and will burn out easily.
 
-Remember to be social and go to events if possible.
-
 ### Subjects this semester
 - Functional programming
-- Sturctures of data and programming
-- Basics of Computer Graphics
+- Data structures and programming
+- Intro to Computer Graphics
 - Computer Architecture
-- English
+- Computer English
 
-Extra curriculums, that I enrolled in
-- Structures of data - practicum => helps with algorithms
-- Computer Architectures - practicum => learn assembly
-- Computer Aided Graphic Design (CAGD) => interesting and important algorithms
+### Extra curriculums (that I enrolled in)
+- Data structures and programming - practicum (algorithms practice)
+- Computer Architectures - practicum (Assembly language)
+- Computer Aided Graphic Design (CAGD) (Bezier and other curves)
