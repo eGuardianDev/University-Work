@@ -507,7 +507,7 @@ newSpaceFoundBetweenSymbols:
 	jne skipMinusRemoveEndSymbol
 
 	dec di
-	mov byte ptr[di], 0h
+	mov byte ptr [di], 0h
 	inc di
 	
 	skipMinusRemoveEndSymbol:
