@@ -7,7 +7,7 @@
 #include <iostream>
 #include <new>
 #include <vector>
-const int COUNT_ALPHABET = 26;
+const long COUNT_ALPHABET = 26;
 
 class Trie{
 private:
@@ -17,6 +17,11 @@ public:
 
     Trie(){root = new Node();}
     ~Trie(){if(root){root->Destruct();}}
+
+    Trie(const Trie &other) = delete;
+    Trie& operator=(const Trie &other) = delete;
+    Trie(const Trie &&other) = delete;
+    Trie& operator=(const Trie &&other) = delete;
 
     void print() const;
     std::vector<Word> getWords() const;

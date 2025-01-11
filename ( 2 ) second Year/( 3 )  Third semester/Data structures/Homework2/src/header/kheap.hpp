@@ -14,6 +14,11 @@ public:
     kHeap(int k=2);
     ~kHeap(){destroy();}
 
+    kHeap(kHeap &) = delete;
+    kHeap &operator= (kHeap &) = delete;
+    kHeap(kHeap &&) = delete;
+    kHeap &operator= (kHeap &&) = delete;
+
     const Word extractMin();
     const Word& getMin() const;
     void insert(const Word&);

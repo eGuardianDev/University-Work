@@ -97,27 +97,23 @@ void Trie::appendHelper(Node* node, char* word, int& val, bool count){
 
     int index = *word - 'a';
 
+    bool alreadyExist = false;
     if(!node->next[index]){
         try{
             node->next[index] = new Node;
         }catch(std::bad_alloc& e){
             // * old bad exception safety
-            // this->root->Destruct();
+            // if (root)
+            //  this->root->Destruct();
             // root = nullptr;
             throw e;
         }
-    }
+    } else alreadyExist = true;
+    
     try{
         appendHelper(node->next[index], word+1, val,count);
     }catch(std::bad_alloc& e){
-        bool hasChildren = false;
-        for(int i =0 ;i<COUNT_ALPHABET;++i){
-            if(node->next[index]->next[i] != nullptr){
-                hasChildren = true;
-                break;
-            }
-        }
-        if(!hasChildren){
+        if(!alreadyExist){
             delete node->next[index];
             node->next[index] = nullptr;
         }
