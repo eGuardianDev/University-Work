@@ -95,10 +95,9 @@ void kHeap::resize(){
     delete [] temp;
 }
 void kHeap::destroy(){
-    // * this is not needed, because no pointers are used
-    // for(int i =0;i<size;++i){
-        // data[i].Destruction();
-    // }
+    for(int i =0;i<size;++i){
+        data[i].Destruction();
+    }
     size = 0;
     cap = 0;
     level = 0;

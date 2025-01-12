@@ -99,15 +99,8 @@ void Trie::appendHelper(Node* node, char* word, int& val, bool count){
 
     bool alreadyExist = false;
     if(!node->next[index]){
-        try{
-            node->next[index] = new Node;
-        }catch(std::bad_alloc& e){
-            // * old bad exception safety
-            // if (root)
-            //  this->root->Destruct();
-            // root = nullptr;
-            throw e;
-        }
+        node->next[index] = new Node;
+        
     } else alreadyExist = true;
     
     try{
