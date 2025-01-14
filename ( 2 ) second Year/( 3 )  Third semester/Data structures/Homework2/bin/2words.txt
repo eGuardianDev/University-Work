@@ -1,6 +1,0 @@
-fast -3
-big -1
-ball -3
-high -7
-warm 4
-tHe -10
