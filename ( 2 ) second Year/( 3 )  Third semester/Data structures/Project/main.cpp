@@ -68,17 +68,16 @@ void printToken(TokenType token){
 // }
 
 void CLI(){
-
-
     std::string cmd;
     while(getline(std::cin, cmd)){
         Reader r;
+        
         try{
-
-        r.Read(cmd);
+            r.Read(cmd);
         }catch(std::invalid_argument e){
             std::cout << "| Error | " << e.what() << "\n";
         }
+
         for(auto a : r.getTokens()){
             printToken(a);
         }

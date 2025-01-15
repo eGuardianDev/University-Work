@@ -86,10 +86,10 @@ void add(std::vector<std::vector<int>>& adjList, int u, int v, int w){
 int main(){
     std::vector<std::vector<int>> adjList;
     add(adjList, 0,1,1);
-    add(adjList, 0,3,2);
-    add(adjList, 1,3,1);
-    add(adjList, 1,2,3);
-    add(adjList, 2,3,-5);
+    add(adjList, 1,2,5);
+    add(adjList, 2,3,1);
+    add(adjList, 3,4,2);
+    add(adjList, 4,1,3);
 
     dijkstra(adjList,0);
     return 0;
