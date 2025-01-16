@@ -5,7 +5,6 @@
 void update(std::vector<std::vector<std::pair<int,int>>>& adjList, int dest[], int prev[], int size){
     for(int i =0;i<adjList.size();++i){
         int from = i;
-        bool flag = false;
         for(int j =0; j< adjList[i].size();++j){
             int to = adjList[i][j].first;
             int w = adjList[i][j].second;
@@ -13,10 +12,8 @@ void update(std::vector<std::vector<std::pair<int,int>>>& adjList, int dest[], i
             if(dest[to] > dest[from] + w){
                 dest[to] = dest[from] + w;
                 prev[to] = from;
-                // flag = true;
             }
         }
-        // if(flag) return;
     }
 }
 void bellmanFord(std::vector<std::vector<std::pair<int,int>>>& adjList, int start){
