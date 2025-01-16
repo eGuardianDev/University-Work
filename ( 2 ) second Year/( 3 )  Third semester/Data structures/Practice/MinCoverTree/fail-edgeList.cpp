@@ -5,7 +5,11 @@
 #include <iostream>
 #include <vector>
 typedef std::vector<std::vector<int>> list;
-
+// ==============================
+//
+// ! BAD CODE - DOESN'T WORK
+//
+// ==============================
 
 void add (list& list, int u, int v, int w){
     list.push_back({u,v,w});

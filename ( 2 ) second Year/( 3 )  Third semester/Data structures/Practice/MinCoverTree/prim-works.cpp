@@ -2,6 +2,7 @@
 #include <iostream>
 #include <vector>
 
+
 typedef std::vector<std::vector<int>> matrix;
 
 int minDist(bool visited[], int dist[], int size ){
@@ -45,13 +46,16 @@ void Prim(matrix& graph, int start){
     }
 
     for(int i =0;i<size;++i){
+        // this is cost from prev[i] to i
+        // if you want to the sum cost, need to backtrack until start
+        // and sum while doing it
         std::cout << dist[i] << " ";
     }
         std::cout << "\n";
     for(int i =0;i<size;++i){
         std::cout << prev[i] << " ";
     }
-        std::cout << "\n";
+    std::cout << "\n";
 
 
 }
