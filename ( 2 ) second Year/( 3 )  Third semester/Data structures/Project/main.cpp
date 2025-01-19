@@ -3,15 +3,19 @@
 #include <stack>
 #include <stdexcept>
 #include <vector>
-#include "Checker.hpp"
+// #include "Checker.hpp"
 #include "Objects.hpp"
 #include "Reader.hpp"
+#include "SyntaxTreeBuilder.hpp"
 
 std::string a = "";
 std::stack<Object*> programStack;
 
-void printToken(TokenType token){
-    std::cout << TokenToString[token];
+void printToken(Token token){
+    std::cout << TokenToString[token.token];
+}
+void printTokenVal(Token token){
+    std::cout << token.val;
 }
 // std::string printToken(Tokens token){
 //     switch(token){
@@ -81,24 +85,30 @@ void CLI(){
         for(auto a : r.getTokens()){
             printToken(a);
         }
+        std::cout << "\n";
+        for(auto a : r.getTokens()){
+            printTokenVal(a);
+        }
+        std::cout << "\n";
 
-        Checker ch;
+        try{
+            STBuilder builder;
+            std::vector<Token> tokens = r.getTokens();
+            builder.build(tokens);
+        }catch( const char* e){
+            std::cout << "ERORR | " << e <<std::endl; 
+        }
+
+        // Checker ch;
         
-        std::vector<TokenType> types = r.getTokens();
-        ch.Check(types);
-
+        // ch.Check(types);
         std::cout <<  '\n';
     }
 }
 
 
 int main(){
-    // CLI();
-    Checker c;
-    auto a = std::vector<TokenType>
-    {IF,Number, Number, Number};
-    c.Check(a);
-    
-    std::cout << c.run();
+    CLI();
+  
     return 0;
 }

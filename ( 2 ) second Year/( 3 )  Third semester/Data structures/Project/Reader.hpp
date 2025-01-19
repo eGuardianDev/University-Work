@@ -7,7 +7,7 @@ class Reader{
 
     std::string data;
     int index =0;
-    std::vector<TokenType> tokens;
+    std::vector<Token> tokens;
 
     bool isEnd(){return index == data.size();}
     char &Peak(){
@@ -42,7 +42,6 @@ class Reader{
     void Read(std::string input){
         this->data = input;
         index = 0;
-
         while(!isEnd()){
             switch(Pop()){
                 case ' ':
@@ -50,7 +49,7 @@ class Reader{
                 break;
                 case '<':
                     if(!isEnd() && Peak() == '-'){
-                        tokens.push_back(LetBe);
+                        tokens.push_back({LetBe, "<-"});
                         Next();
                     }
                     else{
@@ -59,21 +58,27 @@ class Reader{
                 break;
 
                 case '(':
-                    tokens.push_back(Open_bracket);
+                    tokens.push_back({Open_bracket, "("});
                 break;
                 case ')':
-                    tokens.push_back(Close_bracket);
+                    tokens.push_back({Close_bracket, ")"});
                 break;
                 case ',':
-                    tokens.push_back(Comma);
+                    tokens.push_back({Comma, ","});
                 break;
                 case '#':
-                    tokens.push_back(Variable);
-                    while(!isEnd() && isDigit(Peak())){
-                        Next();
-                    }
-                    if(Peak() != ',' && Peak() != ')'){
-                        invalidChar(Peak(),index);
+                    {
+                        std::string val = "";
+                        Token temp {Variable};
+                        while(!isEnd() && isDigit(Peak())){
+                            val += Peak();
+                            Next();
+                        }
+                        if(Peak() != ',' && Peak() != ')'){
+                            invalidChar(Peak(),index);
+                        }
+                        temp.val = val;
+                        tokens.push_back(temp);
                     }
                 break;
                 default:
@@ -89,7 +94,7 @@ class Reader{
                     if(isAlpha(Peak())){
                         invalidChar(Peak(),index);
                     }
-                    tokens.push_back(Number);
+                    tokens.push_back({Number,tempData});
                 }else if(isAlpha(last)){
                     tempData +=last;
                     while(isAlpha(last = Peak())){
@@ -100,52 +105,16 @@ class Reader{
                     if(isDigit(Peak())){
                         invalidChar(Peak(),index);
                     }
-                    if (tempData == "add") {
-                        tokens.push_back(ADD);
-                    } else if (tempData == "sub") {
-                        tokens.push_back(SUB);
-                    } else if (tempData == "mul") {
-                        tokens.push_back(MUL);
-                    } else if (tempData == "div") {
-                        tokens.push_back(DIV);
-                    } else if (tempData == "pow") {
-                        tokens.push_back(POW);
-                    } else if (tempData == "sqrt") {
-                        tokens.push_back(SQRT);
-                    } else if (tempData == "sin") {
-                        tokens.push_back(SIN);
-                    } else if (tempData == "cos") {
-                        tokens.push_back(COS);
-                    } else if (tempData == "eq") {
-                        tokens.push_back(EQ);
-                    } else if (tempData == "le") {
-                        tokens.push_back(LE);
-                    } else if (tempData == "nand") {
-                        tokens.push_back(NAND);
-                    } else if (tempData == "if") {
-                        tokens.push_back(IF);
-                    } else if (tempData == "list") {
-                        tokens.push_back(LIST);
-                    } else if (tempData == "head") {
-                        tokens.push_back(HEAD);
-                    } else if (tempData == "tail") {
-                        tokens.push_back(TAIL);
-                    } else if (tempData == "map") {
-                        tokens.push_back(MAP);
-                    } else if (tempData == "filter") {
-                        tokens.push_back(FILTER);
-                    }else{
-                        tokens.push_back(Variable);
+                    
+                        tokens.push_back({Variable,tempData});
                     }
-                }else{
-                    invalidChar(last, index-1);
-                }
+             
                 break;
             }
         }
     }
 
-    const std::vector<TokenType>& getTokens(){
+    const std::vector<Token>& getTokens(){
         return this->tokens;
     }
 
