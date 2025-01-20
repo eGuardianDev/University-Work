@@ -13,7 +13,8 @@ enum TokenType{
     LetBe =3, 
 
     //VARIABLES
-    Name =4, Variable = 5, Number =6,
+    // Name =4,
+    Variable = 5, Number =6,
     
     // // generic functions
     // ADD =7, SUB =8 , MUL= 9, DIV= 10, POW= 11, SQRT= 12, SIN= 13, COS= 14, EQ =15, LE=16, NAND=17,

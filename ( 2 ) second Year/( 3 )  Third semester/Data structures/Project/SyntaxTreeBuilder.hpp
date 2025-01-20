@@ -4,87 +4,171 @@
 #include <ostream>
 #include <stack>
 #include <stdexcept>
+#include <unordered_map>
 #include <vector>
 #include "Tokens.hpp"
 class STBuilder{
     private:
 
     std::vector<Token> objs;
+    std::vector<Node*> newFunctions;
+
+    std::unordered_multimap<std::string, executeArgs>&  functions;
+
     int index = 0;
 
     Token &Peak(){
+        if(index == objs.size()){
+            problem("Uncomplete syntax");
+        }
         return objs[index];
     }
     Token &Pop(){
         return objs[index++];
     }
     bool end(){
-        return index == objs.size();
+        return index >= objs.size();
     }
     void next(){
         ++index;
     }
+    void reset(){
+        index = 0;
+    }
+    void problem(const std::string& data){
+        std::string res;
+        res += data +"\n\n";
+        reset();
+        throw std::runtime_error(res);
+    }
 
     public:
 
-    STBuilder(){}
-    ~STBuilder(){}
+    STBuilder(std::unordered_multimap<std::string, executeArgs>& functions) : functions(functions){}
+    ~STBuilder(){
+        for(int i=0;i<newFunctions.size();++i){
+            newFunctions[i]->Destruct();
+        }
+    }
 
-    Object* build(std::vector<Token> _objs, int _index = 0){
+    Node* build(std::vector<Token> _objs, int& _index){
         objs = _objs;
         index = _index;
         if(objs.size() == 0){
             throw "Empty vector no objects";
             return nullptr;
         }
+        Node* root = nullptr;
 
-        Object* root = nullptr;
+        if(index == _objs.size()){
+            return nullptr;
+        }
 
-
-
-
-        int countBrackets = 0;
         while(!end()){
-            Token curr = Pop();
-            
-            switch(curr.token){
-                case UNDEFINED:
-                    throw std::logic_error("Something went very wrong - undefined token type");
-                    break;
-                // case Name:
-                //     if(Peak().token != LetBe || Peak().token != Open_bracket){
-                //         throw "Function without call or definition";
-                //     }
-                //     break;
+            switch(Peak().token){
                 case Variable:
-                    break;
-                case Comma:
-                    if(countBrackets == 0)
-                        throw "Arguments outside brackets";
-                    break;
-                case LetBe:
-                    if(countBrackets)
-                        throw "Invalid attempt for definitions inside arguments";
-                    
-                    break;
-                case Number:
-                    break;
-                case Open_bracket:
-                    ++countBrackets;
-                    break;
-                case Close_bracket:
-                    if(countBrackets==0)
-                        throw "Invalid brackets";
-                    --countBrackets;
-                    break;
-            }
-        }
-        if(countBrackets >0){
-            throw "Invalid brackets";
-        }
+                {
+                    std::string nameOfFunc = Peak().val;
+                    next();
+                    if(Peak().token == LetBe){
+                        next();
+                         Node* res;
+                        try{
+                         res = build(objs,index);
+                        }
+                        catch(std::runtime_error& e){
+                            if(root)root->Destruct();
+                            throw e;
+                        }
+                        newFunctions.push_back(res);
+                        functions.insert({nameOfFunc,{0, [res](std::vector<Node*> args) -> Node*
+                        {return res->clone();}}});
+                        return nullptr;
 
+                    }else{
+                        auto [left, right] = functions.equal_range(nameOfFunc);
+                        if(left == nullptr){
+                            problem("function with name \"" + nameOfFunc+ "\" is not defined");
+                        }
+
+                        if(Peak().token == Open_bracket){
+                            next();
+                            std::vector<Node*> args;
+
+                            while(!end() && Peak().token != Close_bracket){
+                                if(Peak().token == Comma){
+                                    next();
+                                    continue;
+                                }else{
+                                    try{
+                                    args.push_back(build(objs, index));
+                                    }catch(std::runtime_error& e ){
+                                        if(root){
+                                            root->Destruct();
+                                        }
+                                        throw e;
+                                    }
+                                }
+                            }   
+                            next();
+                            // std::cout << "args count: "<< args.size() << std::endl;
+
+
+                            bool found = false;
+                            while(left != right){
+                                if(args.size() == left->second.argc){
+                                    return left->second.function(args);
+                                    found =true;
+                                    break;
+                                }
+                                ++left;
+                            }
+                            if(found){
+                            }else{
+                                for(int i =0;i<args.size();++i){
+                                    args[i]->Destruct();
+                                }
+
+                                problem("Function " + nameOfFunc + " doesn't support this amounth of arguments");
+                            }
+                            
+                            if(end()){
+                                return root;
+                            }
+                        }
+                    }
+                }
+                break;
+                case Open_bracket:
+                    throw std::logic_error("Token is Open_bracket");
+                break;
+                case Close_bracket:
+                    throw std::logic_error("Token is Close_bracket");
+                break;
+                case Comma:
+                    throw std::logic_error("Token is Comma");
+                break;
+                case Number:
+                    root = new RealNum(std::stod(Peak().val));
+                    next();
+                    return root;
+                break;
+
+                default:
+                    throw std::logic_error("undefined token type");
+                break;
+
+            }
+            next();
+
+        }
 
         return root;
+    }
+
+    Node* build(std::vector<Token> _objs){
+        int index =0;
+        return build(_objs,index);
     }
 
 };

@@ -1,87 +1,181 @@
-#ifndef _Objects_hpp_
-#define _Objects_hpp_
+#ifndef _Nodes_hpp_
+#define _Nodes_hpp_
 
-class Object{
+#include <exception>
+#include <functional>
+#include <stdexcept>
+#include <vector>
+#include <iostream>
+
+class Node{
 
     public:
-    Object() {}
-    virtual ~Object() {};
-    virtual double operator()() = 0;
+    virtual ~Node() {};
+    virtual Node* clone() = 0;
+    virtual double operator()(std::vector<Node*>& args) = 0;
+    virtual void Destruct() = 0;
 };
 
 
-class RealNumber : public Object{
+struct executeArgs{
+    short argc = -1;
+    // Node* function = nullptr; 
+    std::function<Node*(std::vector<Node*>)> function = nullptr;
+};
+
+class RealNum : public Node{
     private:
     double val;
+    short index = -1;
     public:
-    RealNumber(double a) :val(a){}; 
-    ~RealNumber() override {}
-    double operator()() override{
+    RealNum(double a,  short index= -1) :val(a), index(index){}; 
+    ~RealNum() override {}
+    Node* clone() override{
+        return new RealNum(val, index);
+    }
+    double operator()(std::vector<Node*>& args) override{
+        if(index >=0){
+            return args.size();
+            // return (*args[index])(args);
+        }
         return val;
     }
-};
-
-class AddFunc : public Object{
-
-
-    public:
-    Object *a, *b;
-    AddFunc(){}
-    AddFunc(Object* a, Object* b) : a (a), b (b){}
-    ~AddFunc() override {}
-   
-    double operator()() override{
-        return (*a)() + (*b)();
+    void Destruct() override{
+        delete this;
     }
 };
 
-class IfDef : public Object{
-
-
+class Add : public Node{
     public:
-    Object *logic, *t, *f;
-    IfDef() {}
-    IfDef(Object* logic, Object* t, Object *f) : logic(logic), t(t), f(f){}
-    ~IfDef() override {}
-   
-    double operator()() override{
-        if((*logic)() != 0){
-            return (*t)();
+    Node *a, *b;
+     Add(){}
+     Add(Node* a, Node* b) : a (a), b (b){}
+    ~Add() override {}
+    double operator()(std::vector<Node*>& args) override{
+        return (*a)(args) + (*b)(args);
+    }
+    Node* clone() override{
+        return new Add(a->clone(), b->clone());
+    }
+    void Destruct() override{
+        if(a)a->Destruct();
+        if(b)b->Destruct();
+        delete this;
+    }
+};
+class VariableHolder : public Node{
+     public:
+     std::vector<Node*> args;
+     Node *index;
+     VariableHolder(){}
+     VariableHolder(std::vector<Node*>& args, Node* index) : 
+     args(args), index (index){}
+    ~VariableHolder() override {}
+    double operator()(std::vector<Node*>& _args) override{
+        return (*args[(*index)(_args)])(_args);
+    }
+    Node* clone() override{
+
+        std::vector<Node*> res(args.size());
+        for(int i=0; i < args.size();++i){
+            res[i] = args[i]->clone();
+        }
+        return new VariableHolder(res, index->clone());
+    }
+    void Destruct() override{
+        if(index)index->Destruct();
+        // for(int i =0;i<args)
+        delete this;
+    }
+};
+
+class If : public Node{
+     public:
+    Node *logic, *t, *f;
+     If(){}
+     If(Node* logic, Node* t, Node* f) : logic(logic), t(t), f(f){}
+
+    Node* clone() override{
+        return new If(logic->clone(), t->clone(), f->clone());
+    }
+    ~If() override {}
+    double operator()(std::vector<Node*>& args) override{
+        if((*logic)(args) !=0 ){
+            return (*t)(args);
         }else{
-            return (*f)();
+            return (*f)(args);
         }
     }
+    void Destruct() override{
+        if(logic)logic->Destruct();
+        if(t)t->Destruct();
+        if(f)f->Destruct();
+        delete this;
+    }
+};
+class Sub : public Node{
+     public:
+    Node *a, *b;
+     Sub(){}
+     Sub(Node* a, Node* b) : a (a), b (b){}
+    ~Sub() override {}
+    double operator()(std::vector<Node*>& args) override{
+        return (*a)(args) - (*b)(args);
+    }
+
+    Node* clone() override{
+        return new Sub(a->clone(), b->clone());
+    }
+    void Destruct() override{
+        if(a)a->Destruct();
+        if(b)b->Destruct();
+        delete this;
+    }
+};
+class Mul : public Node{
+};
+class Div : public Node{
+};
+class Pow : public Node{
+};
+class Custom : public Node{
+    // public:
+    // std::vector<Node*> args;
+    //  Custom(Node* a ...) : a (a), b(b){
+    //     throw std::runtime_error("Pow function not ready");
+    //  }
+    // ~Pow() override {}
+    // double operator()(std::vector<Node*>& args) override{
+    //     // throw std::runtime_error("Function not ready");
+    //     // (*a)(),(*b)();
+    // }
+    // void Destruct() override{
+    //     if(a)a->Destruct();
+    //     if(b)b->Destruct();
+    // }
 };
 
-class SubFunc : public Object{
+class Sqrt : public Node{
 };
-class MulFunc : public Object{
+class Sin : public Node{
 };
-class DivFunc : public Object{
+class Cos : public Node{
 };
-class PowFunc : public Object{
+class Eq : public Node{
 };
-class SqrtFunc : public Object{
+class Le : public Node{
 };
-class SinFunc : public Object{
+class Nand : public Node{
 };
-class CosFunc : public Object{
+class list : public Node{
 };
-class EqFunc : public Object{
+class head : public Node{
 };
-class LeFunc : public Object{
+class tail : public Node{
 };
-class NandFunc : public Object{
+class map : public Node{
 };
-class list : public Object{
-};
-class head : public Object{
-};
-class tail : public Object{
-};
-class map : public Object{
-};
-class filter : public Object{
+class filter : public Node{
 };
 
-#endif //_Objects_hpp_
+#endif //_Nodes_hpp_

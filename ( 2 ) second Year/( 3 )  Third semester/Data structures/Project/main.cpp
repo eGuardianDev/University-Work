@@ -2,15 +2,20 @@
 #include <iostream>
 #include <stack>
 #include <stdexcept>
+#include <unordered_map>
 #include <vector>
 // #include "Checker.hpp"
 #include "Objects.hpp"
 #include "Reader.hpp"
 #include "SyntaxTreeBuilder.hpp"
+#include "tokenChecker.hpp"
 
-std::string a = "";
-std::stack<Object*> programStack;
+#define Debug_mode
 
+// std::string a = "";
+// std::stack<Object*> programStack;
+
+#ifdef Debug_mode
 void printToken(Token token){
     std::cout << TokenToString[token.token];
 }
@@ -70,39 +75,105 @@ void printTokenVal(Token token){
 
 //     }
 // }
+#endif
 
 void CLI(){
     std::string cmd;
-    while(getline(std::cin, cmd)){
-        Reader r;
+
+      std::unordered_multimap<std::string, executeArgs> functions;
+
+        functions.insert({"add",{2, [](std::vector<Node*> args) -> Node*
+        {return new Add(args[0], args[1]);}}});
+        functions.insert({"sub",{2, [](std::vector<Node*> args) -> Node*
+        {return new Sub(args[0], args[1]);}}});
+
+        functions.insert({"if",{3, [](std::vector<Node*> args) -> Node*
+        {return new If(args[0], args[1],args[2]);}}});
+
+        functions.insert({"index0",{2, [](std::vector<Node*> args) -> Node*
+        {return new VariableHolder(args,new RealNum(0));}}});
+
+
+
+    STBuilder builder(functions);
+
+    while(true){
         
+        std::cout << "# ";
+        getline(std::cin, cmd);
+        std::cout << functions.size() << "\n";
+        if(cmd == ""){
+            continue;
+        }
+        if(cmd == "end"){
+            break;
+        }
+        std::cout << cmd;
+        Reader r;
         try{
             r.Read(cmd);
         }catch(std::invalid_argument e){
             std::cout << "| Error | " << e.what() << "\n";
         }
 
-        for(auto a : r.getTokens()){
-            printToken(a);
+        // for(auto a : r.getTokens()){
+        //     printToken(a);
+        // }
+        // std::cout << "\n";
+
+        std::vector<Token> tokens = r.getTokens();
+
+        if(tokens.size() ==0){
+            continue;
         }
-        std::cout << "\n";
-        for(auto a : r.getTokens()){
-            printTokenVal(a);
-        }
-        std::cout << "\n";
 
         try{
-            STBuilder builder;
-            std::vector<Token> tokens = r.getTokens();
-            builder.build(tokens);
-        }catch( const char* e){
-            std::cout << "ERORR | " << e <<std::endl; 
+            // std::cout << "Begin checking" << std::endl;
+            tokenChecker checker;
+            checker.check(tokens);
+        }catch(std::runtime_error& e){
+            std::cout << "\nERORR | " << e.what() <<std::endl;
+            continue; 
         }
 
-        // Checker ch;
+      
         
-        // ch.Check(types);
-        std::cout <<  '\n';
+
+
+
+        Node *currFunct = nullptr;
+        try{
+            std::cout << "Begin building" << std::endl;
+            currFunct = builder.build(tokens);
+        }catch( std::runtime_error& e){
+            std::cout << "\nERORR | " << e.what() <<std::endl; 
+            if(currFunct) currFunct->Destruct();
+            currFunct = nullptr;
+            continue;
+        }
+
+        try{
+           
+            std::vector<Node*> args(0);
+            if(tokens.size() >= 2 && tokens[1].token == LetBe){
+
+            }else{
+                if(!currFunct){
+                    throw "Build failed";
+                }
+                std::cout << (*currFunct)(args) << std::endl;
+            }
+            if(currFunct){
+                currFunct->Destruct();
+            }
+            currFunct = nullptr;
+        }catch(const char* e){
+            std::cout << "ERORR | " << e <<std::endl; 
+            if(currFunct)currFunct->Destruct();
+            currFunct = nullptr;
+            continue;
+        }
+
     }
 }
 

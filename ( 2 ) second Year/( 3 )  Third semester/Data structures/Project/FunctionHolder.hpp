@@ -10,7 +10,7 @@
 #include "Objects.hpp"
 class FunctionHolder{
 
-    typedef std::vector<Object*> argsList;
+    typedef std::vector<Node*> argsList;
     typedef double returnType; 
 
     typedef std::function<returnType(argsList&)> functionType;
@@ -37,7 +37,7 @@ class FunctionHolder{
     }
     public:
 
-    double run(Object* command){
+    double run(Node* command){
                 
     }
     

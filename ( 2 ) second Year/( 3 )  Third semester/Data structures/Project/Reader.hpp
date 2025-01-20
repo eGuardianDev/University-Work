@@ -20,20 +20,23 @@ class Reader{
         }
          return data[index-1];} 
 
-    void invalidChar(char &data, int position){
+    void invalidChar(const char &data, const int position){
         this->tokens.clear();
         std::string res = "Invalid character in string \n" + std::string(2, ' ') + this->data+'\n'+std::string(position+2, ' ') + "^-- here\n";
 
         throw std::invalid_argument(res);
     }
 
-    bool isDigit(char &data){
+    bool isDigit(const char &data) const{
         return data >= '0' && data <='9';
     }
 
-    bool isAlpha(char &data){
+    bool isAlpha(const char &data)const{
         return (data >= 'a' && data <= 'z') || (data >='A' && data <= 'Z');
     }
+    // bool isValidSymbol(const char & data) const{
+    //     return (data > '0' && data <'9') || (data > 'a' && data < 'z') || data == '('|| data == ')'|| data == ','|| data == '-'|| data == '#';
+    // }
 
     public:
     Reader(){}
@@ -83,32 +86,31 @@ class Reader{
                 break;
                 default:
                 char last = Last();
-                std::string tempData;
+                std::string currData;
                 if(last == '-' || isDigit(last)){
-                    tempData +=last;
+                    currData +=last;
                     while(isDigit(last = Peak())){
-                        tempData +=last;
+                        currData +=last;
                         //add to something
                         Next();
                     }
                     if(isAlpha(Peak())){
                         invalidChar(Peak(),index);
                     }
-                    tokens.push_back({Number,tempData});
+                    tokens.push_back({Number,currData});
                 }else if(isAlpha(last)){
-                    tempData +=last;
-                    while(isAlpha(last = Peak())){
-                        tempData +=last;
-                        //add to something
+                    currData += last;
+                    while(isAlpha(last = Peak()) || isDigit(last =Peak())){
+                        currData += last;
                         Next();
                     }
-                    if(isDigit(Peak())){
-                        invalidChar(Peak(),index);
-                    }
                     
-                        tokens.push_back({Variable,tempData});
+                    tokens.push_back({Variable,currData});
                     }
-             
+                else{
+                    invalidChar(Peak(),index-1);
+                    // throw std::runtime_error("Symbol is invalid");
+                }
                 break;
             }
         }
