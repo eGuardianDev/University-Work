@@ -71,7 +71,7 @@ class Reader{
                 break;
                 case '#':
                     {
-                        std::string val = "";
+                        std::string val = "#";
                         Token temp {Variable};
                         while(!isEnd() && isDigit(Peak())){
                             val += Peak();

@@ -11,14 +11,14 @@ class Node{
 
     public:
     virtual ~Node() {};
-    virtual Node* clone() = 0;
-    virtual double operator()(std::vector<Node*>& args) = 0;
+    virtual Node* clone(std::vector<Node*>&) = 0;
+    virtual double operator()(std::vector<Node*>& args ) = 0;
     virtual void Destruct() = 0;
 };
 
 
 struct executeArgs{
-    short argc = -1;
+    int argc = -1;
     // Node* function = nullptr; 
     std::function<Node*(std::vector<Node*>)> function = nullptr;
 };
@@ -30,12 +30,12 @@ class RealNum : public Node{
     public:
     RealNum(double a,  short index= -1) :val(a), index(index){}; 
     ~RealNum() override {}
-    Node* clone() override{
+    Node* clone(std::vector<Node*>& args ) override{
         return new RealNum(val, index);
     }
-    double operator()(std::vector<Node*>& args) override{
+    double operator()(std::vector<Node*>& args ) override{
         if(index >=0){
-            return args.size();
+            // return args.size();
             // return (*args[index])(args);
         }
         return val;
@@ -51,11 +51,11 @@ class Add : public Node{
      Add(){}
      Add(Node* a, Node* b) : a (a), b (b){}
     ~Add() override {}
-    double operator()(std::vector<Node*>& args) override{
+    double operator()(std::vector<Node*>& args ) override{
         return (*a)(args) + (*b)(args);
     }
-    Node* clone() override{
-        return new Add(a->clone(), b->clone());
+    Node* clone(std::vector<Node*>& args) override{
+        return new Add(a->clone(args), b->clone(args));
     }
     void Destruct() override{
         if(a)a->Destruct();
@@ -63,24 +63,43 @@ class Add : public Node{
         delete this;
     }
 };
-class VariableHolder : public Node{
-     public:
-     std::vector<Node*> args;
-     Node *index;
-     VariableHolder(){}
-     VariableHolder(std::vector<Node*>& args, Node* index) : 
-     args(args), index (index){}
-    ~VariableHolder() override {}
-    double operator()(std::vector<Node*>& _args) override{
-        return (*args[(*index)(_args)])(_args);
-    }
-    Node* clone() override{
 
+class Wrapper : public Node{
+    public:
+    std::vector<Node*> args;
+    Node* val;
+    Wrapper(std::vector<Node*>& args, Node* val) : val(val){
+        this->args = args;
+    }
+    ~Wrapper() override {}
+    double operator()(std::vector<Node*>& args ) override{
+        return (*args[0])(args);
+    }
+    Node* clone(std::vector<Node*>& _args) override{
         std::vector<Node*> res(args.size());
         for(int i=0; i < args.size();++i){
-            res[i] = args[i]->clone();
+            res[i] = args[i]->clone(_args);
         }
-        return new VariableHolder(res, index->clone());
+        return val->clone(_args);
+    }
+    void Destruct() override{
+        // if(index)index->Destruct();
+        // for(int i =0;i<args)
+        delete val;
+        delete this;
+    }
+};
+
+class VariableHolder : public Node{
+     public:
+     Node *index;
+     VariableHolder(Node* index) : index (index){}
+    ~VariableHolder() override {}
+    double operator()(std::vector<Node*>& _args ) override{
+        return (*_args[(*index)(_args)])(_args);
+    }
+    Node* clone(std::vector<Node*>& _args) override{
+        return new VariableHolder(index->clone(_args));
     }
     void Destruct() override{
         if(index)index->Destruct();
@@ -95,11 +114,11 @@ class If : public Node{
      If(){}
      If(Node* logic, Node* t, Node* f) : logic(logic), t(t), f(f){}
 
-    Node* clone() override{
-        return new If(logic->clone(), t->clone(), f->clone());
+    Node* clone(std::vector<Node*>& _args) override{
+        return new If(logic->clone(_args), t->clone(_args), f->clone(_args));
     }
     ~If() override {}
-    double operator()(std::vector<Node*>& args) override{
+    double operator()(std::vector<Node*>& args ) override{
         if((*logic)(args) !=0 ){
             return (*t)(args);
         }else{
@@ -119,12 +138,12 @@ class Sub : public Node{
      Sub(){}
      Sub(Node* a, Node* b) : a (a), b (b){}
     ~Sub() override {}
-    double operator()(std::vector<Node*>& args) override{
+    double operator()(std::vector<Node*>& args ) override{
         return (*a)(args) - (*b)(args);
     }
 
-    Node* clone() override{
-        return new Sub(a->clone(), b->clone());
+    Node* clone(std::vector<Node*>& _args) override{
+        return new Sub(a->clone(_args), b->clone(_args));
     }
     void Destruct() override{
         if(a)a->Destruct();

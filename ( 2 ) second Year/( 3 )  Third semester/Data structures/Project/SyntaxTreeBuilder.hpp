@@ -12,10 +12,14 @@ class STBuilder{
 
     std::vector<Token> objs;
     std::vector<Node*> newFunctions;
+    std::vector<Node*> newArgs;
+
+    int maxArgumnets = 0;
 
     std::unordered_multimap<std::string, executeArgs>&  functions;
 
     int index = 0;
+    bool afterLet = false;
 
     Token &Peak(){
         if(index == objs.size()){
@@ -43,7 +47,9 @@ class STBuilder{
     }
 
     public:
-
+    std::vector<Node*>& arguments(){
+        return this->newArgs;
+    }
     STBuilder(std::unordered_multimap<std::string, executeArgs>& functions) : functions(functions){}
     ~STBuilder(){
         for(int i=0;i<newFunctions.size();++i){
@@ -51,9 +57,12 @@ class STBuilder{
         }
     }
 
+
     Node* build(std::vector<Token> _objs, int& _index){
+        afterLet = false;
         objs = _objs;
         index = _index;
+        
         if(objs.size() == 0){
             throw "Empty vector no objects";
             return nullptr;
@@ -70,19 +79,30 @@ class STBuilder{
                 {
                     std::string nameOfFunc = Peak().val;
                     next();
-                    if(Peak().token == LetBe){
+
+                    if(nameOfFunc[0] == '#'){
+                        int index = std::stoi(nameOfFunc.data()+1);
+                        maxArgumnets = std::max(maxArgumnets, index);
+                        std::cout << "Created #var\n";
+                        return new VariableHolder(new RealNum(index));
+                    }
+                    else if(Peak().token == LetBe){
                         next();
-                         Node* res;
+                        Node* res;
+                        afterLet = true;
                         try{
-                         res = build(objs,index);
+                            res = build(objs,index);
                         }
                         catch(std::runtime_error& e){
                             if(root)root->Destruct();
                             throw e;
                         }
+
                         newFunctions.push_back(res);
-                        functions.insert({nameOfFunc,{0, [res](std::vector<Node*> args) -> Node*
-                        {return res->clone();}}});
+
+                        functions.insert({nameOfFunc,{maxArgumnets+1, [res](std::vector<Node*> args) -> Node*
+                        {return res->clone(args);}}});
+
                         return nullptr;
 
                     }else{
@@ -93,7 +113,7 @@ class STBuilder{
 
                         if(Peak().token == Open_bracket){
                             next();
-                            std::vector<Node*> args;
+                            std::vector<Node*> args(0);
 
                             while(!end() && Peak().token != Close_bracket){
                                 if(Peak().token == Comma){
@@ -101,7 +121,7 @@ class STBuilder{
                                     continue;
                                 }else{
                                     try{
-                                    args.push_back(build(objs, index));
+                                        args.push_back(build(objs, index));
                                     }catch(std::runtime_error& e ){
                                         if(root){
                                             root->Destruct();
@@ -111,20 +131,19 @@ class STBuilder{
                                 }
                             }   
                             next();
-                            // std::cout << "args count: "<< args.size() << std::endl;
-
+                            std::cout << "args count: "<< args.size() << std::endl;
+                            this->newArgs = args;
 
                             bool found = false;
                             while(left != right){
                                 if(args.size() == left->second.argc){
                                     return left->second.function(args);
-                                    found =true;
+                                    found = true;
                                     break;
                                 }
                                 ++left;
                             }
-                            if(found){
-                            }else{
+                            if(!found){
                                 for(int i =0;i<args.size();++i){
                                     args[i]->Destruct();
                                 }
@@ -168,6 +187,7 @@ class STBuilder{
 
     Node* build(std::vector<Token> _objs){
         int index =0;
+        maxArgumnets = 0;
         return build(_objs,index);
     }
 

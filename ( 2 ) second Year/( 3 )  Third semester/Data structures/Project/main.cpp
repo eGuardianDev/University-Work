@@ -83,15 +83,16 @@ void CLI(){
       std::unordered_multimap<std::string, executeArgs> functions;
 
         functions.insert({"add",{2, [](std::vector<Node*> args) -> Node*
-        {return new Add(args[0], args[1]);}}});
+        {return new Add(args[0],args[1]);}}});
         functions.insert({"sub",{2, [](std::vector<Node*> args) -> Node*
         {return new Sub(args[0], args[1]);}}});
 
         functions.insert({"if",{3, [](std::vector<Node*> args) -> Node*
         {return new If(args[0], args[1],args[2]);}}});
 
-        functions.insert({"index0",{2, [](std::vector<Node*> args) -> Node*
-        {return new VariableHolder(args,new RealNum(0));}}});
+        functions.insert({"real",{2, [](std::vector<Node*> args) -> Node*
+        {return new VariableHolder(new RealNum(0));}}});
+
 
 
 
@@ -101,14 +102,14 @@ void CLI(){
         
         std::cout << "# ";
         getline(std::cin, cmd);
-        std::cout << functions.size() << "\n";
+
         if(cmd == ""){
             continue;
         }
         if(cmd == "end"){
             break;
         }
-        std::cout << cmd;
+        // std::cout << cmd;
         Reader r;
         try{
             r.Read(cmd);
@@ -118,8 +119,10 @@ void CLI(){
 
         // for(auto a : r.getTokens()){
         //     printToken(a);
-        // }
+        //     printTokenVal(a);
         // std::cout << "\n";
+            
+        // }
 
         std::vector<Token> tokens = r.getTokens();
 
@@ -143,7 +146,7 @@ void CLI(){
 
         Node *currFunct = nullptr;
         try{
-            std::cout << "Begin building" << std::endl;
+            // std::cout << "Begin building" << std::endl;
             currFunct = builder.build(tokens);
         }catch( std::runtime_error& e){
             std::cout << "\nERORR | " << e.what() <<std::endl; 
@@ -154,14 +157,15 @@ void CLI(){
 
         try{
            
-            std::vector<Node*> args(0);
+            // std::vector<Node*> args = {new RealNum(0)};
             if(tokens.size() >= 2 && tokens[1].token == LetBe){
 
             }else{
                 if(!currFunct){
                     throw "Build failed";
                 }
-                std::cout << (*currFunct)(args) << std::endl;
+                std::cout << builder.arguments().size() << std::endl;              
+                std::cout << std::endl<< (*currFunct)(builder.arguments()) << std::endl;
             }
             if(currFunct){
                 currFunct->Destruct();
