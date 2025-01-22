@@ -113,16 +113,16 @@ void CLI(){
             std::cout << "| Error | " << e.what() << "\n";
         }
 
-        for(auto a : r.getTokens()){
-            printToken(a);
+        // for(auto a : r.getTokens()){
+        //     printToken(a);
             
-        }
-        std::cout << "\n";
-        for(auto a : r.getTokens()){
-            printTokenVal(a);
+        // }
+        // std::cout << "\n";
+        // for(auto a : r.getTokens()){
+        //     printTokenVal(a);
             
-        }
-        std::cout << "\n";
+        // }
+        // std::cout << "\n";
 
         std::vector<Token> tokens = r.getTokens();
 
@@ -152,11 +152,11 @@ void CLI(){
             continue;
         }
 
-        currFunct->print(std::cout);
+        // currFunct->print(std::cout);
 
 
         try{
-            std::vector<Expression*> env;
+            std::vector<Expression*> env(0);
             Evaluator eval(currFunct,functions, env);
             Expression* res = eval.evaluate();
                       
@@ -164,6 +164,8 @@ void CLI(){
                 curr->print(std::cout);
             } else if (Associate_Exp* curr = dynamic_cast<Associate_Exp*>(res); curr != nullptr){
                 // delete curr;
+                // res->Destruct();
+                delete res;
                 continue;
             }
             else{
@@ -171,18 +173,27 @@ void CLI(){
             }
             // Evaluator eval(currFunct,functions);
             // std::cout << eval.countVariables() << std::endl;
-            // currFunct->Destruct();
+           
+            currFunct->Destruct();
+
+          
+            // std::cout << eval.localEnv.size() << std::endl;
+            // // eval.localEnv[0]->Destruct();
+            
+            res->Destruct();
         }catch( std::runtime_error& e){
             std::cout << "ERORR | " << e.what() <<std::endl; 
             if(currFunct)currFunct->Destruct();
             currFunct = nullptr;
             continue;
         }
-
-    
-
-
     }
+
+    for(auto it = functions.begin(); it != functions.end();){
+        it->second.function->Destruct();
+        it++;
+    }
+
 }
 
 

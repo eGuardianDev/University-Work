@@ -12,12 +12,14 @@ class Evaluator{
 
     Expression* expression;
     typedef std::unordered_multimap<std::string, executeArgs> map;
-
     map& functionsList;
 
-    size_t varCount =0;
-public:
+    enviroment variables;
 
+    Number_Exp* castToNum(Expression* exp){
+        return  dynamic_cast<Number_Exp*>(Evaluator(exp,functionsList, variables).evaluate());
+    }
+public:
     size_t countVariables(){
         if (Function_Exp* curr = dynamic_cast<Function_Exp*>(expression); curr != nullptr){
             size_t local = 0;
@@ -41,21 +43,22 @@ public:
         return 0;
     }
 
-    enviroment variables;
     Evaluator(Expression* expression, map& functions, enviroment variables) : expression(expression), functionsList(functions), variables(variables) {}
     ~Evaluator(){}
 
-    Expression* evaluate(){
+    Expression* evaluate(int step =0){
         if (Function_Exp* curr = dynamic_cast<Function_Exp*>(expression); curr != nullptr){
-            std::cout << "this is function " << curr->func_name << std::endl; 
+            // std::cout << "this is function " << curr->func_name << std::endl; 
             
             if(curr->func_name == "add"){
                 if(curr->arguments.size() == 2){
-                    Number_Exp* left = dynamic_cast<Number_Exp*>(Evaluator(curr->arguments[0],functionsList, variables).evaluate());
+                    Number_Exp* left = castToNum(curr->arguments
+                    [0]);
 
-                    Number_Exp* right = dynamic_cast<Number_Exp*>(Evaluator(curr->arguments[1],functionsList, variables).evaluate());
+                    Number_Exp* right = castToNum(curr->arguments[1]);
 
                     int res = left->value +right->value;
+                   
                     return new Number_Exp(res);
 
                 }else{
@@ -65,6 +68,7 @@ public:
             else if(curr->func_name == "sub"){
                 if(curr->arguments.size() == 2){
                     Number_Exp* left = dynamic_cast<Number_Exp*>(Evaluator(curr->arguments[0],functionsList, variables).evaluate());
+                  
 
                     Number_Exp* right = dynamic_cast<Number_Exp*>(Evaluator(curr->arguments[1],functionsList, variables).evaluate());
 
@@ -95,12 +99,12 @@ public:
                     if(logic->value != 0){
 
                         Number_Exp* True = dynamic_cast<Number_Exp*>(Evaluator(curr->arguments[1],functionsList, variables).evaluate());
-                        return new Number_Exp(True->value);
+                        return True;
 
                     }else{
                         Number_Exp* False = dynamic_cast<Number_Exp*>(Evaluator(curr->arguments[2],functionsList, variables).evaluate());
 
-                        return new Number_Exp(False->value);
+                        return False;
                     }
 
                 }else{
@@ -114,16 +118,17 @@ public:
                 }
                 while(begin != end){
                     if(begin->second.argc == curr->arguments.size()){
-                        enviroment newVars;
+                        enviroment newVars(0);
+
                         for(int i =0;i<curr->arguments.size();++i){
                             newVars.push_back(Evaluator(curr->arguments[i],functionsList,variables).evaluate());
                         }
 
-                        Expression* res = Evaluator(begin->second.function, functionsList, newVars).evaluate();
+                        Evaluator temp(begin->second.function, functionsList, newVars);
+                        Expression* res = temp.evaluate();
 
-                        for(int i=0;i<newVars.size();++i){
-                            newVars[i]->Destruct();
-                        }
+                       
+
                         return res;
                     }else{
                         ++begin;
@@ -137,23 +142,30 @@ public:
             return curr;
         }else 
         if (Number_Exp* curr = dynamic_cast<Number_Exp*>(expression); curr != nullptr){
-            std::cout << "this is number" << std::endl; 
+            // std::cout << "this is number" << std::endl; 
             return curr;
         }else 
         if (Argument_Exp* curr = dynamic_cast<Argument_Exp*>(expression); curr != nullptr){
-            std::cout << "this is argument" << std::endl; 
+            // std::cout << "this is argument" << std::endl; 
             return variables[curr->index];
             // return curr;
         }else 
         if (Associate_Exp* curr = dynamic_cast<Associate_Exp*>(expression); curr != nullptr){
-            std::cout << "this is assoc" << std::endl; 
+            // std::cout << "this is assoc" << std::endl; 
         
-            // auto [begin, end] = functionsList.equal_range(curr->func_name);
+            auto [begin, end] = functionsList.equal_range(curr->func_name);
             
-
+            size_t argc = Evaluator(curr->expression,functionsList,variables).countVariables();
+            if(begin != nullptr && begin != end){
+                if(begin->second.argc == argc){
+                    fail("Function with name and argument count exists");
+                }else{
+                    ++begin;
+                }
+            }
             //all good
-            functionsList.insert({curr->func_name, {Evaluator(curr->expression,functionsList,variables).countVariables(), curr->expression}});
-            std::cout << "created successfully " << curr->func_name << std::endl;
+            functionsList.insert({curr->func_name, {argc, curr->expression}});
+            // std::cout << "created successfully " << curr->func_name << std::endl;
             return curr;
         }else{
             //ignore this

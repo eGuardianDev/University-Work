@@ -2,6 +2,7 @@
 #define _Expressions_hpp__
 
 #include <functional>
+#include <iostream>
 #include <ostream>
 #include <string>
 #include <vector>
@@ -33,31 +34,6 @@ public:
     std::ostream& print( std::ostream& stream, const int tabs = 0) override{
         stream << std::string(tabs, ' ') << func_name << "<-" << std::endl;
         this->expression->print(stream,tabs+1);
-        return stream; 
-    }
-};
-
-
-class Function_Exp : public Expression{
-
-public:
-    std::string func_name;
-    std::vector<Expression*> arguments;
-
-    Function_Exp(std::string function_name, std::vector<Expression*>& arguments) : func_name(function_name), arguments(arguments) { };
-    ~Function_Exp() override {}
-
-    void Destruct() override{
-        for(int i = 0;i <arguments.size();++i){
-            if(arguments[i])arguments[i]->Destruct();
-        }
-        delete this;
-    }
-    std::ostream& print( std::ostream& stream, const int tabs = 0) override{
-        stream << std::string(tabs, ' ') << func_name << " " <<arguments.size() << std::endl;
-        for(int i =0;i<arguments.size();++i){
-            this->arguments[i]->print(stream,tabs+1);
-        }
         return stream; 
     }
 };
@@ -95,6 +71,31 @@ public:
     }
     std::ostream& print( std::ostream& stream, const int tabs = 0) override{
         stream << std::string(tabs, ' ') << value << std::endl;
+        return stream; 
+    }
+};
+
+
+class Function_Exp : public Expression{
+
+public:
+    std::string func_name;
+    std::vector<Expression*> arguments;
+
+    Function_Exp(std::string function_name, std::vector<Expression*>& arguments) : func_name(function_name), arguments(arguments) { };
+    ~Function_Exp() override {}
+
+    void Destruct() override{
+        for(int i = 0;i <arguments.size();++i){
+            if(arguments[i])arguments[i]->Destruct();
+        }
+        delete this;
+    }
+    std::ostream& print( std::ostream& stream, const int tabs = 0) override{
+        stream << std::string(tabs, ' ') << func_name << " " <<arguments.size() << std::endl;
+        for(int i =0;i<arguments.size();++i){
+            this->arguments[i]->print(stream,tabs+1);
+        }
         return stream; 
     }
 };
