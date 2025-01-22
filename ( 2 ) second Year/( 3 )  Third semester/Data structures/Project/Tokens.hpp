@@ -13,7 +13,7 @@ enum TokenType{
     LetBe =3, 
 
     //VARIABLES
-    // Name =4,
+    Function =4,
     Variable = 5, Number =6,
     
     // // generic functions
@@ -30,7 +30,7 @@ struct Token{
 };
 
 const std::string TokenToString[] = 
-{"(", ")", ",", "<-", "Name", "Var", "Num", "add", "sub", "mul", "div", "pow", "sqrt", "sin", "cos", "eq", "le", "nand","if" ,"list" ,"head" ,"tail" ,"map" ,"filter" 
+{"(", ")", ",", "<-", "Function", "Var", "Num", "add", "sub", "mul", "div", "pow", "sqrt", "sin", "cos", "eq", "le", "nand","if" ,"list" ,"head" ,"tail" ,"map" ,"filter" 
 };
 
 #endif

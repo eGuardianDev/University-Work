@@ -17,11 +17,6 @@ class Node{
 };
 
 
-struct executeArgs{
-    int argc = -1;
-    // Node* function = nullptr; 
-    std::function<Node*(std::vector<Node*>)> function = nullptr;
-};
 
 class RealNum : public Node{
     private:

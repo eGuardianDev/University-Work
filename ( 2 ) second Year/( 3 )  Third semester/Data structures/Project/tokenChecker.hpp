@@ -71,14 +71,14 @@ class tokenChecker{
         }
 
         bool endedFunction = false;
+        bool afterLetBe = false;
         int bracketCount = 0;
         while(!end()){
             if(endedFunction){
                 problem("Multiple definions on one line");
             }
             switch(Pop().token){
-                case Variable:
-                  
+                case Function:
                     if(bracketCount == 0){
                         if(Peak().token != LetBe && Peak().token != Open_bracket){
                             problem("Expected parsing or calling of function");
@@ -93,7 +93,8 @@ class tokenChecker{
                     if(Peak().token == Open_bracket){
                         problem("Too many open brackets");
                     }
-                    if(Peak().token != Variable && Peak().token != Number && Peak().token != Close_bracket){
+                    if(Peak().token != Variable && Peak().token != Function 
+                    && Peak().token != Number && Peak().token != Close_bracket){
                         problem("Expected variable or number inside bracket");
                     }
                     ++bracketCount;
@@ -112,7 +113,7 @@ class tokenChecker{
                     if(bracketCount == 0){
                         problem("Comma outside brackets");
                     }
-                    if(Peak().token != Variable && Peak().token != Number){
+                    if(Peak().token != Variable && Peak().token != Function && Peak().token != Number){
                         problem("Expected variable or number");
                     }
                     break;
@@ -124,21 +125,30 @@ class tokenChecker{
                     if(bracketCount >0){
                         problem("Cannot define something inside argument input");
                     }
-                    if(Peak().token != Variable && Peak().token != Number){
+                    if(Peak().token != Variable && Peak().token != Function && Peak().token != Number){
                         problem("Expected function call or Number declaration after definition (<-)");
                     }
+                    afterLetBe = true;
                     break;
 
                 case Number:
                     if(canContinue() && (Peak().token == LetBe || Peak().token == Open_bracket)){
                         problem("Invalid operation over number");
                     }
+                    break;  
+                case Variable:
+                    if(!afterLetBe){
+                        problem("Trying to used variables definition outside defining scope");
+                    }
+                    if(bracketCount ==0){
+                        problem("Cannot put variables outside brackets");
+                    }
+                    if(canContinue() && (Peak().token == LetBe || Peak().token == Open_bracket)){
+                        problem("Invalid operation over number");
+                    }
                     break;
                 
                 
-                case UNDEFINED:
-                    throw std::logic_error("Undefined token type");
-                    break;
                 default:
                     reset();
                     throw std::logic_error("Undefined token type");

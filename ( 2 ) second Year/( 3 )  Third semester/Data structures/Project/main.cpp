@@ -5,9 +5,11 @@
 #include <unordered_map>
 #include <vector>
 // #include "Checker.hpp"
+#include "Evaluator.hpp"
+#include "Expression.hpp"
 #include "Objects.hpp"
-#include "Reader.hpp"
-#include "SyntaxTreeBuilder.hpp"
+#include "Lexer.hpp"
+#include "Parser.hpp"
 #include "tokenChecker.hpp"
 
 #define Debug_mode
@@ -80,23 +82,17 @@ void printTokenVal(Token token){
 void CLI(){
     std::string cmd;
 
-      std::unordered_multimap<std::string, executeArgs> functions;
-
-        functions.insert({"add",{2, [](std::vector<Node*> args) -> Node*
-        {return new Add(args[0],args[1]);}}});
-        functions.insert({"sub",{2, [](std::vector<Node*> args) -> Node*
-        {return new Sub(args[0], args[1]);}}});
-
-        functions.insert({"if",{3, [](std::vector<Node*> args) -> Node*
-        {return new If(args[0], args[1],args[2]);}}});
-
-        functions.insert({"real",{2, [](std::vector<Node*> args) -> Node*
-        {return new VariableHolder(new RealNum(0));}}});
+   
+    // functions.insert({"add",{2, [](std::vector<Expression*> args) -> Expression*
+    // {  
+    // }}});
+       
 
 
+    std::unordered_multimap<std::string, executeArgs> functions;
 
 
-    STBuilder builder(functions);
+    Parser builder;
 
     while(true){
         
@@ -117,12 +113,16 @@ void CLI(){
             std::cout << "| Error | " << e.what() << "\n";
         }
 
-        // for(auto a : r.getTokens()){
-        //     printToken(a);
-        //     printTokenVal(a);
-        // std::cout << "\n";
+        for(auto a : r.getTokens()){
+            printToken(a);
             
-        // }
+        }
+        std::cout << "\n";
+        for(auto a : r.getTokens()){
+            printTokenVal(a);
+            
+        }
+        std::cout << "\n";
 
         std::vector<Token> tokens = r.getTokens();
 
@@ -140,11 +140,8 @@ void CLI(){
         }
 
       
-        
 
-
-
-        Node *currFunct = nullptr;
+        Expression *currFunct = nullptr;
         try{
             // std::cout << "Begin building" << std::endl;
             currFunct = builder.build(tokens);
@@ -155,28 +152,35 @@ void CLI(){
             continue;
         }
 
-        try{
-           
-            // std::vector<Node*> args = {new RealNum(0)};
-            if(tokens.size() >= 2 && tokens[1].token == LetBe){
+        currFunct->print(std::cout);
 
-            }else{
-                if(!currFunct){
-                    throw "Build failed";
-                }
-                std::cout << builder.arguments().size() << std::endl;              
-                std::cout << std::endl<< (*currFunct)(builder.arguments()) << std::endl;
+
+        try{
+            std::vector<Expression*> env;
+            Evaluator eval(currFunct,functions, env);
+            Expression* res = eval.evaluate();
+                      
+            if (Number_Exp* curr = dynamic_cast<Number_Exp*>(res); curr != nullptr){
+                curr->print(std::cout);
+            } else if (Associate_Exp* curr = dynamic_cast<Associate_Exp*>(res); curr != nullptr){
+                // delete curr;
+                continue;
             }
-            if(currFunct){
-                currFunct->Destruct();
+            else{
+                throw std::runtime_error("Evaluation failed, because return type was not a number");
             }
-            currFunct = nullptr;
-        }catch(const char* e){
-            std::cout << "ERORR | " << e <<std::endl; 
+            // Evaluator eval(currFunct,functions);
+            // std::cout << eval.countVariables() << std::endl;
+            // currFunct->Destruct();
+        }catch( std::runtime_error& e){
+            std::cout << "ERORR | " << e.what() <<std::endl; 
             if(currFunct)currFunct->Destruct();
             currFunct = nullptr;
             continue;
         }
+
+    
+
 
     }
 }
