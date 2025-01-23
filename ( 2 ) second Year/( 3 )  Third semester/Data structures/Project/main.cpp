@@ -171,15 +171,8 @@ void CLI(){
             else{
                 throw std::runtime_error("Evaluation failed, because return type was not a number");
             }
-            // Evaluator eval(currFunct,functions);
-            // std::cout << eval.countVariables() << std::endl;
-           
             currFunct->Destruct();
 
-          
-            // std::cout << eval.localEnv.size() << std::endl;
-            // // eval.localEnv[0]->Destruct();
-            
             res->Destruct();
         }catch( std::runtime_error& e){
             std::cout << "ERORR | " << e.what() <<std::endl; 

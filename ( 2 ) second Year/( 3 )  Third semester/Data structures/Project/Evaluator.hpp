@@ -3,7 +3,9 @@
 #define _Evaluator_hpp__
 
 #include "Expression.hpp"
+#include <functional>
 #include <iostream>
+#include <locale>
 #include <stdexcept>
 class Evaluator{
     void fail(std::string data){
@@ -16,10 +18,22 @@ class Evaluator{
 
     enviroment variables;
 
-    Number_Exp* castToNum(Expression* exp){
-        return  dynamic_cast<Number_Exp*>(Evaluator(exp,functionsList, variables).evaluate());
+    double castToNum(Expression* exp){
+        Evaluator eval(exp,functionsList, variables);
+        Number_Exp* evaluation = dynamic_cast<Number_Exp*>(eval.evaluate());
+        if(!evaluation){
+            fail("CastToNum failed - maybe a list?");
+        }
+        double res = evaluation->value;
+
+        if(eval.newCreated) evaluation->Destruct();
+        return res;
     }
+    bool newCreated = false;
 public:
+    bool newAlloc() const{
+        return newCreated;
+    }
     size_t countVariables(){
         if (Function_Exp* curr = dynamic_cast<Function_Exp*>(expression); curr != nullptr){
             size_t local = 0;
@@ -52,13 +66,9 @@ public:
             
             if(curr->func_name == "add"){
                 if(curr->arguments.size() == 2){
-                    Number_Exp* left = castToNum(curr->arguments
-                    [0]);
-
-                    Number_Exp* right = castToNum(curr->arguments[1]);
-
-                    int res = left->value +right->value;
-                   
+                 
+                    double res = castToNum(curr->arguments[0]) + castToNum(curr->arguments[1]);
+                    newCreated = true;
                     return new Number_Exp(res);
 
                 }else{
@@ -67,12 +77,8 @@ public:
             }
             else if(curr->func_name == "sub"){
                 if(curr->arguments.size() == 2){
-                    Number_Exp* left = dynamic_cast<Number_Exp*>(Evaluator(curr->arguments[0],functionsList, variables).evaluate());
-                  
-
-                    Number_Exp* right = dynamic_cast<Number_Exp*>(Evaluator(curr->arguments[1],functionsList, variables).evaluate());
-
-                    int res = left->value -right->value;
+                  double res = castToNum(curr->arguments[0]) - castToNum(curr->arguments[1]);
+                    newCreated = true;
                     return new Number_Exp(res);
 
                 }else{
@@ -80,11 +86,21 @@ public:
                 }
             }else if(curr->func_name == "mul"){
                 if(curr->arguments.size() == 2){
-                    Number_Exp* left = dynamic_cast<Number_Exp*>(Evaluator(curr->arguments[0],functionsList, variables).evaluate());
+                   double res = castToNum(curr->arguments[0]) * castToNum(curr->arguments[1]);
+                    newCreated = true;
+                    return new Number_Exp(res);
 
-                    Number_Exp* right = dynamic_cast<Number_Exp*>(Evaluator(curr->arguments[1],functionsList, variables).evaluate());
-
-                    int res = left->value *right->value;
+                }else{
+                    fail("invalid argument count");
+                }
+            }else if(curr->func_name == "div"){
+                if(curr->arguments.size() == 2){
+                    double divisor = castToNum(curr->arguments[1]);
+                    if(divisor == 0){
+                        fail("Trying to divide by 0");
+                    }
+                   double res = castToNum(curr->arguments[0]) /divisor;
+                    newCreated = true;
                     return new Number_Exp(res);
 
                 }else{
@@ -92,20 +108,12 @@ public:
                 }
             }else if(curr->func_name == "if"){
                 if(curr->arguments.size() ==3){
-                    
                                         
-                    Number_Exp* logic = dynamic_cast<Number_Exp*>(Evaluator(curr->arguments[0],functionsList, variables).evaluate());
-
-                    if(logic->value != 0){
-
-                        Number_Exp* True = dynamic_cast<Number_Exp*>(Evaluator(curr->arguments[1],functionsList, variables).evaluate());
-                        return True;
-
-                    }else{
-                        Number_Exp* False = dynamic_cast<Number_Exp*>(Evaluator(curr->arguments[2],functionsList, variables).evaluate());
-
-                        return False;
-                    }
+                    double logicVal = castToNum(curr->arguments[0]);
+                    if(logicVal != 0)
+                        return new Number_Exp (castToNum(curr->arguments[1]));
+                    else return new Number_Exp (castToNum(curr->arguments[2]));
+                    
 
                 }else{
                     fail("invalid argument count");
@@ -119,14 +127,31 @@ public:
                 while(begin != end){
                     if(begin->second.argc == curr->arguments.size()){
                         enviroment newVars(0);
-
+                        enviroment toBeDestroyed(0);
                         for(int i =0;i<curr->arguments.size();++i){
-                            newVars.push_back(Evaluator(curr->arguments[i],functionsList,variables).evaluate());
+                            auto tempVal =curr->arguments[i];
+                            
+                            auto eval =Evaluator(tempVal,functionsList,variables);
+                                auto val=(eval.evaluate());
+
+                            newVars.push_back(val);
+
+                            if(eval.newCreated){
+                                toBeDestroyed.push_back(val);
+                            }
                         }
 
                         Evaluator temp(begin->second.function, functionsList, newVars);
+                        
+                        
                         Expression* res = temp.evaluate();
 
+                        newCreated = true;
+
+                        // std::cout << toBeDestroyed.size() << std::endl;
+                        for(int i =0;i<toBeDestroyed.size();++i){
+                            toBeDestroyed[i]->Destruct();
+                        }
                        
 
                         return res;

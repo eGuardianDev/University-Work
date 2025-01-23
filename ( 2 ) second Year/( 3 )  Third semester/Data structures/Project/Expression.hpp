@@ -15,6 +15,7 @@ public:
     Expression() {};
     virtual ~Expression() {};
     virtual void Destruct() = 0;
+    virtual Expression* clone() = 0;
     virtual std::ostream& print( std::ostream& stream ,const int tabs = 0) = 0;
 };
 
@@ -27,6 +28,9 @@ public:
 
     Associate_Exp(std::string function_name, Expression* expression) : func_name(function_name), expression(expression){}
     ~Associate_Exp() override {}
+    Expression* clone() override {
+        return new Associate_Exp(func_name, expression->clone());
+    }
     void Destruct() override{
         if(this->expression)this->expression->Destruct();
         delete this;
@@ -51,6 +55,9 @@ public:
         index = -1;
         delete this;
     }
+     Expression* clone() override{
+        return new Argument_Exp(index);
+    }
      std::ostream& print( std::ostream& stream, const int tabs = 0) override{
         stream << std::string(tabs, ' ') << "index: " << index << std::endl;
         return stream; 
@@ -68,6 +75,9 @@ public:
     void Destruct() override{
         value = 0;
         delete this;
+    }
+    Expression* clone() override{
+        return new Number_Exp(value);
     }
     std::ostream& print( std::ostream& stream, const int tabs = 0) override{
         stream << std::string(tabs, ' ') << value << std::endl;
@@ -90,6 +100,13 @@ public:
             if(arguments[i])arguments[i]->Destruct();
         }
         delete this;
+    }
+    Expression* clone() override{
+        std::vector<Expression*> args(arguments.size());
+        for(int i =0; i<args.size();++i){
+            args[i] = arguments[i]->clone();
+        }
+        return new Function_Exp(func_name, args);
     }
     std::ostream& print( std::ostream& stream, const int tabs = 0) override{
         stream << std::string(tabs, ' ') << func_name << " " <<arguments.size() << std::endl;
