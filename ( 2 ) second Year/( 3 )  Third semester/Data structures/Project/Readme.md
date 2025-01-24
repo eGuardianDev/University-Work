@@ -20,26 +20,26 @@ https://craftinginterpreters.com/scanning.html#the-interpreter-framework)
  - Interpreter - взема синтактично дърво и изчислява резултата
 
 
-#### syntaxis
+#### Syntax
 
-- add - 2 arguments
-- sub - 2 arguments
-- mul - 2 arguments
-- div - 2 arguments
-- pow - 2 arguments
-- sqrt - 1 arguments
-- sin - 1 arguments
-- cos - 1 arguments
-- eq - 2 arguments -> equal == 
-- le - 2 arguments
-- nand - 2 arguments
+- [X] add - 2 arguments 
+- [X] sub - 2 arguments  
+- [X] mul - 2 arguments
+- [X] div - 2 arguments
+- [] pow - 2 arguments
+- [] sqrt - 1 arguments
+- [] sin - 1 arguments
+- [] cos - 1 arguments
+- [] eq - 2 arguments -> equal ==
+- [] le - 2 arguments -> less  <
+- [] nand - 2 arguments -> not and  !#0 || !#1
 
-- IF - 3 arguments - "test" "if-true" "if-false"
-- list - random arguments - 
-- head - 1 argument - list -> first element
-- tail - 1 argument - list -> new list
-- map - 2 arguments - "function-name" "list" -> new list
-- filter - 2 arguments - "function-name" "list" -> new list
+- [X] IF - 3 arguments - "test" "if-true" "if-false"
+- [X] list - random arguments - 
+- [X] head - 1 argument - list -> first element
+- [X] tail - 1 argument - list -> new list
+- [X] map - 2 arguments - "function-name" "list" -> new list
+- [X] filter - 2 arguments - "function-name" "list" -> new list
 
 lazy evaluation - if, nand
 
@@ -56,3 +56,19 @@ eq(#0, #1) -> #0 е първия аругмент, #1 е втория аргум
 ---
 
 
+## Todo:
+ - [X] same alloc when error clean memory (check with isNewlyAllocated() )
+ - [] don't allow rewritting default functions
+ 
+ - [X] lists;
+ - [X] read from file
+ 
+ - [] copy/move semantics
+ - [X] save trees that don't need evaluation
+
+ - [X] evaluate trees with no arguments needed
+        - Fixed const values being delted
+ - fixed empty list not implemented
+ 
+ - [] if function haven't declared all it's values, don't execute
+ - [] allow to check how many arguments functions has, without solo tests ( or create a function for that );

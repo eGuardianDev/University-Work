@@ -1,5 +1,4 @@
 
-#include "Objects.hpp"
 #include <iomanip>
 #include <iostream>
 #include <ostream>
@@ -138,6 +137,7 @@ class tokenChecker{
                     break;  
                 case Variable:
                     if(!afterLetBe){
+                        index--;
                         problem("Trying to used variables definition outside defining scope");
                     }
                     if(bracketCount ==0){

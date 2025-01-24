@@ -1,10 +1,13 @@
 #ifndef _Expressions_hpp__
 #define _Expressions_hpp__
 
+#include <cassert>
 #include <functional>
 #include <iostream>
 #include <ostream>
+#include <stdexcept>
 #include <string>
+#include <type_traits>
 #include <vector>
 
 
@@ -80,7 +83,7 @@ public:
         return new Number_Exp(value);
     }
     std::ostream& print( std::ostream& stream, const int tabs = 0) override{
-        stream << std::string(tabs, ' ') << value << std::endl;
+        stream << std::string(tabs, ' ') << value;
         return stream; 
     }
 };
@@ -117,6 +120,68 @@ public:
     }
 };
 
+
+class List_Exp : public Expression{
+
+public:
+    Expression* value;
+    bool newlyCreated = true;
+    List_Exp* next = nullptr;
+    List_Exp(Expression* variable) : value(variable), next(nullptr) {};
+    List_Exp(std::vector<Expression*>& arguments, size_t index =0 ) { 
+        // if(arguments.size() == 0){
+        //     throw std::invalid_argument("empty passed");
+        // }
+        if(arguments.size() == 0){
+            this->value = 0;
+            this->next = nullptr;
+            return;
+        }
+        if(index > arguments.size()){
+            throw std::logic_error("index out of bound");
+        }
+        if(arguments[index] == nullptr){
+            throw std::logic_error("Empty value at that index");
+        }
+        this->value = arguments[index];    
+        
+        if(++index == arguments.size()){
+            next = new List_Exp(0);
+        }else{
+            next = new List_Exp(arguments, index);
+        }
+
+    }
+
+    ~List_Exp() override {}
+
+    void Destruct() override{
+        if(newlyCreated){
+            if(value)value->Destruct();
+        }
+        if(next)next->Destruct();
+        delete this;
+    }
+    Expression* clone() override{
+        List_Exp* list = new List_Exp(value->clone());
+        list->next = dynamic_cast<List_Exp*>(this->next->clone());
+        return list;
+
+    }
+    std::ostream& print( std::ostream& stream, const int tabs = 0) override{
+        if(this->value){
+            this->value->print(stream);
+        }else return stream;
+        if(this->next)
+        {
+            if(this->next->value){
+                stream << ", ";
+                this->next->print(stream);
+            }
+        } 
+        return stream; 
+    }
+};
 
 struct executeArgs{
     size_t argc = -1;

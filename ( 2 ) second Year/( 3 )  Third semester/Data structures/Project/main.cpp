@@ -7,11 +7,11 @@
 // #include "Checker.hpp"
 #include "Evaluator.hpp"
 #include "Expression.hpp"
-#include "Objects.hpp"
+// #include "Objects.hpp"
 #include "Lexer.hpp"
 #include "Parser.hpp"
 #include "tokenChecker.hpp"
-
+#include <fstream>
 #define Debug_mode
 
 // std::string a = "";
@@ -79,23 +79,20 @@ void printTokenVal(Token token){
 // }
 #endif
 
+void runCmd(std::string data);
+void ReadFromFile(){
+    std::fstream File("input.txt");
+
+    std::string cmd;
+    while(std::getline(File, cmd)){
+        runCmd(cmd);
+    }
+}
+
 void CLI(){
     std::string cmd;
 
-   
-    // functions.insert({"add",{2, [](std::vector<Expression*> args) -> Expression*
-    // {  
-    // }}});
-       
-
-
-    std::unordered_multimap<std::string, executeArgs> functions;
-
-
-    Parser builder;
-
     while(true){
-        
         std::cout << "# ";
         getline(std::cin, cmd);
 
@@ -105,6 +102,29 @@ void CLI(){
         if(cmd == "end"){
             break;
         }
+        runCmd(cmd);
+    }
+}
+
+std::unordered_multimap<std::string, executeArgs> functions;
+void clean(){
+     for(auto it = functions.begin(); it != functions.end();){
+        it->second.function->Destruct();
+        it++;
+    }
+}
+
+void runCmd(std::string cmd){
+
+   
+    // functions.insert({"add",{2, [](std::vector<Expression*> args) -> Expression*
+    // {  
+    // }}});
+    
+
+        Parser builder;
+        
+        
         // std::cout << cmd;
         Reader r;
         try{
@@ -127,7 +147,7 @@ void CLI(){
         std::vector<Token> tokens = r.getTokens();
 
         if(tokens.size() ==0){
-            continue;
+            return;
         }
 
         try{
@@ -136,7 +156,7 @@ void CLI(){
             checker.check(tokens);
         }catch(std::runtime_error& e){
             std::cout << "\nERORR | " << e.what() <<std::endl;
-            continue; 
+            return; 
         }
 
       
@@ -149,7 +169,7 @@ void CLI(){
             std::cout << "\nERORR | " << e.what() <<std::endl; 
             if(currFunct) currFunct->Destruct();
             currFunct = nullptr;
-            continue;
+            return;
         }
 
         // currFunct->print(std::cout);
@@ -162,36 +182,59 @@ void CLI(){
                       
             if (Number_Exp* curr = dynamic_cast<Number_Exp*>(res); curr != nullptr){
                 curr->print(std::cout);
+                std::cout << std::endl;
             } else if (Associate_Exp* curr = dynamic_cast<Associate_Exp*>(res); curr != nullptr){
                 // delete curr;
                 // res->Destruct();
                 delete res;
-                continue;
+                return;
+            } else if (List_Exp* curr = dynamic_cast<List_Exp*>(res); curr != nullptr){
+                // delete curr;
+                // res->Destruct();
+                // delete res;
+                std::cout << "[";
+                curr->print(std::cout);
+                std::cout << "]" << std::endl;
+                // continue;
+            }else
+            {
+                throw std::runtime_error("Evaluation failed, because return type was not a number or a list");
             }
-            else{
-                throw std::runtime_error("Evaluation failed, because return type was not a number");
+            if(currFunct != res){
+                currFunct->Destruct();
             }
-            currFunct->Destruct();
-
-            res->Destruct();
+            if(eval.isNewlyCreated()){
+                res->Destruct();
+            }
         }catch( std::runtime_error& e){
             std::cout << "ERORR | " << e.what() <<std::endl; 
             if(currFunct)currFunct->Destruct();
             currFunct = nullptr;
-            continue;
+            return;
         }
-    }
+    
 
-    for(auto it = functions.begin(); it != functions.end();){
-        it->second.function->Destruct();
-        it++;
-    }
+   
 
 }
+//fact <- if(#0,mul(#0, fact(sub(#0, 1))),1)
 
 
 int main(){
-    CLI();
+    ReadFromFile();
+    // CLI();
+
+    clean();
+
+    // std::vector<Expression*> values(0);
+    // values.push_back(new Number_Exp(3));
+    // values.push_back(new Number_Exp(5));
+    // Expression* exp = new List_Exp( values);
+    // std::cout <<'[';
+    // exp->print(std::cout);
+    // std::cout <<']' << std::endl;
+
+    // exp->Destruct();
   
     return 0;
 }
