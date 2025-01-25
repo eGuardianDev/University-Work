@@ -45,7 +45,12 @@ class Lexer{
     Lexer(Lexer&&)  = delete;
     Lexer& operator=(Lexer&&) = delete;
 
+    void Clear(){
+        tokens.clear();
+        index = 0;
+    }
     void Read(std::string input){
+        Clear();
         this->data = input;
         index = 0;
         while(!isEnd()){
@@ -80,13 +85,10 @@ class Lexer{
                             val += Peak();
                             Next();
                         }
-                        if(Peak() != ',' && Peak() != ')'){
-                            invalidChar(Peak(),index);
-                        }
                         temp.val = val;
                         tokens.push_back(temp);
                     }
-                break;
+                    break;
                 default:
                 char last = Last();
                 std::string currData;
@@ -101,6 +103,7 @@ class Lexer{
                         currData +=last;
                         Next();
                     }
+                    //after check
                     if(Peak() == '-'){
                         invalidChar(Peak(),index);
                     }
@@ -113,6 +116,7 @@ class Lexer{
                     if(currData.length() > 0 && currData[currData.length()-1] == '.'){
                         invalidChar(Peak(),index);
                     }
+
                     tokens.push_back({Number,currData});
                 }else if(isAlpha(last)){
                     currData += last;
@@ -120,10 +124,14 @@ class Lexer{
                         currData += last;
                         Next();
                     }
+
+                    //aftercheck
+                    if((last=Peak())=='#'){
+                        invalidChar(Peak(),index);
+                    }
                     tokens.push_back({Function,currData});
                 }else{
                     invalidChar(Peak(),index-1);
-                    // throw std::runtime_error("Symbol is invalid");
                 }
                 break;
             }

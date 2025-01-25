@@ -8,6 +8,8 @@
 #include <stdexcept>
 #include <unordered_map>
 
+// #define MAXRECURSION 3 // not used currently
+
 class Evaluator{
     void fail(std::string data){
         throw std::runtime_error(data);
@@ -148,6 +150,8 @@ public:
     Evaluator& operator=(Evaluator&&) = delete;
 
     Expression* evaluate(int step =0){
+
+      
         if (Function_Exp* curr = dynamic_cast<Function_Exp*>(expression); curr != nullptr){
 
 
@@ -621,7 +625,7 @@ public:
                             auto tempVal =curr->arguments[i];
                             
                             auto eval =Evaluator(tempVal,functionsList,variables);
-                                auto val=(eval.evaluate());
+                                auto val=(eval.evaluate(step+1));
 
                             newVars.push_back(val);
 
@@ -633,7 +637,7 @@ public:
                         Evaluator temp(begin->second.function, functionsList, newVars);
                         
                         
-                        Expression* res = temp.evaluate();
+                        Expression* res = temp.evaluate(step+1);
                        
 
                         newCreated = temp.newCreated;

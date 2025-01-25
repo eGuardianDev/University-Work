@@ -149,6 +149,9 @@ class tokenChecker{
                     if(canContinue() && (Peak().token == LetBe || Peak().token == Open_bracket)){
                         problem("Invalid operation over number");
                     }
+                    if(Peak().token != Comma && Peak().token != Close_bracket){
+                        problem("Invalid element after arguemnt");
+                    }
                     break;
                 
                 
