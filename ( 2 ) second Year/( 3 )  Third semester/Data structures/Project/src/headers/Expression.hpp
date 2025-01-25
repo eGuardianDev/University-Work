@@ -2,12 +2,10 @@
 #define _Expressions_hpp__
 
 #include <cassert>
-#include <functional>
 #include <iostream>
 #include <ostream>
 #include <stdexcept>
 #include <string>
-#include <type_traits>
 #include <vector>
 
 
@@ -129,9 +127,7 @@ public:
     List_Exp* next = nullptr;
     List_Exp(Expression* variable) : value(variable), next(nullptr) {};
     List_Exp(std::vector<Expression*>& arguments, size_t index =0 ) { 
-        // if(arguments.size() == 0){
-        //     throw std::invalid_argument("empty passed");
-        // }
+       
         if(arguments.size() == 0){
             this->value = 0;
             this->next = nullptr;

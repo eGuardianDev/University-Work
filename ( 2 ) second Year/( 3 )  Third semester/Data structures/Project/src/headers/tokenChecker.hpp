@@ -1,11 +1,10 @@
 
-#include <iomanip>
-#include <iostream>
-#include <ostream>
-#include <stack>
 #include <stdexcept>
 #include <vector>
-#include "Tokens.hpp"
+
+#include "./Tokens.hpp"
+
+
 class tokenChecker{
     private:
 
@@ -61,6 +60,10 @@ class tokenChecker{
 
     tokenChecker(){}
     ~tokenChecker(){}
+    tokenChecker(tokenChecker&)  = delete;
+    tokenChecker& operator=(tokenChecker&) = delete;
+    tokenChecker(tokenChecker&&)  = delete;
+    tokenChecker& operator=(tokenChecker&&) = delete;
 
     bool check(std::vector<Token> _objs, int _index = 0){
         objs = _objs;

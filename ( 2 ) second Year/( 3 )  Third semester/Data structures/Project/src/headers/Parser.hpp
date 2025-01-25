@@ -1,14 +1,13 @@
 
+#ifndef _Parser_hpp__
+#define _Parser_hpp__
+
 #include "Expression.hpp"
-#include <iostream>
-#include <ostream>
-#include <stack>
 #include <stdexcept>
 #include <string>
-#include <unordered_map>
 #include <vector>
-// #include "Objects.hpp"
 #include "Tokens.hpp"
+
 class Parser{
     private:
 
@@ -55,6 +54,10 @@ class Parser{
             newFunctions[i]->Destruct();
         }
     }
+    Parser(Parser&)  = delete;
+    Parser& operator=(Parser&) = delete;
+    Parser(Parser&&)  = delete;
+    Parser& operator=(Parser&&) = delete;
 
 
     Expression* build(std::vector<Token> _objs, int& _index){
@@ -140,3 +143,5 @@ class Parser{
     }
 
 };
+
+#endif //_Parser_hpp__

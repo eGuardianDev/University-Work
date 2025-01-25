@@ -3,15 +3,17 @@
 #define _Evaluator_hpp__
 
 #include "Expression.hpp"
-#include <iostream>
+#include <cmath>
 #include <algorithm>
 #include <stdexcept>
+#include <unordered_map>
+
 class Evaluator{
     void fail(std::string data){
-        throw  std::runtime_error(data);
+        throw std::runtime_error(data);
     }
 
-   std::vector<std::string> integratedFunctions = {"add","sub","mul","div","pow","sqrt","sin","cos","eq","le","nand","IF","list","head","tail","map","filter"};
+   std::vector<std::string> integratedFunctions = {"add","sub","mul","div","pow","sqrt","sin","cos","eq","le","nand","if","list","head","tail","map","filter"};
 
     Expression* expression;
     typedef std::unordered_multimap<std::string, executeArgs> map;
@@ -56,10 +58,58 @@ class Evaluator{
         return evaluation;
     }
 
+    bool areSubfunctionsDefined_OneArgument(Expression* exp){
+        Number_Exp* testVal = new Number_Exp(3);
+
+        Function_Exp* func = dynamic_cast<Function_Exp*>(exp);
+        if(func == nullptr) throw std::runtime_error("Passed expression is expected to be function, but is not.");
+
+        Evaluator eval(func, functionsList,variables);
+        Expression* testRes = 0;
+        func->arguments.push_back(testVal);
+        try{
+            testRes = eval.evaluate();
+        }catch(std::runtime_error& e){
+            func->arguments.pop_back();
+            testVal->Destruct();
+            throw e;
+        }
+
+        func->arguments.pop_back();
+        
+        testVal->Destruct();
+        if(eval.newCreated){
+            testRes->Destruct();
+        }
+        return true;
+    }
    
+
+    bool canFunctionSupportOneArguments(Function_Exp* func_exp){
+        auto [begin, end] = functionsList.equal_range(func_exp->func_name);
+        
+        if(begin==nullptr){
+            fail("Passed function doesn't exist");
+        }
+
+        bool argCountIs1 = false;
+        while(begin != end){
+            if(begin->second.argc == 1){
+                argCountIs1 = true;
+                break;
+            }else{
+                ++begin;
+            }
+        }
+        if(!argCountIs1){
+            fail("Function doesn't support solo argument");
+        } 
+        return true;
+    }
 
     bool newCreated = false;
 public:
+
 
    
     const bool isNewlyCreated() const{
@@ -90,6 +140,12 @@ public:
 
     Evaluator(Expression* expression, map& functions, enviroment variables) : expression(expression), functionsList(functions), variables(variables) {}
     ~Evaluator(){}
+    
+    
+    Evaluator(Evaluator&) = delete;
+    Evaluator& operator=(Evaluator&) = delete;
+    Evaluator(Evaluator&&) = delete;
+    Evaluator& operator=(Evaluator&&) = delete;
 
     Expression* evaluate(int step =0){
         if (Function_Exp* curr = dynamic_cast<Function_Exp*>(expression); curr != nullptr){
@@ -140,6 +196,57 @@ public:
                 }else{
                     fail("invalid argument count");
                 }
+            }else if(curr->func_name == "pow"){
+                if(curr->arguments.size() == 2){
+                double first = castToNum(curr->arguments[0]);
+                double second = castToNum(curr->arguments[1]);
+                double res =  std::pow(first,second);
+                    newCreated = true;
+                    return new Number_Exp(res);
+
+                }else{
+                    fail("invalid argument count");
+                }
+            }else if(curr->func_name == "sqrt"){
+                if(curr->arguments.size() == 1){
+                double arg = castToNum(curr->arguments[0]);
+                double res =  std::sqrt(arg);
+                    newCreated = true;
+                    return new Number_Exp(res);
+
+                }else{
+                    fail("invalid argument count");
+                }
+            }else if(curr->func_name == "sqrt"){
+                if(curr->arguments.size() == 1){
+                double arg = castToNum(curr->arguments[0]);
+                double res =  std::sqrt(arg);
+                    newCreated = true;
+                    return new Number_Exp(res);
+
+                }else{
+                    fail("invalid argument count");
+                }
+            }else if(curr->func_name == "sin"){
+                if(curr->arguments.size() == 1){
+                double arg = castToNum(curr->arguments[0]);
+                double res =  std::sin(arg);
+                    newCreated = true;
+                    return new Number_Exp(res);
+
+                }else{
+                    fail("invalid argument count");
+                }
+            }else if(curr->func_name == "cos"){
+                if(curr->arguments.size() == 1){
+                double arg = castToNum(curr->arguments[0]);
+                double res =  std::cos(arg);
+                    newCreated = true;
+                    return new Number_Exp(res);
+
+                }else{
+                    fail("invalid argument count");
+                }
             }
 
 
@@ -171,6 +278,39 @@ public:
                 }else{
                     fail("invalid argument count");
                 }
+            }else if(curr->func_name == "eq"){
+                if(curr->arguments.size() == 2){
+                                        
+                    double first = castToNum(curr->arguments[0]);
+                    double second = castToNum(curr->arguments[1]);
+                   
+                    this->newCreated = true;
+                    return new Number_Exp (first == second);
+                }else{
+                    fail("invalid argument count");
+                }
+            }else if(curr->func_name == "le"){
+                if(curr->arguments.size() == 2){
+                                        
+                    double first = castToNum(curr->arguments[0]);
+                    double second = castToNum(curr->arguments[1]);
+                   
+                    this->newCreated = true;
+                    return new Number_Exp (first <= second);
+                }else{
+                    fail("invalid argument count");
+                }
+            }else if(curr->func_name == "nand"){
+                if(curr->arguments.size() == 2){
+                                        
+                    double first = castToNum(curr->arguments[0]);
+                    double second = castToNum(curr->arguments[1]);
+                   
+                    this->newCreated = true;
+                    return new Number_Exp ((!first) || (!second));
+                }else{
+                    fail("invalid argument count");
+                }
             }
 
 
@@ -189,81 +329,184 @@ public:
 
                 // check function functionallity 
 
-                    Function_Exp* transform_Func = dynamic_cast<Function_Exp*>(curr->arguments[0]);
+                Function_Exp* transform_Func = dynamic_cast<Function_Exp*>(curr->arguments[0]);
 
-                    if(!transform_Func){
-                        fail("Must be manipulation function");
-                    }
-                    auto [begin, end] = functionsList.equal_range(transform_Func->func_name);
-                    if(begin==nullptr){
-                        fail("Passed function isn't fully defined");
-                    }
-                    bool argCountIs1 = false;
-                    while(begin != end){
-                        if(begin->second.argc == 1){
-                            argCountIs1 = true;
-                            break;
-                        }else{
-                            ++begin;
-                        }
-                    }
-                    if(!argCountIs1){
-                        fail("Function doesn't support solo argument");
-                    } 
+                if(!transform_Func){
+                    fail("Must be manipulation function");
+                }
+
+
+                canFunctionSupportOneArguments(transform_Func);
+
+                areSubfunctionsDefined_OneArgument(transform_Func);
+                  
 
 
                 // Check if passed argument is list
 
-                    List_Exp* valList = dynamic_cast<List_Exp*>(curr->arguments[1]);
-                    Evaluator eval(curr->arguments[1], functionsList, variables);
-                
-                    if(valList == nullptr){
-                        Expression* currEval = eval.evaluate();
-                        valList = dynamic_cast<List_Exp*>(currEval);
-                        if(valList == nullptr){
-                            if(eval.newCreated){currEval->Destruct();}
-                            
-                            fail("second arguments must be list or fuction that returns list");
-                        }
+                // save value
+                List_Exp* valList = dynamic_cast<List_Exp*>(curr->arguments[1]);
+
+                // temp eval
+                Evaluator eval(curr->arguments[1], functionsList, variables);
+            
+                // isn't list, need evaluation
+                if(valList == nullptr){
+                    Expression* currEval = eval.evaluate();
+                    valList = dynamic_cast<List_Exp*>(currEval);
                     
+                    // its not even function that returns list
+                    if(valList == nullptr){
+
+                        if(eval.newCreated){currEval->Destruct();}
+                        
+                        fail("second arguments must be list or fuction that returns list");
                     }
+                
+                }
 
                 // Start working on the list 
+                
+                // Generate new list
+                List_Exp* headVal = valList;
+
+                List_Exp* currNode = new List_Exp(0);
+                List_Exp* dummy = currNode;
+                
+                currNode->next = new List_Exp(0);
+                
+                while(valList){
+                    currNode = currNode->next;
+
+                    Number_Exp* temp = dynamic_cast<Number_Exp*>(valList->value);
+
+                    if(!temp && valList->value){
+                        throw std::logic_error("List doesn't contain number for some reason? - critical logic error");
+                    }
+                    if(!valList->value){
+                        valList = valList->next;
+                        continue;
+                    }
+
+                    transform_Func->arguments.push_back(temp);
+                    double res;
+
+                    res = castToNum(transform_Func); 
+                    
+                    transform_Func->arguments.pop_back();
+                    
+                    currNode->value = new Number_Exp(res);
+                    currNode->next = new List_Exp(0);
+                    valList = valList->next;
+                }
+                
+                // clean memory
+                delete currNode->next;
+                currNode->next = nullptr;
+                if(eval.newCreated){
+                    headVal->Destruct();
+                }
+                
+                currNode = dummy->next;
+                delete dummy;
+                newCreated = true;
+
+                return currNode;
+
+                }else{
+                    fail("invalid argument count");
+                }
+       
+            }else if(curr->func_name == "filter"){
+                if(curr->arguments.size() == 2){
+
+
+                    // check function functionallity 
+
+                    Function_Exp* transform_Func = dynamic_cast<Function_Exp*>(curr->arguments[0]);
+                   
+                        
+                    if(!transform_Func){
+                        fail("Must be manipulation function");
+                    }
+
+                    canFunctionSupportOneArguments(transform_Func);
+
+                    areSubfunctionsDefined_OneArgument(transform_Func);
+                  
+                    
+                    // Check if passed argument is list
+
+                    // save value
+
+                    List_Exp* valList = dynamic_cast<List_Exp*>(curr->arguments[1]);
+
+                    bool toDeleteArg = false;
+
+                    if(valList == nullptr){
+                        Evaluator eval(curr->arguments[1], functionsList, variables);
+                        Expression* currEval = eval.evaluate();
+
+                        valList = dynamic_cast<List_Exp*>(currEval);
+                        toDeleteArg = eval.newCreated;
+                        
+                        if(valList == nullptr){
+
+                            if(eval.newCreated){
+                                currEval->Destruct();
+                            }
+                            fail("second arguments must be list or fuction that returns list");
+                        }
+                    }
+
+                    
+                // Start working on the list 
+                
+                // Generate new list
                     List_Exp* headVal = valList;
 
                     List_Exp* currNode = new List_Exp(0);
                     List_Exp* dummy = currNode;
                     
                     currNode->next = new List_Exp(0);
-                    
+                    bool change = true;
                     while(valList){
-                        currNode = currNode->next;
+                        if(change){
+                            currNode = currNode->next;
+                        }
+                        change = true;
 
                         Number_Exp* temp = dynamic_cast<Number_Exp*>(valList->value);
 
+                     
                         if(!temp && valList->value){
-                            fail("List doesn't contain number for some reason? - logic error");
+                            throw std::logic_error("List doesn't contain number for some reason? - critical logic error");
                         }
                         if(!valList->value){
                             valList = valList->next;
                             continue;
                         }
 
-                        transform_Func->arguments.push_back(temp);
-                        double res;
 
-                        res = castToNum(transform_Func); 
-                        
+
+                        transform_Func->arguments.push_back(temp);
+
+                        double res = castToNum(transform_Func); 
+
                         transform_Func->arguments.pop_back();
                        
-                        currNode->value = new Number_Exp(res);
-                        currNode->next = new List_Exp(0);
+                        if(res != 0 ){
+                            currNode->value = new Number_Exp(temp->value);
+                            currNode->next = new List_Exp(0);
+                        }else{
+                            change = false;
+                        }
                         valList = valList->next;
                     }
-                    
-                    delete currNode->next;
-                    currNode->next = nullptr;
-                    if(eval.newCreated){
+
+
+                    // clean memory
+                    if(toDeleteArg){
                         headVal->Destruct();
                     }
                     
@@ -271,16 +514,11 @@ public:
                     delete dummy;
                     newCreated = true;
 
-
-                    // currNode->print(std::cout);
-
                     return currNode;
 
-                    }else{
-                        fail("invalid argument count");
-                    }
-
-
+                }else{
+                    fail("invalid argument count");
+                }
 
             }else if(curr->func_name == "head"){
                 if(curr->arguments.size() == 1){
@@ -308,123 +546,6 @@ public:
 
 
                     return new Number_Exp(val);
-
-                }else{
-                    fail("invalid argument count");
-                }
-            }else if(curr->func_name == "filter"){
-                if(curr->arguments.size() == 2){
-
-                    Function_Exp* transform_Func = dynamic_cast<Function_Exp*>(curr->arguments[0]);
-                   
-                        
-                    if(!transform_Func){
-                        fail("Must be manipulation function");
-                    }
-                    auto [begin, end] = functionsList.equal_range(transform_Func->func_name);
-
-                    if(begin==nullptr){
-                        fail("Passed function isn't fully defined");
-                    }
-
-
-                    bool argCountIs1 = false;
-                    while(begin != end){
-                        if(begin->second.argc == 1){
-                            argCountIs1 = true;
-                            break;
-                        }else{
-                            ++begin;
-                        }
-                    }
-                    if(!argCountIs1){
-                        fail("Function doesn't support solo argument");
-                    } 
-
-
-                    Number_Exp* testVal = new Number_Exp(3);
-
-                    Evaluator eval(transform_Func, functionsList,variables);
-                    Expression* testRes = 0;
-                    transform_Func->arguments.push_back(testVal);
-                    try{
-                        testRes = eval.evaluate();
-                    }catch(std::runtime_error& e){
-                        transform_Func->arguments.pop_back();
-                        testVal->Destruct();
-                        throw e;
-                    }
-                    transform_Func->arguments.pop_back();
-                    testVal->Destruct();
-                    if(eval.newCreated){
-                        testRes->Destruct();
-                    }
-
-
-                    
-
-
-                    List_Exp* valList = dynamic_cast<List_Exp*>(curr->arguments[1]);
-                    if(valList == nullptr){
-                        Evaluator eval(curr->arguments[1], functionsList, variables);
-                        valList = dynamic_cast<List_Exp*>(eval.evaluate());
-                    }
-
-                    if(valList == nullptr){
-                        fail("second arguments must be list or fuction that returns list");
-                    }
-                    
-                    List_Exp* headVal = valList;
-
-                    List_Exp* currNode = new List_Exp(0);
-                    List_Exp* dummy = currNode;
-                    
-                    currNode->next = new List_Exp(0);
-                    bool change = true;
-                    while(valList){
-                        if(change){
-                            currNode = currNode->next;
-                        }
-                        change = true;
-
-                        Number_Exp* temp = dynamic_cast<Number_Exp*>(valList->value);
-
-                     
-                        if(!temp && valList->value){
-                            fail("List doesn't contain number for some reason? - logic error");
-                        }
-                        if(!valList->value){
-                            valList = valList->next;
-                            continue;
-                        }
-
-
-
-                        transform_Func->arguments.push_back(temp);
-
-                        double res = castToNum(transform_Func); 
-
-                        transform_Func->arguments.pop_back();
-                       
-                        if(res != 0 ){
-                            currNode->value = new Number_Exp(temp->value);
-                            currNode->next = new List_Exp(0);
-                        }else{
-                            change = false;
-                        }
-                        valList = valList->next;
-                    }
-                    
-                    headVal->Destruct();
-                    
-                    currNode = dummy->next;
-                    delete dummy;
-                    newCreated = true;
-
-
-                    // currNode->print(std::cout);
-
-                    return currNode;
 
                 }else{
                     fail("invalid argument count");
@@ -555,6 +676,12 @@ public:
         }else 
         if (Associate_Exp* curr = dynamic_cast<Associate_Exp*>(expression); curr != nullptr){
 
+
+            //check function name if the same as integrated functions
+
+            if(std::find(integratedFunctions.begin(), integratedFunctions.end(), curr->func_name) != integratedFunctions.end()) {
+                fail("Cannot change default functions");
+            }
 
             // define function 
             

@@ -1,9 +1,11 @@
 
-#include <iostream>
+#ifndef _Lexer_hpp__
+#define _Lexer_hpp__
+
 #include <stdexcept>
 #include <vector>
 #include "Tokens.hpp"
-class Reader{
+class Lexer{
 
     std::string data;
     int index =0;
@@ -34,13 +36,14 @@ class Reader{
     bool isAlpha(const char &data)const{
         return (data >= 'a' && data <= 'z') || (data >='A' && data <= 'Z');
     }
-    // bool isValidSymbol(const char & data) const{
-    //     return (data > '0' && data <'9') || (data > 'a' && data < 'z') || data == '('|| data == ')'|| data == ','|| data == '-'|| data == '#';
-    // }
-
+  
     public:
-    Reader(){}
-    ~Reader(){}
+    Lexer(){}
+    ~Lexer(){}
+    Lexer(Lexer&)  = delete;
+    Lexer& operator=(Lexer&) = delete;
+    Lexer(Lexer&&)  = delete;
+    Lexer& operator=(Lexer&&) = delete;
 
     void Read(std::string input){
         this->data = input;
@@ -89,12 +92,25 @@ class Reader{
                 std::string currData;
                 if(last == '-' || isDigit(last)){
                     currData +=last;
-                    while(isDigit(last = Peak())){
+                    int dots = 0;
+                    while((last = Peak()) && (last == '.' || isDigit(last))){
+                        if(last == '.'){
+                            dots++;
+                        }
+                        if(dots >1) break;
                         currData +=last;
-                        //add to something
                         Next();
                     }
+                    if(Peak() == '-'){
+                        invalidChar(Peak(),index);
+                    }
+                    if(dots > 1){
+                        invalidChar(Peak(),index);
+                    }
                     if(isAlpha(Peak())){
+                        invalidChar(Peak(),index);
+                    }
+                    if(currData.length() > 0 && currData[currData.length()-1] == '.'){
                         invalidChar(Peak(),index);
                     }
                     tokens.push_back({Number,currData});
@@ -119,3 +135,5 @@ class Reader{
     }
 
 };
+
+#endif //_Lexer_hpp__
