@@ -85,10 +85,10 @@ public:
     void runCmd(std::string cmd){
     
 
-        Parser builder;
-            
-            
         Lexer r;
+        Parser builder;
+        tokenChecker checker;
+
         try{
             r.Read(cmd);
         }catch(std::invalid_argument e){
@@ -103,7 +103,6 @@ public:
         }
 
         try{
-            tokenChecker checker;
             checker.check(tokens);
         }catch(std::runtime_error& e){
             std::cout << "\nERORR | " << e.what() <<std::endl;

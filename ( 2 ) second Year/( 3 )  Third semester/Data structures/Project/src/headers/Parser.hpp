@@ -12,8 +12,6 @@ class Parser{
     private:
 
     std::vector<Token> objs;
-    std::vector<Expression*> newFunctions;
-    std::vector<Expression*> newArgs;
 
     int maxArgumnets = 0;
 
@@ -46,13 +44,15 @@ class Parser{
         throw std::runtime_error(res);
     }
 
+    void Clean(){
+        objs.clear();
+        index =0 ;
+    }
     public:
    
     Parser(){}
     ~Parser(){
-        for(int i=0;i<newFunctions.size();++i){
-            newFunctions[i]->Destruct();
-        }
+     
     }
     Parser(Parser&)  = delete;
     Parser& operator=(Parser&) = delete;
@@ -61,7 +61,7 @@ class Parser{
 
 
     Expression* build(std::vector<Token> _objs, int& _index){
-         objs= _objs;
+        objs= _objs;
         index = _index;
 
         Expression* root = nullptr;
@@ -139,6 +139,7 @@ class Parser{
     Expression* build(std::vector<Token> _objs){
         int index =0;
         maxArgumnets = 0;
+        Clean();
         return build(_objs,index);
     }
 

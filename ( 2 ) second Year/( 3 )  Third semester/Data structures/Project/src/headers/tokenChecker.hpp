@@ -143,7 +143,7 @@ class tokenChecker{
                         index--;
                         problem("Trying to used variables definition outside defining scope");
                     }
-                    if(bracketCount ==0){
+                    if(bracketCount == 0){
                         problem("Cannot put variables outside brackets");
                     }
                     if(canContinue() && (Peak().token == LetBe || Peak().token == Open_bracket)){
