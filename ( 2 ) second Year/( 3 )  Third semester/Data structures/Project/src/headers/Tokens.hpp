@@ -24,8 +24,6 @@ struct Token{
     std::string val = "";
 };
 
-// const std::string TokenToString[] = 
-// {"(", ")", ",", "<-", "Function", "Var", "Num", "add", "sub", "mul", "div", "pow", "sqrt", "sin", "cos", "eq", "le", "nand","if" ,"list" ,"head" ,"tail" ,"map" ,"filter" 
-// };
+
 
 #endif
