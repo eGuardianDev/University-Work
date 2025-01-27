@@ -660,7 +660,7 @@ TEST_CASE("List functions"){
     REQUIRE(list->next->next->next->next == nullptr);
 
     list->Destruct();
-    delete exp;
+    exp->Destruct();
     }
     {
     lexer.Read(inputs[2]);
@@ -694,7 +694,7 @@ TEST_CASE("List functions"){
     REQUIRE(list->next->next->next == nullptr);
  
     list->Destruct();
-    delete exp;
+    exp->Destruct();
     }
       for(auto it = functions.begin(); it != functions.end();){
         it->second.function->Destruct();
@@ -702,6 +702,8 @@ TEST_CASE("List functions"){
     }
 
 }
+
+
 TEST_CASE("Not complete function detection in list functions call"){
     
      Lexer lexer;
@@ -713,8 +715,6 @@ TEST_CASE("Not complete function detection in list functions call"){
         "lessOrEqualTo2 <- fish(#0,2)",
         "filter(lessOrEqualTo2,list(1,2,3,4))"
     };
-
-   
     {
     lexer.Read(inputs[0]);
     Expression* exp = parser.build(lexer.getTokens());
@@ -729,7 +729,8 @@ TEST_CASE("Not complete function detection in list functions call"){
     enviroment env;
     Evaluator eval(exp,functions,env);
     REQUIRE_THROWS(eval.evaluate());  
-    delete exp;
+    // delete exp;
+    exp->Destruct();
     }
     {
     lexer.Read(inputs[2]);
@@ -745,15 +746,15 @@ TEST_CASE("Not complete function detection in list functions call"){
     enviroment env;
     Evaluator eval(exp,functions,env);
     REQUIRE_THROWS(eval.evaluate());  
+    exp->Destruct();
     }
     for(auto it = functions.begin(); it != functions.end();){
         it->second.function->Destruct();
         it++;
     }
 }
-TEST_CASE("Example given"){
-    
-    
+
+TEST_CASE("Example given"){    
     Lexer lexer;
     Parser parser;
     std::unordered_multimap<std::string, executeArgs> functions;

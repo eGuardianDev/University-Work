@@ -40,7 +40,7 @@ public:
     Evaluator(Evaluator&&) = delete;
     Evaluator& operator=(Evaluator&&) = delete;
 
-    Expression* evaluate(int step = 0);
+    Expression* evaluate();
 
 private:
     std::vector<std::string> integratedFunctions = {"add","sub","mul","div","pow","sqrt","sin","cos","eq","le","nand","if","list","head","tail","map","filter"};

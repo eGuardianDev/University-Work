@@ -647,7 +647,7 @@ Expression* Evaluator::doAssociation(Associate_Exp* curr){
 }
 
 
-Expression* Evaluator::evaluate(int step){
+Expression* Evaluator::evaluate(){
 
     
     if (Function_Exp* curr = dynamic_cast<Function_Exp*>(expression); curr != nullptr){
