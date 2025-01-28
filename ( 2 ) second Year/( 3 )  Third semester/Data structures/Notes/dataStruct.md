@@ -1,19 +1,65 @@
-# Key data structures
+# Data structures
 
 ## Linear
-### Stack
-**L**ast **I**n **F**irst **O**ut (LIFO) structure
+
+
+## Lists
+- ползват се за итериране през елементи
+- в основата на различни структури ( Queue, Stack )
+
+### Linked List
+
+cons:
+ - по-бавни операции
+ - без индексиране 
+ - без locality
+pros:
+ - всяка операция е O(1) ( ако не броим намирането на елемент )
+ - намирането е O(n)
+ - лесно разрязване, филтриране, добавяне
+ - супер лесно изтриване
+
+Pattern - Directional Iterator
+
+Да има: ( * са задължителни)
+ - указател към началото *
+ - указател към края
+ - размер
+
+### Double-linked list
+
+cons: 
+ - всичко на Linked List
+ - Използва повече памет
+ - малко по-сложна логика
+pros:
+ - Премахване на **случаен** елемент по итератор
+ - добавяне **след/преди** итератор
+ - бърз достъп до елементите около  началото и края
+
+Pattern - Bi-Directional Iterator
+
+Да има: ( * са задължителни )
+ - указател към началото *
+ - указател към края * 
+ - размер 
+
 
 ---
-#### Used for
- - function call
- - undo operation
+
+### Stack
+LIFO структура
+
+---
+Използва се за
+ - Shunting yard
+ - връщане на операциите
+ - алгоритъм за соритране
  - DFS
- - calculators (Shunting Yard)
 #### Types
- - Static
- - Dynamic
- - Linked
+ - статичен
+ - динамичен
+ - свързан
 
 #### Key functions
 ```cpp
@@ -26,25 +72,83 @@ T& top() const;
 bool isEmpty() const;
 ```
 #### Notes
- - Doesn't support interpreters
- - Only access **top of stack**
+ - Не поддържа итератор
+ - Само Top of stack достъп
+ - Можа да има centipede stack, за памет
+ - 
 
 
 
 ### Queue
----
-#### Used for
- - 
+FIFO стурктурата
 
-### List
+използва се за:
+ - BFS
+ - Извеждане на данните
+ - Lexer/Parser
+
+```cpp
+void dequeue();
+void enqueue();
+int front();
+int size();
+bool isEmpty();
+```
 
 ---
 ## Non-Linear
 
 ### Tree
+ - Binary ,Trinary, N-ary брой деца
+
+представяне
+ - Nodes -> value, child
+ - Nodes -> value, first child, next sibling
+ - Nodes -> parent, value, children
+ - Array -> 2 array, value + parent  
+
+Използване:
+ - Binary Search Tree
+ - представяне без съдържане на елементи ( файлова система )
+ - Trie
+
+Видове балансиране
+ - Online - структурата сама се балансира по време на операции.
+ - Offline - стурктурата се балансира при запазване или четене.
+
+Балансиращи се дървета:
+ - AVL -> ротация
+   - губи се стабилността
+   - по-бързи алгоритми
+ - Red-Black
+   - до 2 ротации
+   - бавно извеждане 
+   - бързо триене
+   - 13 edge cases
+ - S play
+   - hottest element
+ - DSW 
+   - Бавни операции
+   - Може да се прави на стъпки ротацията
+
+Основни операции:
+ - търсене
+ - добавяне   
+ - премахване <по сложна операция>
+скорост: O(h) за небалансирано, O(log(N)) за балансирано, O(N) най-лош случай
+
+Още:
+ - тежест O(N)
+ - височина O(N)
+ - балансирано O(N)
+ - перфектно балансирано O(N)
+
+Notes:
+ - Ползвай рекурсия при всяка операция, най-лесно е.
+ - Ако можеш чрез & reference е още по-добре.
+
 ### Heap
 
 ### Graph
 ---
-## Weird ones (combinations)
 ### Hashmap
