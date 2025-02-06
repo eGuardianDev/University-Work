@@ -4,16 +4,69 @@ const offset_Selector = 0.1;
 
 
 
+
+
 let VisibleControlPoligon = true;
 
 function updateControlPoligon(caller){
   CleanCanvas();
   Redraw();
 }
+
+
 function updateDrawingCurve(caller){
   CleanCanvas();
   Redraw();
 }
+function updateFirstPolarDraw(caller){
+  CleanCanvas();
+  Redraw();
+}
+function updateDrawControlPoints(caller){
+  if(!caller.checked){
+    document.getElementById("DrawTextCheckbox").checked = false;
+  }
+  CleanCanvas();
+  Redraw();
+}
+function updateDrawText(caller){
+  CleanCanvas();
+  Redraw();
+}
+function updateFirstPolar(caller){
+  let polarControlPointCheckBox =  document.getElementById("DrawPolarControlPointsCheckbox");
+  polarControlPointCheckBox.checked = caller.checked;
+  polarControlPointCheckBox.disabled = !caller.checked;
+  
+  CleanCanvas();
+  Redraw();
+}
+
+function updatePolarSlider(caller){
+  let polarSlider =  document.getElementById("polarSlider");
+  let polarNumberBox =  document.getElementById("polarNumberBox");
+  if(caller == polarSlider){
+    polarNumberBox.value = polarSlider.value;
+  }else{
+    let val = polarNumberBox.value;
+    if(val < 0) val = 0;
+    else if(val > 1) val = 1;
+    else{
+      polarSlider.value = val;
+      // polarNumberBox.value = val;
+    }
+  }
+  
+  CleanCanvas();
+  Redraw();
+}
+function updatePolarNumber(caller){
+  let val = caller.value;
+  if(val < 0) val = 0;
+  else if (val >1) val = 1;
+  caller.value = val;
+}
+
 
 const canvas = document.getElementById("DisplayBox");
 document.addEventListener("DOMContentLoaded", function () {
@@ -56,6 +109,8 @@ function getMousePosition(canvas, event) {
   DebugLog("Coordinate: "+ x + ","+ y);
  
 
+
+
   switch(CurrentControl){
     case UIControl.add:
       controlPoints.push({x,y});
@@ -77,10 +132,6 @@ function getMousePosition(canvas, event) {
 
   }
   
-  // ctx.clearRect(0, 0, canvas.width, canvas.height);
-  // ctx.beginPath();
-  // ctx.arc(x, y, 10, 0, 2 * Math.PI, true);
-  // ctx.stroke();
 }
 
 
@@ -159,7 +210,19 @@ function CleanCanvas(){
 }
 
 function Redraw(){
+  ctx.color = "black";
   ctx.font = "25px Arial";
+  
+
+  if(document.getElementById("ControlPoligonCheckbox").checked){
+    for(let i =1;i<controlPoints.length; ++i){
+      ctx.beginPath(); // Start a new path
+      ctx.moveTo(controlPoints[i-1].x, controlPoints[i-1].y); // Move the pen to (30, 50)
+      ctx.lineTo(controlPoints[i].x, controlPoints[i].y); // Draw a line to (150, 100)
+      ctx.stroke(); // Render the path
+    }
+  }
+
   for(let i =0;i<controlPoints.length; ++i){
     // console.log(controlPoints[i]);
     ctx.beginPath();
@@ -177,24 +240,29 @@ function Redraw(){
     var offsetX =10
     if(tempX < 0) offsetX = -40;
 
-  
-    ctx.fillText("b"+i,controlPoints[i].x + offsetX, controlPoints[i].y);
+    
+    if(document.getElementById("DrawTextCheckbox").checked){
+      ctx.color = "black";
+      ctx.fillText("b"+i,controlPoints[i].x + offsetX, controlPoints[i].y);
+    }
 
-    ctx.arc(controlPoints[i].x, controlPoints[i].y, circleRadius, 0, 2 * Math.PI, true);
-    ctx.arc(controlPoints[i].x, controlPoints[i].y, circleRadius, 0, 2 * Math.PI, true);
-    ctx.stroke();
-  }
 
-  if(document.getElementById("ControlPoligonCheckbox").checked){
-    for(let i =1;i<controlPoints.length; ++i){
-      ctx.beginPath(); // Start a new path
-      ctx.moveTo(controlPoints[i-1].x, controlPoints[i-1].y); // Move the pen to (30, 50)
-      ctx.lineTo(controlPoints[i].x, controlPoints[i].y); // Draw a line to (150, 100)
-      ctx.stroke(); // Render the path
+    if(document.getElementById("DrawControlPointsCheckbox").checked){
+      ctx.arc(controlPoints[i].x, controlPoints[i].y, circleRadius, 0, 2 * Math.PI, true);
+      ctx.arc(controlPoints[i].x, controlPoints[i].y, circleRadius, 0, 2 * Math.PI, true);
+      ctx.stroke();
     }
   }
+
   if(document.getElementById("DrawingCurveCheckbox").checked){
     drawCurve();
+  }
+  
+  if(document.getElementById("DrawingFirstPolarCheckbox").checked){
+    let t0 = document.getElementById("polarSlider").value;
+    let drawPolarControlPoints = document.getElementById("DrawPolarControlPointsCheckbox").checked;
+    drawFirstPolar(t0,drawPolarControlPoints);
+  
   }
   
 }
@@ -258,10 +326,26 @@ canvas.addEventListener("mousemove", function (e) {
   GlowSelectablePoint(e);
 
   var selector = document.getElementById( "modesSelectorId" );
-  CurrentControl = selector.options[ selector.selectedIndex ].value
+  
+  var radios = document.getElementsByName('SelectMode');
+  for (var i = 0, length = radios.length; i < length; i++) {
+    if (radios[i].checked) {
+      CurrentControl = radios[i].value;
+      break;
+    }
+  }
 
 }); 
 
 canvas.addEventListener("mousedown", function (e) {
   getMousePosition(canvas, e);
 }); 
+
+var download = function(){
+  var link = document.createElement('a');
+  link.download = 'Bezier.png';
+  link.href = document.getElementById('DisplayBox').toDataURL()
+  link.click();
+  link.remove();  
+}
+

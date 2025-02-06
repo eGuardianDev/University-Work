@@ -4,6 +4,10 @@ body{
     font-family: Arial, Helvetica, sans-serif;
 }
 
+#miniControlPanel{
+    border:black 1px solid; margin:1%; padding:5%; border-radius: 10px;
+}
+
 main{
     margin: 0;
 }

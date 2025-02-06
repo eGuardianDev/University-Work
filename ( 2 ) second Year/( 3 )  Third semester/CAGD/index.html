@@ -1,0 +1,69 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="styles.css">
+    
+</head>
+<body>
+    
+
+    <main>
+    
+    <canvas id="DisplayBox">
+        Your browser doesn't support this format
+    </canvas>
+    
+
+    <div id="ControlPanel">
+
+        <h1>Bézier curves</h1>
+        <p>by Tsvetomir Staykov</p> 
+      
+        
+        <h3 style="text-align: center;">Controls:</h3>
+        <form style="display: flex; padding:1%">
+            <input type="radio" name="SelectMode" value="Add" checked> Add<br>
+            <input type="radio" name="SelectMode" value="Move"> Move<br>
+            <input type="radio" name="SelectMode" value="Delete`"> Remove<br>
+          </form>
+        <br>
+        <div style="border:black 1px solid; margin:1%; padding:10%; border-radius: 10px;">
+            <input id="ControlPoligonCheckbox" type="checkbox" checked="true" onchange="updateControlPoligon(this);" >Visible control poligon</input>
+            <br>
+            <input id="DrawingCurveCheckbox" type="checkbox" checked="true" onchange="updateDrawingCurve(this);" >Drawing Cruve</input>
+            <br>
+            <input id="DrawControlPointsCheckbox" type="checkbox" checked="true" onchange="updateDrawControlPoints(this);" >Visible control points circle</input>
+            <br>
+            <input id="DrawTextCheckbox" type="checkbox" checked="true" onchange="updateDrawText(this);" >Visible control point text</input>
+        </div>
+            
+        <br>
+
+        <div style="border:black 1px solid; margin:1%; padding:10%; border-radius: 10px;">
+            <div style="margin:auto; text-align: center;">
+                <label for="polarSlider">First polar first parameter</label><br>
+                <input type="range" min="0" max="1" step=".01" value=".5" id="polarSlider" 
+                oninput="updatePolarSlider(this);"><br>
+                <input min =0 max=1 step=".01" value = "0.5" type="number" id="polarNumberBox" oninput="updatePolarSlider(this);" onblur="updatePolarNumber(this);" >
+            </div>
+            <br>
+            <input id="DrawingFirstPolarCheckbox" type="checkbox" checked="true" onchange="updateFirstPolar(this);" >Drawing first polar</input>
+            <br>
+            <input id="DrawPolarControlPointsCheckbox" type="checkbox" checked="true" onchange="updateDrawText(this);" >Visible polar control points</input>
+        </div>
+
+        <br>
+        <button onclick="download();">Download curve</button>
+            
+    </div>
+    </main>
+</body>
+    <script src="Interface.js"></script>
+    <script src="Debug.js"></script>
+    <script src="Algorithms.js"></script>
+</html>
