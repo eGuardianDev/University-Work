@@ -69,17 +69,26 @@ function updatePolarNumber(caller){
 
 
 const canvas = document.getElementById("DisplayBox");
+const blendingFunctionGraph = document.getElementById("blendingFunctionGraph");
+
 document.addEventListener("DOMContentLoaded", function () {
   canvas.width = window.innerWidth * 70 / 100;
   canvas.height = window.innerHeight * 97 / 100;
 });
 
 var ctx;
+var graphCtx;
 function draw() {
   if (canvas.getContext) {
     ctx = canvas.getContext("2d");
     canvas.width = window.innerWidth * 70 / 100;
     canvas.height = window.innerHeight * 97 / 100;
+  }else{
+    DebugLog("This browser doesn't support canvas functionality in 2D");
+
+  }
+  if (blendingFunctionGraph.getContext) {
+    graphCtx = blendingFunctionGraph.getContext("2d");
   }else{
     DebugLog("This browser doesn't support canvas functionality in 2D");
 
@@ -201,15 +210,56 @@ function ReleaseElementFromMoving(event){
   }  
 }
 
-
-
-
+function getRandomColor() {
+  return '#' + Math.floor(Math.random() * 0xFFFFFF).toString(16).padStart(6, '0');
+}
 //  * === Standart Drawing Functions ===
 function CleanCanvas(){
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+  graphCtx.clearRect(0,0,blendingFunctionGraph.width,blendingFunctionGraph.height);
+}
+
+const binomialCache = {};
+function binomial(n, k) {
+  
+  if (k > n) return 0;
+  if (k === 0 || k === n) return 1;
+  
+  let key = `${n},${k}`;
+  if (binomialCache[key] !== undefined) return binomialCache[key];
+
+  binomialCache[key] = binomial(n - 1, k - 1) + binomial(n - 1, k);
+  return binomialCache[key];
+}
+  
+function RedrawBlendingData(){
+  let count = controlPoints.length;
+  for(let i = 0;i<count; ++i){
+
+    graphCtx.strokeStyle = getRandomColor();
+    let transalte = 256;
+    
+    let width =  blendingFunctionGraph.width;
+    let height = blendingFunctionGraph.height;
+    let step = 0.2;
+    graphCtx.beginPath(); 
+    for(let t= 0;t<= 1;t+=0.01){
+      let data =  binomial(count-1,i) * Math.pow(t,i)  * Math.pow(1-t,count-1-i);
+      // let data = Math.pow(t,i);
+      
+      let x = width-(t*transalte);
+      let y = height-(data*transalte);
+      graphCtx.moveTo(x,      y);
+      graphCtx.lineTo(x+step, y+step); 
+    }
+    graphCtx.stroke(); 
+  }
+
 }
 
 function Redraw(){
+  RedrawBlendingData();
+
   ctx.color = "black";
   ctx.font = "25px Arial";
   

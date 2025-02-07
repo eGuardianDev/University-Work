@@ -15,7 +15,7 @@
     <main>
     
     <canvas id="DisplayBox">
-        Your browser doesn't support this format
+        Your browser doesn't support canvas
     </canvas>
     
 
@@ -29,7 +29,7 @@
         <form style="display: flex; padding:1%">
             <input type="radio" name="SelectMode" value="Add" checked> Add<br>
             <input type="radio" name="SelectMode" value="Move"> Move<br>
-            <input type="radio" name="SelectMode" value="Delete`"> Remove<br>
+            <input type="radio" name="SelectMode" value="Delete"> Remove<br>
           </form>
         <br>
         <div style="border:black 1px solid; margin:1%; padding:10%; border-radius: 10px;">
@@ -58,8 +58,17 @@
         </div>
 
         <br>
+        
+        
+        <canvas id="blendingFunctionGraph" width="256" height="256">
+            Your browser doesn't support canvas format
+        </canvas>
+
+
+
         <button onclick="download();">Download curve</button>
-            
+
+        
     </div>
     </main>
 </body>
