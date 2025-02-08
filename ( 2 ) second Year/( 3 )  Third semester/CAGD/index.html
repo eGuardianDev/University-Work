@@ -26,13 +26,14 @@
       
         
         <h3 style="text-align: center;">Controls:</h3>
-        <form style="display: flex; padding:1%">
+        <form style="display: flex; padding:1%;   justify-content: center;  width: 100%;">
             <input type="radio" name="SelectMode" value="Add" checked> Add<br>
             <input type="radio" name="SelectMode" value="Move"> Move<br>
             <input type="radio" name="SelectMode" value="Delete"> Remove<br>
           </form>
         <br>
         <div style="border:black 1px solid; margin:1%; padding:10%; border-radius: 10px;">
+            <h3 style="text-align: center; margin-top: 0;">Curve visibility:</h2>
             <input id="ControlPoligonCheckbox" type="checkbox" checked="true" onchange="updateControlPoligon(this);" >Visible control poligon</input>
             <br>
             <input id="DrawingCurveCheckbox" type="checkbox" checked="true" onchange="updateDrawingCurve(this);" >Drawing Cruve</input>
@@ -45,8 +46,9 @@
         <br>
 
         <div style="border:black 1px solid; margin:1%; padding:10%; border-radius: 10px;">
-            <div style="margin:auto; text-align: center;">
-                <label for="polarSlider">First polar first parameter</label><br>
+            <h3 style="text-align: center; margin-top: 0;">First polar control:</h2>
+                <div style="margin:auto; text-align: center;">
+                <label for="polarSlider">First parameter</label><br>
                 <input type="range" min="0" max="1" step=".01" value=".5" id="polarSlider" 
                 oninput="updatePolarSlider(this);"><br>
                 <input min =0 max=1 step=".01" value = "0.5" type="number" id="polarNumberBox" oninput="updatePolarSlider(this);" onblur="updatePolarNumber(this);" >
@@ -60,13 +62,17 @@
         <br>
         
         
-        <canvas id="blendingFunctionGraph" width="256" height="256">
-            Your browser doesn't support canvas format
-        </canvas>
 
+        <div id="BernsteinGraph">
+            <h3>Bernstein polynomial data:</h3>
+            <canvas id="blendingFunctionGraph" width="256" height="256">
+                Your browser doesn't support canvas format
+            </canvas>
+        </div>
 
+        <br>
 
-        <button onclick="download();">Download curve</button>
+        <button style="float:right; margin: 1%;" onclick="download();">Download curve</button>
 
         
     </div>

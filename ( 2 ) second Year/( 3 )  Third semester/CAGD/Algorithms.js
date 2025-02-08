@@ -45,15 +45,7 @@ function calculateAtPosFirstPolar(t0,t,LocalControlPoints, drawPolarPoints,radiu
                     x: (1-t0)* first.x + t0 * second.x,
                     y: (1-t0)* first.y + t0 * second.y
                 }
-                if(drawPolarPoints == true && t < 0.001){
-                    ctx.beginPath();
-                    ctx.arc(newPoints[j].x, newPoints[j].y, radius, 0, 2 * Math.PI);
-                    ctx.fillStyle = "gray";
-                    ctx.fill();
-                    ctx.lineWidth = 1;
-                    ctx.strokeStyle = "DodgerBlue";
-                    ctx.stroke();
-                }
+                
             }else{
                 newPoints[j] = {
                     x: (1-t)* first.x + t * second.x,
@@ -70,6 +62,27 @@ function calculateAtPosFirstPolar(t0,t,LocalControlPoints, drawPolarPoints,radiu
     return intermediatePoints[intermediatePoints.length-1][0];
 }
 
+function PolarControlPoints(t0,LocalControlPoints){
+    
+    let count = LocalControlPoints.length;
+    let PolarControlPoints = new Array(count-1);
+        
+    for(let j =0;j<count-1;++j){
+        
+        let first = LocalControlPoints[j];
+        let second = LocalControlPoints[j+1];
+        
+        PolarControlPoints[j] = {
+            x: (1-t0)* first.x + t0 * second.x,
+            y: (1-t0)* first.y + t0 * second.y
+        }
+
+    }
+    
+    
+
+    return PolarControlPoints;
+}
 function drawCurve(){
     if(controlPoints.length <=1){
         return;
@@ -103,6 +116,8 @@ function drawFirstPolar(t0, drawControlPointOfPolar){
         return;
     }
 
+    
+    
     for(let i =0;i<=1;i+=0.001){   
         let pos =calculateAtPosFirstPolar(t0,i,controlPoints, drawControlPointOfPolar,5,i);
 
@@ -116,6 +131,20 @@ function drawFirstPolar(t0, drawControlPointOfPolar){
         ctx.strokeStyle = "green";
         ctx.stroke();
     }
+
     
+    if(drawControlPointOfPolar == true){
+        let polarControlPoints =PolarControlPoints(t0,controlPoints);
+        for(let i = 0; i<polarControlPoints.length; ++i){
+
+            ctx.beginPath();
+            ctx.arc(polarControlPoints[i].x, polarControlPoints[i].y, 5, 0, 2 * Math.PI);
+            ctx.fillStyle = "gray";
+            ctx.fill();
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = "DodgerBlue";
+            ctx.stroke();
+        }
+    }
     ctx.strokeStyle = "black";
 }

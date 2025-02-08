@@ -231,21 +231,28 @@ function binomial(n, k) {
   binomialCache[key] = binomial(n - 1, k - 1) + binomial(n - 1, k);
   return binomialCache[key];
 }
-  
+
+colorsOfBlendingFunctions = [];
 function RedrawBlendingData(){
   let count = controlPoints.length;
   for(let i = 0;i<count; ++i){
 
-    graphCtx.strokeStyle = getRandomColor();
+    if(currentSelectedPoint == i){
+      graphCtx.lineWidth = 3;
+      graphCtx.strokeStyle = "red";
+    }else{
+      graphCtx.lineWidth = 1;
+      graphCtx.strokeStyle = "black";
+    }
     let transalte = 256;
     
     let width =  blendingFunctionGraph.width;
     let height = blendingFunctionGraph.height;
     let step = 0.2;
     graphCtx.beginPath(); 
-    for(let t= 0;t<= 1;t+=0.01){
-      let data =  binomial(count-1,i) * Math.pow(t,i)  * Math.pow(1-t,count-1-i);
-      // let data = Math.pow(t,i);
+    for(let t= 0;t<= 1;t+=0.001){
+      
+      let data =  binomial(count-1,i)   * Math.pow(1-t,i)* Math.pow(t,count-1-i);
       
       let x = width-(t*transalte);
       let y = height-(data*transalte);
@@ -260,21 +267,21 @@ function RedrawBlendingData(){
 function Redraw(){
   RedrawBlendingData();
 
-  ctx.color = "black";
+  ctx.lineWidth = 2;
+  ctx.fillStyle = "black";
   ctx.font = "25px Arial";
   
 
   if(document.getElementById("ControlPoligonCheckbox").checked){
     for(let i =1;i<controlPoints.length; ++i){
       ctx.beginPath(); // Start a new path
-      ctx.moveTo(controlPoints[i-1].x, controlPoints[i-1].y); // Move the pen to (30, 50)
-      ctx.lineTo(controlPoints[i].x, controlPoints[i].y); // Draw a line to (150, 100)
+      ctx.moveTo(controlPoints[i-1].x, controlPoints[i-1].y); 
+      ctx.lineTo(controlPoints[i].x, controlPoints[i].y); 
       ctx.stroke(); // Render the path
     }
   }
 
   for(let i =0;i<controlPoints.length; ++i){
-    // console.log(controlPoints[i]);
     ctx.beginPath();
 
 
@@ -292,7 +299,7 @@ function Redraw(){
 
     
     if(document.getElementById("DrawTextCheckbox").checked){
-      ctx.color = "black";
+      ctx.fillStyle = "black";
       ctx.fillText("b"+i,controlPoints[i].x + offsetX, controlPoints[i].y);
     }
 
@@ -339,7 +346,7 @@ function DetectPoint(event){
 }
 
 
-
+currentSelectedPoint = -1;
 function GlowSelectablePoint(event){
   if(CurrentControl == UIControl.delete || CurrentControl == UIControl.move)
   {
@@ -357,6 +364,7 @@ function GlowSelectablePoint(event){
       ctx.arc(controlPoints[i].x, controlPoints[i].y, circleRadius+3, 0, 2 * Math.PI, true);
       ctx.stroke();
     }
+    currentSelectedPoint = i;
     ctx.strokeStyle='black';
   }  
 
@@ -375,7 +383,6 @@ canvas.addEventListener("mousemove", function (e) {
   MovingElement(e);
   GlowSelectablePoint(e);
 
-  var selector = document.getElementById( "modesSelectorId" );
   
   var radios = document.getElementsByName('SelectMode');
   for (var i = 0, length = radios.length; i < length; i++) {
