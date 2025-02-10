@@ -1,8 +1,7 @@
 function calculateAtPos(t,LocalControlPoints){
     let count = LocalControlPoints.length;
-    
-    let intermediatePoints = [LocalControlPoints]  
 
+    let intermediatePoints = [LocalControlPoints]  
 
     for(let i = 0;i<count-1;++i){
         let prev = intermediatePoints[i];
@@ -17,48 +16,39 @@ function calculateAtPos(t,LocalControlPoints){
             }
         }
         intermediatePoints.push(newPoints);
-        
+    
     }
     
-
     return intermediatePoints[intermediatePoints.length-1][0];
 }
 
-function calculateAtPosFirstPolar(t0,t,LocalControlPoints, drawPolarPoints,radius, i){
+function calculateAtPosFirstPolar(t0,t,LocalControlPoints){
     let count = LocalControlPoints.length;
     
     let intermediatePoints = [LocalControlPoints]  
 
-
     for(let i = 0;i<count-1;++i){
         let prev = intermediatePoints[i];
         let newPoints = new Array(prev.length-1);
-        
         for(let j =0;j<prev.length-1;++j){
             
             let first = prev[j];
             let second = prev[j+1];
             
             if(i == 0){
-                
                 newPoints[j] = {
                     x: (1-t0)* first.x + t0 * second.x,
                     y: (1-t0)* first.y + t0 * second.y
                 }
-                
             }else{
                 newPoints[j] = {
                     x: (1-t)* first.x + t * second.x,
                     y: (1-t)* first.y + t * second.y
                 }
             }
-
         }
         intermediatePoints.push(newPoints);
-        
     }
-    
-
     return intermediatePoints[intermediatePoints.length-1][0];
 }
 
@@ -78,11 +68,10 @@ function PolarControlPoints(t0,LocalControlPoints){
         }
 
     }
-    
-    
 
     return PolarControlPoints;
 }
+
 function drawCurve(){
     if(controlPoints.length <=1){
         return;
@@ -105,7 +94,8 @@ function drawCurve(){
     ctx.strokeStyle = "black";
 }
 
-function drawFirstPolar(t0, drawControlPointOfPolar){
+
+function drawFirstPolar(t0){
     
     if(t0 < 0 || t0 > 1){
         DebugError("Polar t0 is out of [0,1] bound");
@@ -116,15 +106,13 @@ function drawFirstPolar(t0, drawControlPointOfPolar){
         return;
     }
 
-    
-    
     for(let i =0;i<=1;i+=0.001){   
-        let pos =calculateAtPosFirstPolar(t0,i,controlPoints, drawControlPointOfPolar,5,i);
+        let pos =calculateAtPosFirstPolar(t0,i,controlPoints);
 
         ctx.beginPath();
         ctx.moveTo(pos.x, pos.y); 
 
-        pos =calculateAtPosFirstPolar(t0,i+0.001,controlPoints,false);
+        pos =calculateAtPosFirstPolar(t0,i+0.001,controlPoints);
         
         ctx.lineTo(pos.x, pos.y); 
         ctx.lineWidth = 2;
@@ -132,19 +120,6 @@ function drawFirstPolar(t0, drawControlPointOfPolar){
         ctx.stroke();
     }
 
-    
-    if(drawControlPointOfPolar == true){
-        let polarControlPoints =PolarControlPoints(t0,controlPoints);
-        for(let i = 0; i<polarControlPoints.length; ++i){
-
-            ctx.beginPath();
-            ctx.arc(polarControlPoints[i].x, polarControlPoints[i].y, 5, 0, 2 * Math.PI);
-            ctx.fillStyle = "gray";
-            ctx.fill();
-            ctx.lineWidth = 1;
-            ctx.strokeStyle = "DodgerBlue";
-            ctx.stroke();
-        }
-    }
+   
     ctx.strokeStyle = "black";
 }

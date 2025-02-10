@@ -1,5 +1,5 @@
 
-const DEBUG = true
+const DEBUG = false
 
 function DebugLog(message){
   if(!DEBUG) return;

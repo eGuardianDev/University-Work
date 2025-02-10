@@ -23,9 +23,7 @@ function updateFirstPolarDraw(caller){
   Redraw();
 }
 function updateDrawControlPoints(caller){
-  if(!caller.checked){
-    document.getElementById("DrawTextCheckbox").checked = false;
-  }
+    document.getElementById("DrawTextCheckbox").checked = caller.checked;
   CleanCanvas();
   Redraw();
 }
@@ -36,7 +34,6 @@ function updateDrawText(caller){
 function updateFirstPolar(caller){
   let polarControlPointCheckBox =  document.getElementById("DrawPolarControlPointsCheckbox");
   polarControlPointCheckBox.checked = caller.checked;
-  polarControlPointCheckBox.disabled = !caller.checked;
   
   CleanCanvas();
   Redraw();
@@ -213,6 +210,8 @@ function ReleaseElementFromMoving(event){
 function getRandomColor() {
   return '#' + Math.floor(Math.random() * 0xFFFFFF).toString(16).padStart(6, '0');
 }
+
+
 //  * === Standart Drawing Functions ===
 function CleanCanvas(){
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -274,10 +273,10 @@ function Redraw(){
 
   if(document.getElementById("ControlPoligonCheckbox").checked){
     for(let i =1;i<controlPoints.length; ++i){
-      ctx.beginPath(); // Start a new path
+      ctx.beginPath(); 
       ctx.moveTo(controlPoints[i-1].x, controlPoints[i-1].y); 
       ctx.lineTo(controlPoints[i].x, controlPoints[i].y); 
-      ctx.stroke(); // Render the path
+      ctx.stroke(); 
     }
   }
 
@@ -314,16 +313,29 @@ function Redraw(){
   if(document.getElementById("DrawingCurveCheckbox").checked){
     drawCurve();
   }
+  let t0 = document.getElementById("polarSlider").value;
   
   if(document.getElementById("DrawingFirstPolarCheckbox").checked){
-    let t0 = document.getElementById("polarSlider").value;
-    let drawPolarControlPoints = document.getElementById("DrawPolarControlPointsCheckbox").checked;
-    drawFirstPolar(t0,drawPolarControlPoints);
-  
+    drawFirstPolar(t0);
   }
-  
-}
 
+  if(document.getElementById("DrawPolarControlPointsCheckbox").checked){
+    let polarControlPoints = PolarControlPoints(t0,controlPoints);
+    for(let i = 0; i<polarControlPoints.length; ++i){
+
+        ctx.beginPath();
+        ctx.arc(polarControlPoints[i].x,
+                polarControlPoints[i].y,
+                 5, 0, 2 * Math.PI);
+        ctx.fillStyle = "gray";
+        ctx.fill();
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = "DodgerBlue";
+        ctx.stroke();
+    }
+    ctx.strokeStyle = "black";  
+  }
+}
 
 
 function DetectPoint(event){
