@@ -1,10 +1,16 @@
 
+
+// * Some default parameters
+// * ====================================
 const circleRadius = 10;
 const offset_Selector = 0.1;
 
 
 
 
+
+// * Checkbox settings sync
+// * ============================================
 
 let VisibleControlPoligon = true;
 
@@ -65,8 +71,11 @@ function updatePolarNumber(caller){
 }
 
 
+// * First loading dynamic fixes
+// * ============================================
+
 const canvas = document.getElementById("DisplayBox");
-const blendingFunctionGraph = document.getElementById("blendingFunctionGraph");
+const bernsteinPolynomialGraph = document.getElementById("bernsteinPolynomialGraph");
 
 document.addEventListener("DOMContentLoaded", function () {
   canvas.width = window.innerWidth * 70 / 100;
@@ -84,8 +93,8 @@ function draw() {
     DebugLog("This browser doesn't support canvas functionality in 2D");
 
   }
-  if (blendingFunctionGraph.getContext) {
-    graphCtx = blendingFunctionGraph.getContext("2d");
+  if (bernsteinPolynomialGraph.getContext) {
+    graphCtx = bernsteinPolynomialGraph.getContext("2d");
   }else{
     DebugLog("This browser doesn't support canvas functionality in 2D");
 
@@ -95,6 +104,10 @@ function draw() {
 window.addEventListener("load", draw);
 
 
+
+
+// * Control elements
+// * ================================
 
 const UIControl = {
   add: "Add",
@@ -207,15 +220,11 @@ function ReleaseElementFromMoving(event){
   }  
 }
 
-function getRandomColor() {
-  return '#' + Math.floor(Math.random() * 0xFFFFFF).toString(16).padStart(6, '0');
-}
 
 
-//  * === Standart Drawing Functions ===
 function CleanCanvas(){
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  graphCtx.clearRect(0,0,blendingFunctionGraph.width,blendingFunctionGraph.height);
+  graphCtx.clearRect(0,0,bernsteinPolynomialGraph.width,bernsteinPolynomialGraph.height);
 }
 
 const binomialCache = {};
@@ -232,7 +241,7 @@ function binomial(n, k) {
 }
 
 colorsOfBlendingFunctions = [];
-function RedrawBlendingData(){
+function RedrawBernsteinGraph(){
   let count = controlPoints.length;
   for(let i = 0;i<count; ++i){
 
@@ -245,8 +254,8 @@ function RedrawBlendingData(){
     }
     let transalte = 256;
     
-    let width =  blendingFunctionGraph.width;
-    let height = blendingFunctionGraph.height;
+    let width =  bernsteinPolynomialGraph.width;
+    let height = bernsteinPolynomialGraph.height;
     let step = 0.2;
     graphCtx.beginPath(); 
     for(let t= 0;t<= 1;t+=0.001){
@@ -263,8 +272,12 @@ function RedrawBlendingData(){
 
 }
 
+
+// Redraw function checks from html if specific element is toggled
+// if so, specific rendering function is called
+
 function Redraw(){
-  RedrawBlendingData();
+  RedrawBernsteinGraph();
 
   ctx.lineWidth = 2;
   ctx.fillStyle = "black";
@@ -313,14 +326,14 @@ function Redraw(){
   if(document.getElementById("DrawingCurveCheckbox").checked){
     drawCurve();
   }
-  let t0 = document.getElementById("polarSlider").value;
+  let t1 = document.getElementById("polarSlider").value;
   
   if(document.getElementById("DrawingFirstPolarCheckbox").checked){
-    drawFirstPolar(t0);
+    drawFirstPolar(t1);
   }
 
   if(document.getElementById("DrawPolarControlPointsCheckbox").checked){
-    let polarControlPoints = PolarControlPoints(t0,controlPoints);
+    let polarControlPoints = PolarControlPoints(t1,controlPoints);
     for(let i = 0; i<polarControlPoints.length; ++i){
 
         ctx.beginPath();
@@ -354,7 +367,7 @@ function DetectPoint(event){
     }
  }  
 
- return -1;
+  return -1;
 }
 
 
@@ -384,7 +397,7 @@ function GlowSelectablePoint(event){
 
 
 
-// * == event listeners ===
+// * == event listeners for mouse control on canvas ===
 
 canvas.addEventListener("mouseup", function (e) {
   ReleaseElementFromMoving(e);
