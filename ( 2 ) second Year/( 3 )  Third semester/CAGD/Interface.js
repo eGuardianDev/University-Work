@@ -7,10 +7,10 @@ const offset_Selector = 0.1;
 
 
 
-
-
 // * Checkbox settings sync
 // * ============================================
+// This functions help the checkboxes change value,
+// if "parent box" is toggled or not
 
 let VisibleControlPoligon = true;
 
@@ -45,6 +45,8 @@ function updateFirstPolar(caller){
   Redraw();
 }
 
+
+// sync text box and slider for first polar parameter
 function updatePolarSlider(caller){
   let polarSlider =  document.getElementById("polarSlider");
   let polarNumberBox =  document.getElementById("polarNumberBox");
@@ -56,13 +58,15 @@ function updatePolarSlider(caller){
     else if(val > 1) val = 1;
     else{
       polarSlider.value = val;
-      // polarNumberBox.value = val;
     }
   }
   
   CleanCanvas();
   Redraw();
 }
+
+// This function is used for limiting the textbox with 
+// first polar parameter in the interface
 function updatePolarNumber(caller){
   let val = caller.value;
   if(val < 0) val = 0;
@@ -73,9 +77,10 @@ function updatePolarNumber(caller){
 
 // * First loading dynamic fixes
 // * ============================================
+//This functions help configure canvas size when page is loaded
 
 const canvas = document.getElementById("DisplayBox");
-const bernsteinPolynomialGraph = document.getElementById("bernsteinPolynomialGraph");
+const BernsteinPolynomialGraph = document.getElementById("BernsteinPolynomialGraph");
 
 document.addEventListener("DOMContentLoaded", function () {
   canvas.width = window.innerWidth * 70 / 100;
@@ -84,7 +89,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 var ctx;
 var graphCtx;
-function draw() {
+function InitalizeSizeOfCanvas() {
   if (canvas.getContext) {
     ctx = canvas.getContext("2d");
     canvas.width = window.innerWidth * 70 / 100;
@@ -93,21 +98,24 @@ function draw() {
     DebugLog("This browser doesn't support canvas functionality in 2D");
 
   }
-  if (bernsteinPolynomialGraph.getContext) {
-    graphCtx = bernsteinPolynomialGraph.getContext("2d");
+  if (BernsteinPolynomialGraph.getContext) {
+    graphCtx = BernsteinPolynomialGraph.getContext("2d");
   }else{
     DebugLog("This browser doesn't support canvas functionality in 2D");
 
   }
 }
 
-window.addEventListener("load", draw);
+window.addEventListener("load", InitalizeSizeOfCanvas);
 
 
 
 
-// * Control elements
+// * Control elements/Points
 // * ================================
+// This function help controlling the control points
+// of the curve
+// Here elements and points are used interchangeably
 
 const UIControl = {
   add: "Add",
@@ -118,17 +126,14 @@ controlPoints = []
 let CurrentControl = UIControl.add;
 
 // when moved
-let currentMovingElementFlag = false;
-let currentMovingElementIndex = -1;
+let currentMovingControlPointFlag = false;
+let currentMovingControlPointIndex = -1;
 
 function getMousePosition(canvas, event) {
   let rect = canvas.getBoundingClientRect();
   let x = event.clientX - rect.left;
   let y = event.clientY - rect.top;
   DebugLog("Coordinate: "+ x + ","+ y);
- 
-
-
 
   switch(CurrentControl){
     case UIControl.add:
@@ -144,7 +149,7 @@ function getMousePosition(canvas, event) {
       
       break;
     case UIControl.delete:
-      RemoveElement(event);
+      RemoveControlPoint(event);
       break;
     default:
       DebugLog("Non Selected/Invalid Selected");
@@ -165,20 +170,20 @@ function SelectControlPoint(event){
     let bY = controlPoints[i].y + circleRadius + offset_Selector;
     
     if(aX< x && x< bX && aY < y && y < bY){
-      currentMovingElementIndex = i;
-      currentMovingElementFlag = true;
-      MovingElement(event);
+      currentMovingControlPointIndex = i;
+      currentMovingControlPointFlag = true;
+      MovingControlPoint(event);
       break;
     }
     
   }
 }
-function RemoveElement(event){
+function RemoveControlPoint(event){
   if((CurrentControl == UIControl.delete )){
     let rect = canvas.getBoundingClientRect();
     let x = event.clientX - rect.left;
     let y = event.clientY - rect.top;
-    let removingElementIndex = -1;
+    let removingControlPointIndex = -1;
     for(let i = 0;i<controlPoints.length;++i){
       let aX = controlPoints[i].x - circleRadius - offset_Selector;
       let bX = controlPoints[i].x + circleRadius + offset_Selector;
@@ -186,35 +191,37 @@ function RemoveElement(event){
       let bY = controlPoints[i].y + circleRadius + offset_Selector;
       
       if(aX< x && x< bX && aY < y && y < bY){
-        removingElementIndex = i;
+        removingControlPointIndex = i;
         break;
       }
-   }  
+    }  
 
-    if(removingElementIndex != -1){
-      controlPoints.splice(removingElementIndex,1);
+    if(removingControlPointIndex != -1){
+      controlPoints.splice(removingControlPointIndex,1);
       CleanCanvas();
+      currentSelectedPoint = -1;
       Redraw();
+      
     }
 
   }  
 }
 
-function MovingElement(event){
-  if((CurrentControl == UIControl.move ) && currentMovingElementFlag){
+function MovingControlPoint(event){
+  if((CurrentControl == UIControl.move ) && currentMovingControlPointFlag){
     let rect = canvas.getBoundingClientRect();
     let x = event.clientX - rect.left;
     let y = event.clientY - rect.top;
-    controlPoints[currentMovingElementIndex]= {x,y}   
+    controlPoints[currentMovingControlPointIndex]= {x,y}   
     
     CleanCanvas();
     Redraw();
   }  
 }
-function ReleaseElementFromMoving(event){
-  if((CurrentControl == UIControl.move ) && currentMovingElementFlag == true ){
-    currentMovingElementFlag = false;
-    currentMovingElementIndex = -1;
+function ReleasePointFromMoving(event){
+  if((CurrentControl == UIControl.move ) && currentMovingControlPointFlag == true ){
+    currentMovingControlPointFlag = false;
+    currentMovingControlPointIndex = -1;
     CleanCanvas();
     Redraw();
   }  
@@ -224,8 +231,9 @@ function ReleaseElementFromMoving(event){
 
 function CleanCanvas(){
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  graphCtx.clearRect(0,0,bernsteinPolynomialGraph.width,bernsteinPolynomialGraph.height);
+  graphCtx.clearRect(0,0,BernsteinPolynomialGraph.width,BernsteinPolynomialGraph.height);
 }
+
 
 const binomialCache = {};
 function binomial(n, k) {
@@ -240,42 +248,40 @@ function binomial(n, k) {
   return binomialCache[key];
 }
 
-colorsOfBlendingFunctions = [];
 function RedrawBernsteinGraph(){
   let count = controlPoints.length;
   for(let i = 0;i<count; ++i){
 
     if(currentSelectedPoint == i){
-      graphCtx.lineWidth = 3;
+      graphCtx.lineWidth = 2;
       graphCtx.strokeStyle = "red";
     }else{
       graphCtx.lineWidth = 1;
       graphCtx.strokeStyle = "black";
     }
-    let transalte = 256;
+    let translate = 256;
     
-    let width =  bernsteinPolynomialGraph.width;
-    let height = bernsteinPolynomialGraph.height;
+    let width =  BernsteinPolynomialGraph.width;
+    let height = BernsteinPolynomialGraph.height;
     let step = 0.2;
     graphCtx.beginPath(); 
-    for(let t= 0;t<= 1;t+=0.001){
+    for(let t= 0;t<= 1;t+=0.001){   
+      let data =  binomial(count-1,i) 
+                  * Math.pow(1-t,i)
+                  * Math.pow(t,count-1-i);
       
-      let data =  binomial(count-1,i)   * Math.pow(1-t,i)* Math.pow(t,count-1-i);
-      
-      let x = width-(t*transalte);
-      let y = height-(data*transalte);
+      let x = width-(t*translate);
+      let y = height-(data*translate);
       graphCtx.moveTo(x,      y);
       graphCtx.lineTo(x+step, y+step); 
     }
     graphCtx.stroke(); 
   }
-
 }
 
 
-// Redraw function checks from html if specific element is toggled
+// Redraw function checks from html if specific checkbox is toggled
 // if so, specific rendering function is called
-
 function Redraw(){
   RedrawBernsteinGraph();
 
@@ -332,8 +338,10 @@ function Redraw(){
     drawFirstPolar(t1);
   }
 
-  if(document.getElementById("DrawPolarControlPointsCheckbox").checked){
-    let polarControlPoints = PolarControlPoints(t1,controlPoints);
+  if(document.getElementById("DrawPolarControlPointsCheckbox").checked 
+      && controlPoints.length > 2){
+    
+      let polarControlPoints = PolarControlPoints(t1,controlPoints);
     for(let i = 0; i<polarControlPoints.length; ++i){
 
         ctx.beginPath();
@@ -350,7 +358,8 @@ function Redraw(){
   }
 }
 
-
+// When mouse is over point
+// used in events
 function DetectPoint(event){
   let rect = canvas.getBoundingClientRect();
   let x = event.clientX - rect.left;
@@ -371,11 +380,14 @@ function DetectPoint(event){
 }
 
 
+// mark point as selectable
+// adds red circle around point
+// used in event
 currentSelectedPoint = -1;
 function GlowSelectablePoint(event){
   if(CurrentControl == UIControl.delete || CurrentControl == UIControl.move)
   {
-    if(currentMovingElementFlag) return;
+    if(currentMovingControlPointFlag) return;
 
     let i =DetectPoint(event);
     
@@ -398,14 +410,15 @@ function GlowSelectablePoint(event){
 
 
 // * == event listeners for mouse control on canvas ===
+// * ==================================================
 
 canvas.addEventListener("mouseup", function (e) {
-  ReleaseElementFromMoving(e);
+  ReleasePointFromMoving(e);
   GlowSelectablePoint(e);
 }); 
 
 canvas.addEventListener("mousemove", function (e) {
-  MovingElement(e);
+  MovingControlPoint(e);
   GlowSelectablePoint(e);
 
   
@@ -423,7 +436,11 @@ canvas.addEventListener("mousedown", function (e) {
   getMousePosition(canvas, e);
 }); 
 
-var download = function(){
+
+// additional functions
+
+
+function download(){
   var link = document.createElement('a');
   link.download = 'Bezier.png';
   link.href = document.getElementById('DisplayBox').toDataURL()
@@ -431,3 +448,7 @@ var download = function(){
   link.remove();  
 }
 
+function CleanEveryPoint(){
+  controlPoints = [];
+  CleanCanvas();
+}

@@ -35,14 +35,14 @@
           </form>
         <br>
         <div style="border:black 1px solid; margin:1%; padding:10%; border-radius: 10px;">
-            <h3 style="text-align: center; margin-top: 0;">Curve visibility:</h2>
+            <h3 style="text-align: center; margin-top: 0;">Curve and control points settings:</h2>
             <input id="ControlPoligonCheckbox" type="checkbox" checked="true" onchange="updateControlPoligon(this);" >Visible control poligon</input>
             <br>
-            <input id="DrawingCurveCheckbox" type="checkbox" checked="true" onchange="updateDrawingCurve(this);" >Drawing Cruve</input>
+            <input id="DrawingCurveCheckbox" type="checkbox" checked="true" onchange="updateDrawingCurve(this);" >Drawing curve</input>
             <br>
-            <input id="DrawControlPointsCheckbox" type="checkbox" checked="true" onchange="updateDrawControlPoints(this);" >Visible control points circle</input>
+            <input id="DrawControlPointsCheckbox" type="checkbox" checked="true" onchange="updateDrawControlPoints(this);" >Visible control points circles</input>
             <br>
-            <input id="DrawTextCheckbox" type="checkbox" checked="true" onchange="updateDrawText(this);" >Visible control point text</input>
+            <input id="DrawTextCheckbox" type="checkbox" checked="true" onchange="updateDrawText(this);" >Visible control points text</input>
         </div>
             
         <br>
@@ -67,7 +67,7 @@
 
         <div id="BernsteinGraph">
             <h3>Bernstein polynomial data:</h3>
-            <canvas id="bernsteinPolynomialGraph" width="256" height="256">
+            <canvas id="BernsteinPolynomialGraph" width="256" height="256">
                 Your browser doesn't support canvas format
             </canvas>
         </div>
@@ -75,6 +75,7 @@
         <br>
 
         <button style="float:right; margin: 1%;" onclick="download();">Download curve</button>
+        <button style="float:right; margin: 1%;" onclick="CleanEveryPoint();">Clean canvas</button>
 
         
     </div>

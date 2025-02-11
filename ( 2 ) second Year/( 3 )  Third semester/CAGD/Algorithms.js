@@ -54,7 +54,11 @@ function calculateAtPosFirstPolar(t0,t,LocalControlPoints){
 
 function PolarControlPoints(t0,LocalControlPoints){
     
+    
     let count = LocalControlPoints.length;
+    if(count <= 2) {
+        return [];
+    }
     let PolarControlPoints = new Array(count-1);
         
     for(let j =0;j<count-1;++j){
