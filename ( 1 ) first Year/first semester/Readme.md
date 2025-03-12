@@ -1,5 +1,10 @@
 # First year
 
+
+Въведение:
+- https://www.matematika.bg/visha-matematika/mnojestva.html
+
+
 ### Some answears:
 
 ##### Why we learn so many math?
