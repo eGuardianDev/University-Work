@@ -1,0 +1,30 @@
+
+# Virtualization
+- VMware workstation pro -- recommended, works best
+
+# GNS3 
+- VBox
+- Hyper V - microsoft (in enterprice/pro version of windows)
+- Workstation
+
+GNN3 --- ui display for configuring the network
+
+GNN3 Version == GNS3 VM Version
+2.2.53 <- current
+if updated -> need to upload to vm
+
+if linux
+ -- only gnn3
+
+ - GNS3 opens,closes vm automatically
+
+
+### diffrences
+simulation - we pretent that we do something 
+emulation - pretending that hardware exist with software
+virtualization - giving h/w resources to (using hyperviser)
+
+hypervisor type 1 - server
+hypervisor type 2 - client
+
+image of router - mikrotik ( from their website ) we work with 13 version
