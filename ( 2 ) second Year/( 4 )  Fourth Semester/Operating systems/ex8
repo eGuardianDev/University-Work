@@ -1,0 +1,16 @@
+
+
+for i - ходи по позиционни елементи
+for i [in $*] - ходи по позиционните елементи, може да ги няма, затова са  []
+
+
+list = "w1 w2 w3 w4"
+for i in $list
+do echo $i 1
+   *
+   echo $i 2
+done
+
+* continue
+* break
+* break n - stop specific number of loops
