@@ -1,0 +1,7 @@
+#!/bin/bash
+
+path=/home/dogewithfedora19
+
+echo $(ls -1 $path | wc -l)
+
+find / -name f1 -exec head -n 10 {} \; 2> /dev/null

@@ -1,0 +1,49 @@
+#!/bin/bash
+
+
+file="randomString"
+
+read dir1 dir2
+read str
+
+
+if [ -z $str ]
+then
+ echo "string empty, using predefined string"
+ str=$(cat file)
+fi
+
+
+files1=$(ls -1 . | grep '.c')
+files2=$(ls -1 . | grep '.out')
+
+count=0
+
+for i in $files1
+do
+ cp $i "$dir1/$i"
+ count=$(($count+1))
+done
+
+for i in $files2
+do 
+ cp $i "$dir2/$i"
+ count=$(($count+1))
+done
+
+echo "transfered files: $count"
+
+if [ -d $str ]
+then
+ echo "$str exists"
+elif [ -f $str ]
+then
+ echo "$str is a file"
+ exit  2
+else
+ mkdir $str
+fi
+
+echo $files1 >> "$str/names"
+echo $files2 >> "$str/names"
+

@@ -1,0 +1,11 @@
+
+
+read user1 user2
+
+count=$(who | grep tty | grep $user1 | wc -l)
+
+
+echo $count
+
+date 
+ps -aux | wc -l 

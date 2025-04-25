@@ -1,0 +1,13 @@
+#!/bin/bash
+
+
+read files
+read accounts
+read msg
+
+
+for i in $accounts
+do
+ cat $files >> "$i" 
+ echo $msg >> "$i"
+done

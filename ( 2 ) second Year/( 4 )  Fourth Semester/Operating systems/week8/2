@@ -1,0 +1,28 @@
+#!/bin/bash
+
+
+read dir1 dir2
+
+count1=$( ls -1 $dir1 | grep '.out' | wc -l )
+count2=$( ls -1 $dir2 | grep '.out' | wc -l )
+
+
+if [ $count1 -gt $count2 ]
+then
+ read dir3
+
+ mkdir $dir3
+
+ for i in $(ls $dir1)
+ do
+   if [ -r "$dir1/$i" -a -w "$dir1/$i" ] && ! [  -x "$dir1/$i" ]
+   then 
+     cp "$dir1/$i" $dir3/$i
+   else 
+     echo "files $i not good for transfer"
+   fi 
+ done
+
+else
+ echo "$dir1 has less items than $dir2"
+fi

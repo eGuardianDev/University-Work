@@ -1,0 +1,9 @@
+
+
+for i in * 
+do
+ if [[ "$i" == ??1 || "$i" == ??2 || "$i" == ??3 ]]
+  then
+   echo $i
+ fi
+done

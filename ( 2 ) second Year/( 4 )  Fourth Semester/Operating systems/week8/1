@@ -1,0 +1,20 @@
+#!/bin/bash
+
+read str num
+
+
+data=$( ls -1 $str )
+
+if ! [ -z "$data" ] 
+then 
+ for i in $data
+  do 
+    if [ -f $i ] && [ $( wc -c "$str/$i" | cut -d ' ' -f 1 ) -ge $num ]
+    then echo "$i"
+    fi
+  done
+else
+ echo " doesn't exist this directory"
+fi
+
+

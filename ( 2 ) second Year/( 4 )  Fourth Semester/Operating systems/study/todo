@@ -1,0 +1,27 @@
+
+2. shell
+3. race condition, spin lock, semaphore
+4. deadlock, starvation
+5. task scheduler
+6. 
+7. pipe (fifo), sockets
+
+
+
+
+During lectures:
+spinlock
+deadlock, starvation
+semaphore (read first 100 pages)
+porcesses permissions
+processes and subprocesses, how os starts, child processes, kernal calls
+VFS
+fork, exit codes,
+
+cache, ram, swap, hdd/sdd
+sleep, wait, zombie,
+
+coreutils
+bash
+c
+

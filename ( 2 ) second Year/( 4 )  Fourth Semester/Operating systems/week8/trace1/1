@@ -1,0 +1,11 @@
+count=0
+for val
+do
+   if  test  $val   -gt   0  
+   then
+           count=`expr  $count  +  1`
+   else   echo  $val
+   fi
+ done
+ echo  “val = $val”
+ echo  $count
