@@ -53,3 +53,6 @@ open("/usr/include/unistd.h", O_RDONLY);
     - the file descriptor finds the v-node
     - v-node finds the fs read function
     - the data is fetched from fs (remote, usb or local disk)
+
+### Resources
+- [docs](https://docs.kernel.org/filesystems/vfs.html)
