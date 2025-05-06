@@ -1,0 +1,27 @@
+read dir1 dir2
+
+
+if ! [ -d $dir1 ]
+  then
+  echo "$dir1 doesn't exist"
+  exit 1
+elif ! [ -d $dir2 ]
+  then
+  echo "$dir2 doesn't exist"
+  exit 1
+fi
+
+count_1=$(ls $dir1 | grep .c | wc -l )
+count_2=$(ls $dir2 | grep .c | wc -l )
+
+finalCount=$((count_1 + count_2))
+
+if [ $finalCount -eq 2 ]
+  then
+   touch source.txt
+   chmod 644 source.txt
+   ls $dir1 | grep .c >> source.txt
+   ls $dir2 | grep .c >> source.txt
+else
+  echo "not enought files"
+fi

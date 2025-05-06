@@ -1,0 +1,19 @@
+
+
+read str
+
+count=0
+if ! [ -d /home/$str ]
+then
+ mkdir /home/$str
+ for i in $(ls)
+ do
+  if ! [ -d $i ] && [ -x $i -a -r $i ] 
+  then
+   cp $i /home/$str/$i
+  else
+   count=$( $count + 1 )
+  fi
+ done
+ echo "Not moved $count"
+fi

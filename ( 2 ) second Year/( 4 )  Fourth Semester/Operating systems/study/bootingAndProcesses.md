@@ -51,6 +51,10 @@ if processes with higher
 interupts that cause the system to be changing processes, saving the state of processes so it can continue after that.
 Context switching is wasted time, because the system doesn't do anything usefull during this period. Typically a few milli seconds.
 
+process is removed from the cpu and replace by another - processes switch
+
+process state is stored and and execution is temporary interupted - context switch ( for example outside interupt )
+
 
 ### first process
 when the system first boot init process is created and new processes come from it. normally with pid 1. (sometimes different for virtualization)
@@ -87,6 +91,17 @@ jobs - get current background jobs
 
 
 ### Processes states
+
+
+#### Process table
+data structure in RAM. holds information about processes
+ - pid
+ - owner
+ - priority
+ - enviromental vars
+ - parent process id
+ - pointer to machine code
+ - STATE <-- very important
 
 
 
@@ -142,6 +157,7 @@ when program is making a system call it transitions from user mode to supervisor
 This program controls jobs, manages memory, handles I/O
 
 
+
 ### Killing processes
 
 kill (-15)
@@ -192,4 +208,6 @@ find
 
 - [video find commands](https://www.youtube.com/watch?v=FvEoGHFKsKA)
 
+- [Context switching](https://tldp.org/LDP/LG/issue23/flower/context.html)
+- [Process tables](https://stackoverflow.com/questions/4880555/what-is-the-linux-process-table-what-does-it-consist-of)
 - [Playlist processes](https://www.youtube.com/playlist?list=PLtK75qxsQaMKLUENMaPlD_O2qS8ZBGjuy)

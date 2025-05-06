@@ -1,0 +1,33 @@
+## UNIX 
+Unix is standart.
+
+## Linux
+linux is a kernal. Software that lives close to the Hardware. A translater.
+
+
+## POSIX
+Portable Operating System Interface.
+
+Standart. Maintains compatibility between diffrent os.
+
+defines APIs, Shells and utility interfaces 
+
+There are tests that need to be completed for an os to be POSIX complient. Example: 
+- Standart C operations
+- Multitasking
+- Error States
+- Command line & cmds
+
+
+## POSIX is not Unix
+SUS - Single Unix Specification
+
+being SUS certified makes the os UNIX (its a payed fee)
+
+## Why standarts
+Compatability and expected functions
+
+
+
+# Source:
+- [video POSIX and UNIX](https://www.youtube.com/watch?v=hy4OeVCLGZ4)

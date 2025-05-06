@@ -1,0 +1,10 @@
+
+read cat
+if [ $cat -gt 3 ] && [ $cat -lt 5 ]
+  then
+  echo "fine"
+
+else
+  echo "not fine"
+
+fi
