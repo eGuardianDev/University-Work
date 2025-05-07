@@ -1,0 +1,7 @@
+
+
+echo "args are: $*"
+echo "arg count is $#"
+
+
+exit 127

@@ -1,0 +1,7 @@
+
+
+
+set 'tail -2l file1'
+
+
+echo $*

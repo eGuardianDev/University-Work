@@ -1,0 +1,16 @@
+
+
+read user file
+
+
+name=$(tail -1l $file | cut -d '1' -f 1)
+
+count=$( find ../ -name $name | wc -l )
+
+if [ $count -gt 1 ] 
+  then
+  echo "found $count"
+  write $user < "found $count"
+else
+  echo "nothing found"
+fi

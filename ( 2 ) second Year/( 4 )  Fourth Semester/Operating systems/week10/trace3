@@ -1,0 +1,19 @@
+
+count=3
+until false
+do for var1 in w x y z
+do for var2
+do if test $var2 -le $#
+then count=` expr $count + $var2`
+echo $count var1 $var2 >> file1
+else continue
+echo $var2 var1>> file1
+fi
+done
+grep 5 file1
+set `tail -2l file1`
+echo $1 $4
+break 2
+done
+echo $*
+done

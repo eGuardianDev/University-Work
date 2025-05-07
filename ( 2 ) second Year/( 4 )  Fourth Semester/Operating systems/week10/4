@@ -1,0 +1,8 @@
+
+read file users
+
+for u in $users
+  do 
+
+    cat $file | write $u 
+done
