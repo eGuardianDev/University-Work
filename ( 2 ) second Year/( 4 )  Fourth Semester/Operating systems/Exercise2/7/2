@@ -1,0 +1,8 @@
+
+
+PATH="$PWM:$PATH"
+
+echo $PATH
+
+PATH="$(pwd)$PATH"
+echo $PATH

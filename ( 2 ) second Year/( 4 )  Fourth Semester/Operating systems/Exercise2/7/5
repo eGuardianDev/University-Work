@@ -1,0 +1,14 @@
+
+
+
+read user1 user2
+
+count1=$(who | grep $user1 | wc -l)
+count2=$(who | grep $user2 | wc -l)
+
+sum=`expr $count1+$count2`
+echo $sum
+other=$(( $(who | wc -l) - $(expr $count1 + $count2) ))
+echo $other
+
+

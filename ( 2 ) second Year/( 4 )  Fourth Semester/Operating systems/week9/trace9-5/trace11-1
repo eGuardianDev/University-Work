@@ -1,0 +1,27 @@
+echo > fstrings # creates file
+for prom # read input abc 123 456
+do
+  echo $prom >> fstrings # saves to file abc, 123, 456
+done
+
+cat fstrings # outputs abc, 123, 456
+read str1 str2 # gets prog1.c , a.out prog2
+
+echo $str1
+echo $str2
+
+while cc $str2 # compiles second file gives error
+do
+ set a.out
+ echo $str2 > fstrings
+ grep $1 fstrings
+ exit 0
+done
+
+set arg1 arg2
+echo “prom=$prom”
+if grep $2 fstrings
+ then echo SUCCESS
+else
+ echo $2
+fi

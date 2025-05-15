@@ -1,0 +1,12 @@
+
+
+
+echo "current vars are $# and they are: $@"
+
+for i in $@; do 
+  touch $i
+
+  done
+
+shift 2
+echo "current vars are $# and they are: $@"

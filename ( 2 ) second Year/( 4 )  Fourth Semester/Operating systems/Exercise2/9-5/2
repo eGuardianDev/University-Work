@@ -1,0 +1,8 @@
+
+
+
+#find / -type d -user $(whoami)
+
+data=$(find -type f -name f1 -exec tail -10l {} | grep line \;)
+
+echo $data

@@ -1,0 +1,2 @@
+test/f1: C source, ASCII text test/f2: C source, ASCII text
+

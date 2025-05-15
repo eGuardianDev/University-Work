@@ -1,0 +1,17 @@
+
+
+
+
+read f1 f2 f3
+
+a=`expr length $f1`
+b=`expr length $f2`
+c=`expr length $f3`
+
+echo $(( $a + $b + $c )) > len 
+
+c1=$(wc -c < $f1)
+c2=$(wc -c < $f2)
+c3=$(wc -c < $f3)
+
+echo $(( $c1 + $c2 + $c3 )) > size

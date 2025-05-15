@@ -1,0 +1,14 @@
+
+
+
+
+
+read user
+
+until (who | grep $user > /dev/null)
+do 
+ echo "user check"
+ sleep 1
+done
+
+echo "user is online"

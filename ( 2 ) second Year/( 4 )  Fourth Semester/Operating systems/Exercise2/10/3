@@ -1,0 +1,18 @@
+
+
+
+read user file
+
+index=$( expr index "$(tail -1l $file)" '1')
+
+
+echo -n "count of elements with that name:"
+count=$(find $HOME/ -name "$index" | wc -l )
+
+echo "$count"
+if [ $count -ge 1 ];then
+  echo "found $count elements"
+else 
+  echo "no elements found"
+fi
+

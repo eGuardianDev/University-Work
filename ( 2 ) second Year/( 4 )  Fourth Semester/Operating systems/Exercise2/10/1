@@ -1,0 +1,27 @@
+
+
+
+read dir1 dir2
+
+files1=$(file $dir1/* | grep "C")
+count1=$(echo $files1 | wc -l )
+
+files2=$(file $dir2/* | grep "C")
+count2=$(echo $files2 | wc -l )
+
+sum=$(($count1 + $count2))
+
+if [ $sum -gt 1 ];then  
+  
+  touch sources.txt
+ 
+ echo $files1 > sources.txt 
+ echo $files2 >> sources.txt 
+ 
+
+ chmod 444 sources.txt
+  echo "file created"
+
+else 
+  echo "not enought files"
+fi

@@ -1,0 +1,9 @@
+
+
+
+
+read string
+
+
+echo $( expr index "$string" 'a' )
+echo $( expr substr "$string" 5 10 )

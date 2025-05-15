@@ -1,0 +1,18 @@
+
+set 3 6 4 7 5
+
+c=5
+for k1 in 1 2 3 4 5 6
+do for k2
+do if test $k2 -ne $4
+then c=` expr $c - $#`
+echo $c $k1 $k2
+else continue
+echo $k2 $k1
+fi
+done
+echo $*
+break
+done
+
+

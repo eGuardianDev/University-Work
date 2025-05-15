@@ -1,0 +1,29 @@
+
+
+read dir file
+
+if [ ! -d $dir ]; then
+ mkdir $dir
+fi
+
+cd $dir
+pth=$(pwd)
+cd ..
+
+for i in $(ls ??[1-3].c) ; do
+ if [ -f $i ]; then
+  cp $i $pth
+ fi
+done 
+
+
+pth2="sources"
+
+
+for i in $(ls $pth2/*.c); do
+ echo "file $i"
+ rm $i
+done
+ 
+
+ls -tr ..

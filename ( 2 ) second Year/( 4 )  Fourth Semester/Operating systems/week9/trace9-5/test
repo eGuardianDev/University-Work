@@ -1,0 +1,15 @@
+
+
+niz="cat"
+file="file1"
+i=0
+
+while grep $niz $file; do
+ if [ $i -ge 10 ]; then
+   break
+  fi
+  i=$( $i + 1 )
+ echo "yes"
+done
+
+

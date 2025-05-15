@@ -1,0 +1,4 @@
+
+
+
+ls -al | grep "rw-r--r--" | tr -s ' ' | cut -d ' ' -f 9

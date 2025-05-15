@@ -1,0 +1,19 @@
+
+
+
+read string num
+
+if [[ -d $string ]]; then 
+ allFile=$(ls $string)
+ for i in $allFile; do 
+   if [[ -f $i ]] && [[ $(echo $i | wc -c ) -ge num ]]; then 
+     echo "file: $i satisfieds"
+   else 
+     echo "file: $i is not good"
+   fi 
+  done
+else 
+  echo "$string doesn't exist"
+
+fi
+

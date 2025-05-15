@@ -1,0 +1,23 @@
+
+
+
+
+read user1 user2
+
+for i in $(users); do 
+
+ if [ $i != $user1 -a $i != $user2 ]; then
+   echo $i >> active_users
+   fi
+done 
+
+date >> active_users 
+echo "active processes: $(ps -aux | wc -l)" >> active_users
+
+chmod 644 active_users
+
+if [ ! -d info ]; then 
+ mkdir info
+fi
+
+mv active_users ./info/active1

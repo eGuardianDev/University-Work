@@ -1,0 +1,10 @@
+
+
+
+
+
+
+read user
+
+ps -aux | grep $user
+

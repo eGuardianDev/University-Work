@@ -1,0 +1,27 @@
+
+
+
+
+# text file
+read file   users
+
+if [ ! -f $file ];then 
+ echo "file $file doesn't exist "
+ exit 1
+fi
+
+currentSetting=$(mesg | cut -d ' ' -f 2 )
+
+mesg y
+
+for i in $users; do 
+ 
+ allowed=$(who -T | grep + | grep $i | wc -l )
+
+ if [ $allowed -ge 1 ];then 
+   echo "writing to $i"
+ fi
+
+done
+
+mesg $currentSetting

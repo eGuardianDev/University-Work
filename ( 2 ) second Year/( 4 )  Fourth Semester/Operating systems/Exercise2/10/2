@@ -1,0 +1,21 @@
+
+
+
+
+read string
+
+if [ ! -d $string ];then
+mkdir $string
+fi
+
+count=0
+for i in *; do
+ if [ -f $i -a -w $i -a -r $i ]; then
+  cp $i $string
+ else
+   echo "not moving $i"
+   count=$(($count+1))
+ fi
+done
+
+echo "not moved $count"

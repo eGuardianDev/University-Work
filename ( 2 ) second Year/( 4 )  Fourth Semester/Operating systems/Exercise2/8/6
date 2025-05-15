@@ -1,0 +1,24 @@
+
+
+
+
+read dir1 user1
+
+
+#size=0
+#for i in $(ls $dir1); do 
+
+# size=$(($size + $( cat $i | wc -c ) ))
+#  done
+
+#echo "size is $size"
+
+
+list=$(find $dir1 -type f -exec wc -c {} \;| cut -d ' ' -f 1 )
+
+count=0
+for i in $list; do 
+ count=$(($count+$i))
+done
+
+echo "size: $count" > write $user1

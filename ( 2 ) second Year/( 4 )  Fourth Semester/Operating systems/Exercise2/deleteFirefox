@@ -1,0 +1,20 @@
+
+
+
+list=$(ps -aux | grep firefox | grep -v grep | tr -s ' ' | cut -d ' ' -f 2)
+
+echo "Current jobs"
+echo $list
+
+echo "Deleting processes started"
+for i in $list 
+do 
+ echo "Killing $i"
+ kill -9 $i
+
+done
+
+echo Done
+exit 0
+
+

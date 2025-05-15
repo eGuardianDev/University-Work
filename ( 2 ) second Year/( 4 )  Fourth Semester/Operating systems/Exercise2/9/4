@@ -1,0 +1,33 @@
+
+
+
+
+
+read dir1 dir2 string
+
+
+count1=0
+files1=$(ls *.c)
+for i in $files1; do 
+ mv $i $dir1
+ count1=$(($count1+1))
+done
+
+count2=0
+files2=$(ls *.out)
+for i in $files2; do
+ mv $i $dir2
+ count2=$(($count2+1))
+done
+
+
+echo "moved *.c files: $count1"
+echo "move *.out files: $count2"
+
+if [ ! -d $string ]; then
+ mkdir $string
+fi
+
+echo $files1 > $string/output
+echo $files2 >> $string/output
+

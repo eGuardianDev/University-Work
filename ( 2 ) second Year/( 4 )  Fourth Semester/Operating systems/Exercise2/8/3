@@ -1,0 +1,20 @@
+
+
+
+
+read file string
+
+tee $file1 $file2 $file3
+
+grep "$string" $file
+
+echo "where to save: " -n
+read countFile
+grep "$string" $file | wc -l > $countFile
+
+
+mkdir info
+mv $countFile info/$countFile
+
+
+

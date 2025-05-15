@@ -1,0 +1,25 @@
+if test –z $4
+ then echo $2
+  for prom
+   do echo $prom > fpar
+  done
+else echo $1
+ echo > fpar
+fi
+
+cat fpar
+read niz
+
+while grep $niz fpar
+do
+ echo "we are in the loop"
+ set arg1 $1
+ echo $3
+ echo $1 $2
+ exit 1
+done
+
+echo $?
+set $#
+echo $prom $1
+echo END

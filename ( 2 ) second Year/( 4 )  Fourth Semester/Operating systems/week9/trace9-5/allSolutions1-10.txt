@@ -1,0 +1,285 @@
+
+upr10_zad1 upr10_zad2 upr10_zad3 upr10_zad4 upr2_zad1 upr2_zad2 upr2_zad3 upr2_zad4 upr2_zad5 upr3_zad1 upr3_zad2 upr3_zad3 upr3_zad4 upr3_zad5 upr4_zad1 upr4_zad2 upr5_zad1 upr5_zad2 upr5_zad3 upr5_zad4 upr5_zad5 upr5_zad6 upr6_zad1 upr7_zad1 upr7_zad3 upr7_zad4 upr7_zad5 upr7_zad6 upr7_zad7 upr7_zad8 upr8_zad1 upr8_zad2 upr8_zad3 upr8_zad4 upr8_zad5 upr8_zad6 upr8_zad7 upr9_zad1 upr9_zad2 upr9_zad3
+====== file: upr10_zad1 ======
+fdir1=`ls $1/*.c | wc -l`
+fdir2=`ls $2/*.c | wc -l`
+totbr=`expr $fdir1 + $fdir2`
+if [ $totbr -gt 20 ]
+then
+        ls $1/*.c > sources.txt
+        ls $2/*.c >> sources.txt
+        chmod 0444 sources.txt
+else
+        echo "Total number of files less than 20=$totbr"
+fi
+====== file: upr10_zad2 ======
+if ! test -d $HOME/$1
+then
+        mkdir $HOME/$1
+fi
+num=0
+for var in *
+do
+        if  test -f $var -a -r $var -a -w $var
+        then
+          cp $var $HOME/$1/$var
+        else
+          num=`expr $num + 1 `
+        fi
+done
+echo "Number of nonreadable files = $num"
+====== file: upr10_zad3 ======
+redlast=`tail -1l $2`
+c=`expr index $redlast 1`
+c=`expr $c - 1`
+niz=`expr substr $redlast 1 $c`
+a=`find $HOME/.. -name $niz 2>/dev/null  | wc -l`
+if test $a -eq 0
+   then echo "Nqma takyv" | write $1
+   else echo "Broqt e $a"
+fi
+====== file: upr10_zad4 ======
+oldWriteState=$( if(mesg |grep n>/dev/null); then echo n;else echo y;fi;)
+echo $oldWriteState
+mesg y
+filename=$1
+shift
+for user
+do
+     who -T |grep + |grep $user|while read a b c d
+         do
+            write $a $c <$filename
+         done
+done
+mesg $oldWriteState
+====== file: upr2_zad1 ======
+mkdir AA BB
+cp /home/student/hello.c .
+cp /home/student/second.c .
+cat hello.c
+wc -c second.c
+mv hello.c AA/hello.c
+mv second.c BB/second.c
+cp BB/second.c BB/copycek.c
+rm BB/second.c
+====== file: upr2_zad2 ======
+tee a1 a2 a3 a4 a5
+Hello world
+knxxxxx
+4.03.2025
+cntl D
+mkdir FIRST
+sort a1 a2
+mv a1 a2 FIRST
+cd FIRST
+mkdir SECOND
+cp ../../a[3-5] .
+head -2l a3
+tail -5c a4
+cat $HOME/hello.c
+====== file: upr2_zad3 ======
+rmdir BB
+ls -l /
+file $HOME/*
+cut -c1-3 a1
+cut -c1-3 a2
+mv FIRST/SECOND/a5 .
+cmp a3 a4
+====== file: upr2_zad4 ======
+ls -l [z,Z]??
+ls -l /home/student/*.exe
+====== file: upr2_zad5 ======
+
+mkdir dir
+cp $HOME/../* dir
+====== file: upr3_zad1 ======
+ls -l
+grep int hello.c second.c
+====== file: upr3_zad2 ======
+find / -name f1 -user knxxxxx -exec cat {} \;
+====== file: upr3_zad3 ======
+cut -d":" -f5
+====== file: upr3_zad4 ======
+find . -type f -size 0c -exec rm {} \;
+date
+pwd
+====== file: upr3_zad5 ======
+date
+cal 2025
+who
+ls -al /home/student
+====== file: upr4_zad1 ======
+who
+write knxxxxx
+Super si
+cntl D
+write knyyyyy
+Super si
+cntl D
+====== file: upr4_zad2 ======
+ls -tl
+cat f1 f2
+chmod 0764 f1
+chmod 0764 f2
+mkdir FIRST
+cp f1 FIRST/f1
+cp f1 FIRST/f2
+rm f1
+====== file: upr5_zad1 ======
+who | cut -c1-6
+echo -n Broqt e:
+who | wc -l
+====== file: upr5_zad2 ======
+write knxxxxx < letter
+====== file: upr5_zad3 ======
+cat f1 f2 | sort > tmp
+wc -c f1
+wc -c f2
+wc -c tmp
+====== file: upr5_zad4 ======
+tee f1 f2 f3 f4 f5 < ff
+grep int ff hello.c second.c > x
+cat x
+wc -l < x
+====== file: upr5_zad5 ======
+ls -tlr f*.c
+ls -l | cut -c2-10 > modes
+====== file: upr5_zad6 ======
+who -u | grep " \. "   | grep "120" | wc -l  > active_users
+====== file: upr6_zad1 ======
+sort Names | tr [a-z] [A-Z] > NAMES
+write knxxxxx < NAMES
+====== file: upr7_zad1 ======
+read n1 n2
+suma=`expr $n1 + $n2`
+multipl=`expr $n1 \* $n2`
+echo -n " Sumata e: $suma"
+echo -n " Proizvedenieto e: $multipl"
+====== file: upr7_zad3 ======
+a=`ps aux |grep " man " | wc -l`
+echo -n " Broiat na prosesite e:$a"
+====== file: upr7_zad4 ======
+ls -l | grep rw-r--r-- | wc -l
+ls -l | grep rw-r--r-- | cut -f10 -d' '
+====== file: upr7_zad5 ======
+read user1 user2
+a=`who | grep $user1| wc -l`
+b=`who | grep $user2 | wc -l`
+c=`expr $a + $b`
+d=`expr $(who|wc-l) - $c`
+echo " Broiat e: $d"
+====== file: upr7_zad6 ======
+file * | grep "C program"| wc -l
+====== file: upr7_zad7 ======
+read f1 f2 f3
+a=`expr length $f1`
+b=`expr length $f2`
+c=`expr length $f3`
+echo $a $b $c > len
+wc -c < $f1 > size
+wc -c < $f2 >> size
+wc -c < $f3 >> size
+====== file: upr7_zad8 ======
+read key
+x=`expr index "$key" a`
+y=`expr substr "$key" 5 10`
+echo "poziciata na a e : $x"
+echo "podstr e: $y"
+====== file: upr8_zad1 ======
+mv $1 work
+mv $2 $1
+mv work $2====== file: upr8_zad2 ======
+echo "Stoinostta e $*"
+echo " Broiat e $#"
+set `ls`
+shift
+shift
+echo "Stoinostta e $*"
+echo " Broiat e $#"
+====== file: upr8_zad3 ======
+tee z1 z2 z3 < $1
+grep $2 $1
+read z4
+grep $2 $1 | wc -l > $z4
+mv $1 $HOME/../info
+====== file: upr8_zad4 ======
+until who | grep $1 > /dev/null
+do
+sleep 30
+done
+echo $1 started a session!!!
+====== file: upr8_zad5 ======
+echo "ENTER a string --->"
+read STR
+for each
+ do
+        echo $each
+        grep  $STR $each | wc -l
+ done
+====== file: upr8_zad6 ======
+c=0
+list=`find $1 -type f -exec wc -c {} \; | cut -d' ' -f1`
+for i in $list
+do c=`expr $i + $c`
+done
+echo $c
+if who| grep $2 >/dev/null
+   then echo $c | write $2
+fi
+====== file: upr8_zad7 ======
+b=`ps -u $1 | wc -l`
+a=`ps -u $1 | cut -c1-5`
+set $a
+shift
+for i
+do echo $i
+   # kill -9 $i
+done
+echo " Broqt im e $b"
+====== file: upr9_zad1 ======
+if test -d $1
+then
+        for name in $1/*
+        do
+           size=`wc -c < $name`
+           if [ -f $name -a $size -gt $2 ]
+           then
+                echo $name
+           fi
+        done
+else
+        echo There is no such directory
+fi
+====== file: upr9_zad2 ======
+fdir1=`ls $1/*.out | wc -l`
+fdir2=`ls $2/*.out |wc -l`
+if [ $fdir1 -gt $fdir2 ]
+then
+        read NEWdir
+        mkdir $NEWdir
+        tag_dir=$PWD/$NEWdir
+        cd $1
+        for i in *
+        do
+            if [ -f $i -a -r $i -a -w $i ]
+            then
+               if [ ! -x $i ]
+               then
+                mv $i $tag_dir
+               fi
+            fi
+        done
+fi
+====== file: upr9_zad3 ======
+echo ENTER THE MESSAGE
+read MESSAGE
+filename=$1
+shift
+echo $MESSAGE >> $filename
+for each
+do
+        if who | grep $each > /dev/null
+        then
+            write $each < $filename
+        fi
+done

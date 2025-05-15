@@ -1,0 +1,12 @@
+
+
+read files
+read string
+
+
+for i in $files; do 
+ 
+ echo "file $i has $(grep "$string" $i | wc -l) data"
+
+
+done

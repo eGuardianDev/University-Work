@@ -1,0 +1,29 @@
+
+
+
+
+read dir1 dir2
+
+count1=$(ls -1 $dir1 | grep .out | wc -l)
+count2=$(ls -1 $dir2 | grep .out | wc -l)
+
+echo $count1 $count2
+
+if [[ $count1 -gt $count2 ]]; then
+  echo -n "enter dir3: "
+  read dir3
+  
+  mkdir $dir3
+  
+  for i in $(ls $dir1); do
+    echo "checking $i" 
+    if [ -f $dir1/$i -a -r $dir1/$i -a -w $dir1/$i ]; then 
+     echo "passes one"
+     if [ ! -x $i ]; then 
+      echo "moving $i"
+      mv $dir1/$i $dir3/$i
+     fi
+    fi
+  done
+  
+fi 
