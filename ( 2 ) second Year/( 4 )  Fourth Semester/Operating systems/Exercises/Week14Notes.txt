@@ -1,0 +1,51 @@
+fork, exec - hard
+wait - medium
+getpid, getppid, exit - easy
+
+program segment
+data    segment
+stack   segment
+
+fork
+copy data  segment
+copy stack segment
+
+fork -   0   child
+     - (pid) parent
+     -  -1   error
+
+
+ex. 0 - try in 	if getpid(); else getppid();
+
+ps - get pid of bash
+
+ex. 1 - put sleep(5) in else
+
+when process dies - children is send to init process
+
+ex. 2 - long enought loop i<10000
+
+
+watch out for exit in if or else
+
+wait() - forces parent to wait for child
+
+pid = wait(&status)
+  - pid of child
+  - status of exit value of child
+
+
+EXAM: check for wait
+
+exec - deletes everything and doesn't go down
+
+execl - linear - (name of runnable command, name, options, args, 0); <- this 0 is very important
+execlp -  path - (name of command,  name, opt, args, 0);
+
+execv - vector - (name of command, array) - array same as above 
+execvp - vector path - same as vector, but path
+
+checkout 
+if (execlp  == -1)  <- if returns it deletes everything below
+ printf(error)      <- if not it displays error and continues
+else print(text) <- will never execute

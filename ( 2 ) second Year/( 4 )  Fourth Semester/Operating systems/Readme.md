@@ -1,11 +1,20 @@
 # Operating Systems
 
+### освобождаване
 
+при оценка >= 85 директно освободжаване от теория ( при 20т на теоретични задачи, те са в контролно 2, заедно с 2 задачи на C, всяка по 15 точки)
+
+### Theory
+
+##### processes
 - Process creation
 - Pipeline
 - Spin Lock
 - Mutex/Multiplexer/Semaphore
 
+##### File system
+- VFS
+- Ext.2,3,4
 
 #### Test 1:
 - 2 exercises Bash language

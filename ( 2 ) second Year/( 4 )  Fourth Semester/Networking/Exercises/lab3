@@ -1,0 +1,16 @@
+
+router - stands between networks
+
+ако не е в мрежата IP-то, се изпраща към мрежата
+
+ARP - adress resolution protocol.
+
+само ethernet frame-а има Footer
+
+next hop
+
+routing protocols, (rip) не са част от TCP/IP - routed protocols
+
+може ли OSPF protocol-а да се използва да ротира целия интернет? - BGP - path vector
+
+
