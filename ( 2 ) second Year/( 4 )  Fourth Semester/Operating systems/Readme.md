@@ -26,6 +26,17 @@
 - 2 theory skelet
 
 
+# For passing the exercises:
+>= 85 (with 20 theory)
+
+
+if you go to exercises 
+you can be added 1-2 points if you don't have enought
+
+
+## exercise 15
+is for next semester pracitce and introduction
+
 
 ### For practice :
 #### Bash
