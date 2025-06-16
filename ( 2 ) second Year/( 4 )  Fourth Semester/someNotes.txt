@@ -1,0 +1,9 @@
+3. network layer 
+ICMP - intenet control message protocol
+протокол за diagnostics
+
+RIP - routing information protocol
+
+2. data layer
+MAC - media access control
+ethernet,point-to-point protocol (PPP), LANs
