@@ -12,3 +12,6 @@
 
 *.o
 *.out
+
+**/Materials
+**/materials
