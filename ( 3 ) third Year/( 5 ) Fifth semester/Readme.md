@@ -9,8 +9,6 @@
 - Numerical analysis
 - Socio-legal aspects of information technologies
 
-### Extra curriculums (that I enrolled in) - Waiting to confirm..
-- Set theory
-- Compilators introduction
-- Analytical mechanics ( probably will leave it )
-- Active information security ( on queue, probably will leave it )
+### Extra curriculums (that I enrolled in)
+- Introduction to compilers
+- Semantics of programming languages
