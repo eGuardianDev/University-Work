@@ -1,0 +1,18 @@
+
+# Тема 9:
+
+- rmdir
+
+
+- scandir
+- alphasort
+- versionsort
+
+
+
+
+## not included
+- mount
+- unmount 
+- sync
+- syncfs

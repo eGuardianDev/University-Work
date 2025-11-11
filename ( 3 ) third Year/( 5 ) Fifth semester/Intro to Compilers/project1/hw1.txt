@@ -1,0 +1,45 @@
+enum class ErrorCode{};
+
+
+( *  ( *  * )  * )
+
+tokenStartCharIndex -> public value by antlr4. report error
+
+
+antlr4 extension for vs code
+
+
+```
+mode {name}:
+type : "-"
+ ^
+ |
+custom name of something 
+
+popMode, pushMode({mode}), skip
+
+type : . EOF {
+	register_error(ErrorCode:STR_CONTAINS_EOF);
+	setType(ERROR);
+} -> skip;
+^  ^--- other stuff ( i forgot) 
+|--- inside code
+```
+
+all errors are ERROR:....
+
+//white space
+WS : [ \t\r\n]+ -> skip;
+
+tools/build.sh -> builds it
+build/lexer < tests/lexer/100.keywords.in  -- input of test
+cat tests/lexer/100.keywords.out  	   -- expected output 
+
+'.' is for one symbol/char only
+
+
+define classes, methods, errors in antlr4
+
+check_unique_param(getText());
+
+google search - arntlr cheat sheet liberte

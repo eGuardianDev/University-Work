@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+set -e
+
+FONT_NAME="JetBrainsMono"
+NERD_FONT_NAME="${FONT_NAME// /}-Nerd-Font"
+FONT_URL="https://github.com/ryanoasis/nerd-fonts/releases/latest/download/${NERD_FONT_NAME}.zip"
+FONT_DIR="$HOME/.local/share/fonts"
+
+echo "🧩 Installing ${NERD_FONT_NAME}..."
+
+# Create font directory
+mkdir -p "$FONT_DIR"
+
+# Download and extract
+echo "📦 Downloading Nerd Font..."
+curl -L -o /tmp/${NERD_FONT_NAME}.zip "$FONT_URL"
+
+echo "📂 Extracting..."
+unzip -o /tmp/${NERD_FONT_NAME}.zip -d "$FONT_DIR" > /dev/null
+
+# Refresh font cache
+echo "🔄 Refreshing font cache..."
+fc-cache -fv > /dev/null
+
+# Clean up
+rm /tmp/${NERD_FONT_NAME}.zip
+
+echo "✅ ${NERD_FONT_NAME} installed successfully!"
+echo
+echo "👉 Now set your terminal font to: '${FONT_NAME} Nerd Font'"
+echo "   (You can usually find this in your terminal settings under 'Font')."
+echo
+echo "🧪 Test icons with:"
+echo "   curl -s https://raw.githubusercontent.com/ryanoasis/nerd-fonts/master/bin/scripts/test-fonts.sh | bash"
+

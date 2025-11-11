@@ -1,0 +1,16 @@
+# Тема 10:
+
+
+- fork()
+  ids, signals, etc..
+
+
+- exit
+
+- pid_t wait (status)
+  zombie (if no signal handling...) - sick child
+
+- getpid
+- getppid
+
+

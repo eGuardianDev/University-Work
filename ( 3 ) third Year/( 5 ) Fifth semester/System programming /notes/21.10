@@ -1,0 +1,66 @@
+# file manipulation
+
+## first operation - get file status
+- stat
+- fstat 
+- lstat
+
+
+ext2 - non journal
+ext3/4 - journal
+
+name isn't in the attributes, it is a link
+(Check inode, also known as metadata)
+name is losts after opening.
+
+
+
+df - currently mounted disks
+```
+Filesystem     1K-blocks     Used Available Use% Mounted on
+/dev/dm-0      248378368 36579804 211331124  15% /
+devtmpfs         8003980        0   8003980   0% /dev
+tmpfs            8030296      100   8030196   1% /dev/shm
+efivarfs             246       61       181  25% /sys/firmware/efi/efivars
+tmpfs            3212120     2356   3209764   1% /run
+tmpfs               1024        0      1024   0% /run/credentials/systemd-cryptsetup@luks\x2d075ff577\x2d6b73\x2d4984\x2d99dd\x2d4f2c85f08a2b.service
+tmpfs               1024        0      1024   0% /run/credentials/systemd-journald.service
+tmpfs            8030296       20   8030276   1% /tmp
+/dev/dm-0      248378368 36579804 211331124  15% /home
+/dev/nvme0n1p2    996780   409840    518128  45% /boot
+/dev/nvme0n1p1    613184    19740    593444   4% /boot/efi
+tmpfs               1024        0      1024   0% /run/credentials/systemd-resolved.service
+tmpfs            1606056     3820   1602236   1% /run/user/1000
+```
+
+
+## change owner - може да се объркан на изпит
+- chown
+- fchown
+- lchown
+
+## смяна на правата
+
+- umask
+## време
+- utime
+- utimes
+
+
+## manipulate file descriptor
+- fcntl
+
+
+- accept
+- accept4 
+
+- dup 
+- dup2 
+- dup3 
+
+
+## Hard/soft linking
+- link  
+- symlinkat
+
+if all links to file descriptor are closed, the descriptor is closed

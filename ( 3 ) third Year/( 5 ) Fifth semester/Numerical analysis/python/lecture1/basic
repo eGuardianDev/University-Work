@@ -1,0 +1,44 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Function
+def f(x):
+    return np.log(x)**5
+
+# Nodes
+x_nodes = np.linspace(1, np.e, 5)
+y_nodes = f(x_nodes)
+
+# Lagrange interpolation
+def lagrange_interpolate(x_points, y_points, x_val):
+    total = 0
+    n = len(x_points)
+    for i in range(n):
+        xi, yi = x_points[i], y_points[i]
+        term = yi
+        for j in range(n):
+            if i != j:
+                term *= (x_val - x_points[j]) / (xi - x_points[j])
+        total += term
+    return total
+
+# Evaluate
+x_vals = np.linspace(1, np.e, 200)
+p_vals = [lagrange_interpolate(x_nodes, y_nodes, x) for x in x_vals]
+
+# Plot
+plt.plot(x_vals, f(x_vals), label='f(x) = (ln x)^5')
+plt.plot(x_vals, p_vals, label='Lagrange Interpolant', linestyle='--')
+plt.scatter(x_nodes, y_nodes, color='red', label='Nodes')
+plt.legend()
+plt.title('Lagrange Interpolation for f(x) = (ln x)^5')
+plt.xlabel('x')
+plt.ylabel('y')
+plt.show()
+error = np.abs(f(x_vals) - np.array(p_vals))
+plt.plot(x_vals, error)
+plt.title('Absolute Error of Interpolation')
+plt.xlabel('x')
+plt.ylabel('|f(x) - P(x)|')
+plt.show()
+

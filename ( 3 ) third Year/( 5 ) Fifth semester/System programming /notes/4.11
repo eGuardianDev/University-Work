@@ -1,0 +1,60 @@
+
+- execl, execlp, execle, execv, execvp, execvpe
+
+
+  11 и 12 флаг ако не са дъгнати ще стартира със собствена група, наследена от процеса викаш exec 
+
+  sticky bit for programs -> тази програма ще се изпълянва често,
+          зареди я в RAM
+
+
+
+VMT - virtual memory table
+ bit - load on demand
+ 
+
+ memMap() - регистри от паметта, стават локална памет на процеса
+
+ * сесия - говори се за терминала, подобно на група
+
+
+
+## Signals
+
+signal handler
+
+```man 7 signal``` -> See all signals
+
+types: CORE, TEMR, STOP, ...
+
+
+
+man 2 kill
+man 2 signal
+
+
+signal masks 
+
+SIGKILL and SIGSTOP
+
+
+wait - waits until sigChild is returned
+
+pause - wait for signal
+
+alarm - set an alarm clock for delivery of a signal - sigAlarm, отбелязват се само секундите
+
+
+### real time signals
+
+
+
+sleep
+
+nano sleep
+
+
+crondeamon
+cron
+
+
