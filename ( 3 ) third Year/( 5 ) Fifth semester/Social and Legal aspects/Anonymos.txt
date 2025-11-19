@@ -26,3 +26,6 @@ pseudonymized info == personal info
     Health Insurance Portability and Accountability Act (HIPAA)
     ISO/IEC 27000:2018 IT security standards
 
+
+
+- 18.11: трябва да пиша как се изработва модел

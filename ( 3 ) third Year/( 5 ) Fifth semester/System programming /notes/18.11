@@ -1,0 +1,47 @@
+# Shared memory
+
+## Commands:
+- shm_overview
+- shm_open 
+- ftruncate -> F-Truncate - променя размера на споделената памет 
+- mmap
+
+
+Споделената памет, създава нови страници, запълнени с нули.
+
+## Етапи:
+1. Създаване - shm_open 
+2. Смяна на размера - ftruncate 
+3. Да се види - mmap
+
+mmap се ползва и за файлове и за споделена памет (file descriptor, offset )
+
+memory access при mmap,
+Само когато се чете и записва, тогава се отделя място
+
+###  Protection levels:
+- PROT_EXEC - very important
+- PROT_READ
+- PROT_WRITE
+- PROT_NONE
+
+
+shm може да се изтре чрез:
+- shm_unlink
+
+
+- msync
+
+### other shit
+- message passing
+- remote decision call
+
+
+### Семафори
+- sem_overview
+- sem_init
+- sem_post (unlock semaphore) --- EOVERFLOW error, EINVAL error
+- sem_timedwait
+- sem_destory - опасна работа, най-вече при заспани процеси
+
+АКО ПОЛЗВАМЕ wait със семафори, трябва да внимаваме ако има грешка
