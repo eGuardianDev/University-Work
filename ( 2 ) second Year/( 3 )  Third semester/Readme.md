@@ -14,3 +14,27 @@ because you won't have any free time and will burn out easily.
 - Data structures and programming - practicum (algorithms practice)
 - Computer Architectures - practicum (Assembly language)
 - Computer Aided Graphic Design (CAGD) (Bezier and other curves)
+
+
+Exams:
+- Architectures
+    - 13.01
+- Functional
+    - 21.01
+- Data strcutures
+    - 28.01 
+    - 30.01
+    - 31.01 
+- Architecture
+    - 05.02
+- Graphics
+    - 10.02
+    - 11.02
+
+- Data structures (practicum) 
+    - 10.01 projects
+- Assembly
+    - 12.01 
+- GAGD
+    - 12.02
+    

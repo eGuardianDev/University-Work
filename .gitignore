@@ -27,3 +27,16 @@
 **/tests
 **/tools
 
+
+
+# Obsidian workspace & settings
+.obsidian/
+
+# Optional: ignore Obsidian plugins & cache specifically
+.obsidian/plugins/
+.obsidian/cache/
+
+# Ignore local OS clutter (recommended)
+.DS_Store
+Thumbs.db
+

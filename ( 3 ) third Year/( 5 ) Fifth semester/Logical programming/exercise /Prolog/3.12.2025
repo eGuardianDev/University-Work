@@ -1,0 +1,117 @@
+:- use_module(library(clpfd)).
+
+
+% 1.
+element([X|_], X).
+element([_|T], X) :- element(T,X).
+
+
+% 2.   + +
+concat([],B,B).
+concat([H|T],B,[H|S]):-
+    concat(T,B,S).
+
+
+% 3.first(List,A)
+first([A|_],A).
+
+% 4. last
+%last([B],B).
+%last([_|T],B) :- last(T,B).
+
+% other way
+last(T,X):-
+    concat(_,[X],T).
+	% 		  ^ this needs to be inside a list
+
+% 5.
+reverse(L1,L2) :-
+    %X is last(T2),
+    %reverse(T1,T2).
+    concat(L2_,[A],L2),
+	L1 = [A|L1_],
+    reverse(L1_,L2_).
+
+% 6.
+rotation(L1,L2):-
+    concat(X,Y,L1),
+    concat(Y,X,L2),
+    L1 \= L2.
+    
+% 7.
+% size([],0).
+len([],N):- N #= 0. % is better because??
+len([_|T],N):-
+    N #> 0,
+    len(T,N-1).
+len([_|T],N):-length(T,N1),
+    N is N1+1. % N #= N1+1
+    
+    
+% 8.
+%permutation(List1,List2).
+permutation([A|L1],L2):-
+    permutation(L1,R1),
+    instr(A,R1,L2).
+    
+%8.1 instr(A,L,R) <- this is always needed
+instr(A,L,[A|L]).
+instr(A,[H|T],[H|R]) :-
+    instr(A,T,R).
+    
+
+% 9.    
+%allpermutations(L,ALL):-    
+ % findall(X,permutation(L,X),All). 
+% findall(X,(len(X,3),..),All).
+    
+
+% 10.
+elementsEvenPos([],[]).
+elementsEvenPos([_],[]).
+elementsEvenPos(L1,[Y|L2]):-
+    concat([_,Y],T,L1),
+    elementsEvenPos(T,L2).
+
+%10.other
+% other(L1,L2):-
+	%L1=[_|T],
+	%elementsUnevenPos(T,L2).
+%elementUnevenPos([H|T],[H|R]):-
+	%elementEven(T,R).
+% needs bottom
+
+% even
+% even(N):- N #= N1 + N1
+    
+
+% 11.
+%elementOnPosN(List,N,X)
+n_pos(List,N,X):-
+    N #> 0,
+    len(List,K),
+    N #=< K,
+    elementOnPosN(List,N,X),
+	!. % CUT prevents duplicate proof paths
+
+elementOnPosN([X|_],1,X).
+elementOnPosN([_|T], N, X) :-
+  	N #> 1,
+    N #= N1+1,
+    elementOnPosN(T,N1,X).
+
+
+% 12. XX - means List of Lists
+% first([],[]).
+%firstElement(XX, F):-
+%    findall(X,(first(Y,X),element(XX,Y),F)).
+
+% firstOfAll([H|R],F):-
+%	first(H,A1),
+%	F = [A1|F1],
+%	firstOfAll(R,F1).
+
+
+    
+    
+    

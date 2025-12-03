@@ -4,6 +4,19 @@
 Въведение:
 - https://www.matematika.bg/visha-matematika/mnojestva.html
 
+### Exams:
+- Algebra
+    - 23.01
+    - 27.01 mini tests
+    - 30.01 theory
+- Discrete math
+    - 01.02 theory
+    - 02.02 theory
+    - 05.02
+- Calculus
+    - 07.02 
+    - 10.02 thoery
+
 
 ### Some answears:
 
