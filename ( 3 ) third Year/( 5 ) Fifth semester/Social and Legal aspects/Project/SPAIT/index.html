@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+  <meta charset="UTF-8" />
+  <title>CSV Редактор</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+
+  <style> 
+  body {
+    font-family: Roboto, system-ui, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background: #f4f6f8;
+    color: #222;
+  }
+
+  h2 {
+    margin-top: 0;
+    font-size: 26px;
+    font-weight: 600;
+  }
+
+  #top-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    align-items: center;
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+  }
+
+  #top-bar label {
+    font-weight: 500;
+  }
+
+  input[type="text"] {
+    padding: 6px 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+  }
+
+  button {
+    background: #0069d9;
+    color: white;
+    border: none;
+    padding: 9px 16px;
+    font-size: 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.15s;
+  }
+
+  button:hover {
+    background: #0053b3;
+  }
+
+  .custom-file-button {
+    padding: 9px 16px;
+    background-color: #28a745;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 14px;
+    transition: 0.15s;
+  }
+
+  .custom-file-button:hover {
+    background-color: #1f8c3a;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+  }
+
+  th, td {
+    padding: 10px 12px;
+    border: 1px solid #e0e0e0;
+    background: #fff;
+    font-size: 14px;
+  }
+
+  th {
+    background: #f0f3f7;
+    font-weight: 600;
+    text-align: left;
+  }
+
+  .header-dropdown {
+    width: 100%;
+    padding: 5px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    background: white;
+  }
+
+  .hidden-col {
+    background: #c6c6c6 !important;
+    color: transparent !important;
+    text-shadow: 0 0 5px #444;
+  }
+
+  table, #top-bar {
+    animation: fadein 0.25s ease-out;
+  }
+
+  @keyframes fadein {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+
+  </style>
+</head>
+<body>
+
+<h2>CSV Редактор</h2>
+<h3>Цветомир Стайков - 1MI0800469 </h3>
+<div id="top-bar">
+  <label>
+    Таен hash ключ:
+    <input type="text" id="hashKeyInput" placeholder="Leave empty to auto-generate" />
+  </label>
+  <button id="setHashKeyBtn">Зареди</button>
+
+  <label for="fileInput" class="custom-file-button">отвори файл</label>
+  <input type="file" id="fileInput" accept=".csv" style="display:none;">
+
+  <button id="downloadAllBtn">Изтегли всички файлове</button>
+</div>
+
+<table id="csvTable"></table>
+
+<script>
+
+let originalData = [];
+let currentModes = {};
+let shiftValues = {};
+let idMaps = {};
+let idPrefixes = {};
+let hashMaps = {};
+let HASH_SECRET = "";
+
+function parseCSV(text) {
+  return Papa.parse(text, { header: false }).data;
+}
+
+function downloadCSV(rows, filename) {
+  const csv = Papa.unparse(rows);
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+
+function ensureHashSecret() {
+  const input = document.getElementById("hashKeyInput");
+  if (!HASH_SECRET) {
+    HASH_SECRET = CryptoJS.lib.WordArray.random(32).toString();
+    input.value = HASH_SECRET;
+  }
+}
+
+function secureHash(value) {
+  if (value == null) return "";
+  value = String(value);
+  ensureHashSecret();
+  return CryptoJS.HmacSHA256(value, HASH_SECRET).toString().substring(0, 20);
+}
+
+function ensureHashMap(col) {
+  if (hashMaps[col]) return;
+  ensureHashSecret();
+
+  hashMaps[col] = {};
+  for (let r = 1; r < originalData.length; r++) {
+    let v = (originalData[r][col] ?? "").trim();
+    if (!v) continue;
+    if (!hashMaps[col][v]) hashMaps[col][v] = secureHash(v);
+  }
+}
+
+function sha1prefix(name) {
+  return CryptoJS.SHA1(name || "").toString().substring(0, 5).toUpperCase();
+}
+
+function ensureIDMap(col) {
+  if (idMaps[col]) return;
+
+  idMaps[col] = {};
+  idPrefixes[col] = sha1prefix(originalData[0][col]);
+  const prefix = idPrefixes[col];
+
+  let counter = 1;
+
+  for (let r = 1; r < originalData.length; r++) {
+    let v = (originalData[r][col] ?? "").trim();
+    if (!v) continue;
+    if (!idMaps[col][v]) {
+      idMaps[col][v] = prefix + "_" + String(counter).padStart(3, "0");
+      counter++;
+    }
+  }
+}
+
+const csvTable = document.getElementById("csvTable");
+
+function renderTable(data) {
+  csvTable.innerHTML = "";
+  if (!data.length) return;
+
+  const dropdownRow = document.createElement("tr");
+  const headerRow = document.createElement("tr");
+
+  data[0].forEach((colName, c) => {
+    const thDrop = document.createElement("th");
+    thDrop.innerHTML = `
+      <select class="header-dropdown" data-col="${c}">
+        <option value="none">Без режим</option>
+        <option value="shorten">Съкрати</option>
+        <option value="hash">Хеширай</option>
+        <option value="shift">Изместване</option>
+        <option value="hide">Скрий</option>
+        <option value="counts">Брой</option>
+        <option value="idmap">ID-мaпинг</option>
+      </select>
+    `;
+    dropdownRow.appendChild(thDrop);
+
+    const th = document.createElement("th");
+    th.textContent = colName;
+    headerRow.appendChild(th);
+  });
+
+  csvTable.appendChild(dropdownRow);
+  csvTable.appendChild(headerRow);
+
+  for (let r = 1; r < data.length; r++) {
+    const tr = document.createElement("tr");
+    data[r].forEach(cell => {
+      const td = document.createElement("td");
+      td.textContent = cell;
+      tr.appendChild(td);
+    });
+    csvTable.appendChild(tr);
+  }
+
+  document.querySelectorAll(".header-dropdown").forEach(drop => {
+    const col = Number(drop.dataset.col);
+    if (currentModes[col]) drop.value = currentModes[col];
+
+    drop.addEventListener("change", () => {
+      handleMode(drop.value, col);
+      if (drop.value === "counts") drop.value = currentModes[col] || "none";
+    });
+  });
+
+  for (let col in currentModes) {
+    if (currentModes[col] === "hide") {
+      document.querySelectorAll("tr").forEach(row => {
+        if (row.children[col]) row.children[col].classList.add("hidden-col");
+      });
+    }
+  }
+}
+
+function handleMode(mode, col) {
+  if (mode === "counts") return downloadCounts(col);
+
+  currentModes[col] = mode;
+
+  if (mode === "shift") {
+    let v = prompt("Shift value (+ or -):");
+    v = parseInt(v);
+    if (isNaN(v)) v = 0;
+    shiftValues[col] = v;
+  }
+
+  if (mode === "hash") ensureHashMap(col);
+  if (mode === "idmap") ensureIDMap(col);
+
+  applyAllModes();
+}
+
+function applyAllModes() {
+  let data = JSON.parse(JSON.stringify(originalData));
+
+  for (let col in currentModes) {
+    let mode = currentModes[col];
+
+    for (let r = 1; r < data.length; r++) {
+      let original = originalData[r][col] ?? "";
+
+      if (mode === "shorten") data[r][col] = shorten(original);
+      if (mode === "shift")   data[r][col] = shift(original, shiftValues[col]);
+      if (mode === "hash") {
+        ensureHashMap(col);
+        let t = (original ?? "").trim();
+        data[r][col] = hashMaps[col][t] || "";
+      }
+      if (mode === "hide") data[r][col] = "••••";
+      if (mode === "idmap") {
+        ensureIDMap(col);
+        let t = (original ?? "").trim();
+        data[r][col] = idMaps[col][t] || "";
+      }
+    }
+  }
+
+  renderTable(data);
+}
+function shorten(txt) {
+  if (txt == null) return "";
+  txt = String(txt);
+  if (!txt.trim()) return "";
+  return txt.split(/\s+/).map(x => x[0].toUpperCase() + ".").join(" ");
+}
+
+function shift(txt, n) {
+  if (txt == null) return "";
+  txt = String(txt);
+  return [...txt].map(ch =>
+    String.fromCharCode(ch.charCodeAt(0) + n)
+  ).join("");
+}
+
+function downloadCounts(col) {
+  const name = originalData[0][col];
+  const counts = {};
+
+  for (let r = 1; r < originalData.length; r++) {
+    let v = (originalData[r][col] ?? "").trim();
+    counts[v] = (counts[v] || 0) + 1;
+  }
+
+  const rows = [[name, "count"]];
+  for (let [val, cnt] of Object.entries(counts)) rows.push([val, cnt]);
+
+  downloadCSV(rows, `${name}_counts.csv`);
+}
+
+document.getElementById("downloadAllBtn").addEventListener("click", () => {
+
+  let visible = [];
+  originalData[0].forEach((_, c) => {
+    if (currentModes[c] !== "hide") visible.push(c);
+  });
+
+  let out = [];
+  out.push(visible.map(c => originalData[0][c]));
+
+  for (let r = 1; r < originalData.length; r++) {
+    let row = [];
+    for (let c of visible) {
+      let v = originalData[r][c];
+      let mode = currentModes[c];
+
+      if (mode === "shorten") v = shorten(v);
+      if (mode === "shift")   v = shift(v, shiftValues[c]);
+      if (mode === "hash") {
+        ensureHashMap(c);
+        let t = (v ?? "").trim();
+        v = hashMaps[c][t] || "";
+      }
+      if (mode === "idmap") {
+        ensureIDMap(c);
+        let t = (v ?? "").trim();
+        v = idMaps[c][t] || "";
+      }
+
+      row.push(v);
+    }
+    out.push(row);
+  }
+
+  downloadCSV(out, "full_table.csv");
+
+  let anyHash = false;
+  for (let c in currentModes) {
+    if (currentModes[c] === "hash") {
+      anyHash = true;
+      ensureHashMap(c);
+
+      const name = originalData[0][c];
+      const map = hashMaps[c];
+
+      const rows = [["Original", "Hash"]];
+      for (let [orig, h] of Object.entries(map)) rows.push([orig, h]);
+
+      downloadCSV(rows, `${name}_hashmap.csv`);
+    }
+  }
+
+  if (anyHash) {
+    downloadCSV([["SecretKey"], [HASH_SECRET]], "hash_secret_key.txt");
+  }
+
+  for (let c in currentModes) {
+    if (currentModes[c] === "idmap") {
+      ensureIDMap(c);
+
+      const name = originalData[0][c];
+      const map = idMaps[c];
+
+      const rows = [["Original", "ID"]];
+      for (let [orig, id] of Object.entries(map)) rows.push([orig, id]);
+
+      downloadCSV(rows, `${name}_idmap.csv`);
+    }
+  }
+  for (let c in currentModes) {
+    if (currentModes[c] === "shift") {
+      const name = originalData[0][c];
+      const amount = shiftValues[c];
+      const rows = [["Shift"], [String(amount)]];
+      downloadCSV(rows, `${name}_shiftinfo.txt`);
+    }
+  }
+});
+
+document.getElementById("setHashKeyBtn").addEventListener("click", () => {
+  const input = document.getElementById("hashKeyInput");
+  const k = input.value.trim();
+
+  if (!k) {
+    HASH_SECRET = "";
+    hashMaps = {};
+    alert("Secret key cleared. A new one will be generated.");
+  } else {
+    HASH_SECRET = k;
+    hashMaps = {};
+    alert("Secret key set.");
+    if (originalData.length) applyAllModes();
+  }
+});
+
+document.getElementById("fileInput").addEventListener("change", () => {
+  const f = fileInput.files[0];
+  if (!f) return;
+
+  const reader = new FileReader();
+  reader.onload = e => {
+
+    if (!HASH_SECRET) {
+      HASH_SECRET = CryptoJS.lib.WordArray.random(32).toString();
+      document.getElementById("hashKeyInput").value = HASH_SECRET;
+    }
+
+    originalData = parseCSV(e.target.result);
+    currentModes = {};
+    shiftValues = {};
+    idMaps = {};
+    idPrefixes = {};
+    hashMaps = {};
+
+    renderTable(originalData);
+  };
+
+  reader.readAsText(f, "UTF-8");
+});
+</script>
+
+</body>
+</html>
+
