@@ -2,6 +2,7 @@
 #define BMP_FILE_HPP__
 
 #include <cstdint>
+const unsigned int BUFFER_MAX_SIZE = 25 * 1000 * 1000;
 
 #pragma pack(push, 1)
 struct bmp_header{

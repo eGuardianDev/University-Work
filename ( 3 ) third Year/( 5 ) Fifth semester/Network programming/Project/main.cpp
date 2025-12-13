@@ -19,10 +19,9 @@ enum Command{
     C_none
 };
 
-Command getCommand(std::string &input){
+Command get_command(std::string &input){
     if(input == "help")       return Command::C_help;
     else if(input == "load")  return Command::C_load;
-    else if(input == "check") return Command::C_check;
     else if(input == "send")  return Command::C_send;
     else if(input == "exit")  return Command::C_leave;
     else if(input == "ls")    return Command::C_list;
@@ -33,8 +32,8 @@ Command getCommand(std::string &input){
 
 int main(){
     system("clear");
-    printLogo(std::cout);
-    printCommands(std::cout);
+    print_logo(std::cout);
+    print_commands(std::cout);
 
     std::string file_name;
     int fd = -1;
@@ -46,9 +45,9 @@ int main(){
     
         std::vector<std::string> cmd = split(inputCLI, ' ');
         cmd[0] = toLower(cmd[0]);
-        switch(getCommand(cmd[0])){
+        switch(get_command(cmd[0])){
             case Command::C_help:
-                printCommands(std::cout);
+                print_commands(std::cout);
                 break;
             case Command::C_check:
 
@@ -66,7 +65,7 @@ int main(){
                     std::cerr << "Expected 1 arguments, received " << cmd.size()-1 << std::endl;
                     continue;
                 }
-                if(loadFile(cmd[1],file_name,fd))
+                if(load_file(cmd[1],file_name,fd))
                     std::cout << "Opened file!" << std::endl;
                 break;
             case Command::C_leave:

@@ -7,7 +7,7 @@
 #include "./ImageProcessing/BMP_File.hpp"
 #include "./ImageProcessing/BMP_Manipulation.hpp"
 
-bool validateInputFile(std::string name){
+bool validate_input_file(std::string name){
     if(name.length() < 4) {
         std::cerr << "file must contain extension '.bmp'" <<std::endl;
         return false;
@@ -19,7 +19,7 @@ bool validateInputFile(std::string name){
     }
     return true;
 }
-int loadImage(std::string name, bool &status){
+int load_image(std::string name, bool &status){
 
     int fd = open(name.c_str(), O_RDONLY);
 
@@ -28,12 +28,12 @@ int loadImage(std::string name, bool &status){
     }
     return fd;
 }
-bool loadFile(std::string name, std::string &global_name, int &fd){
+bool load_file(std::string name, std::string &global_name, int &fd){
     bool status;
-    if(!validateInputFile(name)) return false;      // check file name and extensions
-    int new_fd = loadImage(name,status);           // loading file;
+    if(!validate_input_file(name)) return false;      // check file name and extensions
+    int new_fd = load_image(name,status);           // loading file;
     if(new_fd == -1) return false;                // file didn't open 
-    if(!validateFile(new_fd)) return false;      // file is invalid in size or signature
+    if(!validate_file(new_fd)) return false;      // file is invalid in size or signature
     if(fd >2) close(fd);
     fd = new_fd;
     global_name= name;

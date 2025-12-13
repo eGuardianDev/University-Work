@@ -7,6 +7,8 @@
 #include <iostream>
 #include <fcntl.h>
 
+
+
 bmp_header load_header(unsigned char input[138]){
 
   bmp_header header;
@@ -117,7 +119,7 @@ pixel_value read_pixel(uint8_t *buffer,int offset){
 }
 
 
-bool validateFile(int fd){
+bool validate_file(int fd){
     unsigned char buff_header[138];
 
     int size = read(fd, buff_header,138);

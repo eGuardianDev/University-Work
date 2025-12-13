@@ -8,6 +8,7 @@
 #include "utils.hpp"
 
 #include "connection_client.hpp"
+#include "ImageProcessing/BMP_File.hpp"
 #include <thread>
 
 std::string logo = 
@@ -18,18 +19,17 @@ std::string logo =
    ██ ██    ██ ██  ██  ▀███▀  ██▄▄▄▄   ██   ██ ██▄▄▄▄ ████▀  ██  ██ ▀█████   ██   ▀████▀ ██   ██  \n\
                                                                                               ";
 
-void printLogo(std::ostream &str){
+void print_logo(std::ostream &str){
     str << logo << std::endl;
     str << "     ► By Tsvetomir Staykov - 1MI0800469 - 2025 " << std::endl;
 }
 
-void printCommands(std::ostream &str){
+void print_commands(std::ostream &str){
     std::string data =
 "Here are possible commands:\n\
     help - displays this\n\
     exit - stops the program\n\
     load - loads an image to be redacted\n\
-    check - check connection with server\n\
     ls - list all files in current directory\n\
     clear - clears terminal\n\
     send - send image and waits for a return\n";
@@ -61,21 +61,20 @@ bool send_image(int &fd,int options){
     //ESTABLISH
     sockaddr_in serverAddress{};
     int socket;
-    if(!initSocket(socket)) return false;
-    if(!setAddr(socket, serverAddress)) {
-        cleanSock(socket);
+    if(!init_socket(socket)) return false;
+    if(!set_addr(socket, serverAddress)) {
+        clean_socket(socket);
         return false;
     }
-    if(!connect(socket, serverAddress)) {
-        cleanSock(socket);
+    if(!connect_to(socket, serverAddress)) {
+        clean_socket(socket);
         return false;
     }
 
     //READ FILE
     lseek(fd, 0, SEEK_SET);
-    const int MAX_BUFF_SIZE = 25 * 1000 * 1000;
-    uint8_t *buff = new uint8_t[MAX_BUFF_SIZE];
-    int buff_size = read(fd, buff, MAX_BUFF_SIZE); 
+    uint8_t *buff = new uint8_t[BUFFER_MAX_SIZE];
+    int buff_size = read(fd, buff, BUFFER_MAX_SIZE); 
 
     std::cout << "reading bytes: "<<buff_size << std::endl;
     
@@ -91,7 +90,7 @@ bool send_image(int &fd,int options){
     
     if(header_send_size <3){
         std::cerr << "Error sending data" << std::endl;
-        cleanSock(socket);
+        clean_socket(socket);
         return false;
     }
 
@@ -102,7 +101,7 @@ bool send_image(int &fd,int options){
     int header_received_size = receive_options(socket, header);
     if(header_received_size <3){
         std::cerr << "Error | Failed to receive conformation for settings; size not match" << std::endl;
-        cleanSock(socket);
+        clean_socket(socket);
         return false;
     }
 
@@ -110,7 +109,7 @@ bool send_image(int &fd,int options){
 
     if(received_status == 0x01){
         std::cerr << "Error | Options denied, because the option is unavailable or non existant" << std::endl;
-        cleanSock(socket);
+        clean_socket(socket);
         return false;
     }
 
@@ -120,7 +119,7 @@ bool send_image(int &fd,int options){
 
     std::cout << "Sending file..." << std::endl;
     // * SEND FILE
-    int size = sendBytes(buff, buff_size, socket); // ! send
+    int size = send_bytes(buff, buff_size, socket); // ! send
     std::cout << "Image is send! Size: " << size << ". Waiting for response." << std::endl;
     
 
@@ -133,7 +132,7 @@ bool send_image(int &fd,int options){
 
     if(data <3){
         std::cerr << "Error | Failed to receive predata packet" << std::endl;
-        cleanSock(socket);
+        clean_socket(socket);
         return false;
     }
 
@@ -142,7 +141,7 @@ bool send_image(int &fd,int options){
         if(header[1] == 0x01)std::cerr << "\t\t opened file isn't BMP" << std::endl;
         else if(header[1] == 0x02)std::cerr << "\t\t BMP file is v1 which is unsupported" << std::endl;
         else if(header[1] == 0x04)std::cerr << "\t\t file is too small" << std::endl;
-        cleanSock(socket);
+        clean_socket(socket);
         return false;
     }
     
@@ -168,7 +167,7 @@ bool send_image(int &fd,int options){
     // std::cout << "Saved as output.bmp" << std::endl;
         
     // * CLEAN UP
-    cleanSock(socket);
+    clean_socket(socket);
     // delete [] image_buffer;
     return true;
 }

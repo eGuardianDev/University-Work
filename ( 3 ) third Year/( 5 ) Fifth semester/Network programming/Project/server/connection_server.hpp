@@ -1,8 +1,6 @@
 #ifndef CONNECT_SERVER_HPP__
 #define CONNECT_SERVER_HPP__
 
-
-
 #include <iostream>
 #include <netinet/in.h>
 #include <sys/socket.h>
@@ -10,26 +8,30 @@
 #include <fcntl.h>
 #include <algorithm>
 #include <thread>
-#include "../connection_client.hpp"
+#include <cstring>
 #include "../ImageProcessing/BMP_File.hpp"
 #include "../ImageProcessing/BMP_Manipulation.hpp"
 #include "../ImageProcessing/Algorithms.hpp"
+#include "../Base_connections.hpp"
+#include <mutex>
 
 
-bool setAddr(sockaddr_in &serverAddress, const int &port =8080){
+
+
+bool set_addr(sockaddr_in &serverAddress, const int &port =8080){
     serverAddress.sin_family = AF_INET;
     serverAddress.sin_port = htons(port);
     serverAddress.sin_addr.s_addr = htonl(INADDR_ANY);
     return true;
 }
-bool bindSocket(int &sock, sockaddr_in &serverAddress){
+bool bind_socket(int &sock, sockaddr_in &serverAddress){
     if (bind(sock, (struct sockaddr*)&serverAddress, sizeof(serverAddress)) < 0) {
         std::cerr << "Couldn't bind a socket" << std::endl;
         return false;
     }
     return true;
 }
-bool listenSocket(int &sock){
+bool listen_socket(int &sock){
     if (listen(sock, 5) < 0) {
         std::cerr << "Cannot listen to server socket" << std::endl;
         return false;
@@ -38,7 +40,7 @@ bool listenSocket(int &sock){
 }
 
 
-int apply_Algorithm(uint8_t * bmp_data, uint8_t *dst, uint size, int algorithms){
+int apply_algorithm(uint8_t * bmp_data, uint8_t *dst, uint size, int algorithms){
 
     if(size < 138){
         std::cerr << "Algorithm failed, due to small size of input!" << std::endl;
@@ -61,33 +63,54 @@ int apply_Algorithm(uint8_t * bmp_data, uint8_t *dst, uint size, int algorithms)
     }
     header_print_basic(header);
 
+    uint8_t* work = new uint8_t[size];
+    memcpy(work, bmp_data, size);
+
+    uint8_t* in  = work;
+    uint8_t* out = dst;
+
     std::cout << "\t image size: " << header.image_size << std::endl;
 
     bool flag = algorithms & 0x01;
     if((algorithms & 0x01)){
         //inverse
+        std::swap(in, out);
     }
     algorithms = algorithms >> 1;
     if(algorithms & 0x01){
-        Algo_Gray_Scale(bmp_data +header.data_offset ,dst+header.data_offset, header.image_size);
+        Algo_Gray_Scale(in +header.data_offset ,out+header.data_offset, header.image_size);
         // gray
+        std::swap(in, out);
     }
     algorithms = algorithms >> 1;
     if(algorithms & 0x01){
         //black and white
+        std::swap(in, out);
+
     }
     algorithms = algorithms >> 1;
     if(algorithms & 0x01){
         //edge detection
+        Algo_Sobel_Edge(in + header.data_offset, out+header.data_offset, header.width, header.height);
+        std::swap(in, out);
     }
     algorithms = algorithms >> 1;
     if(algorithms & 0x01){
         //gaussian blur
+        std::swap(in, out);
     }
     algorithms = algorithms >> 1;
     if(algorithms & 0x01){
         //gaussian blur (threaded)
+        std::swap(in, out);
     }
+    
+    if (in != dst) {
+        memcpy(dst + header.data_offset,
+               in + header.data_offset,
+               header.image_size);
+    }
+    delete [] work;
 
     return 0;
 }
@@ -96,7 +119,6 @@ void client_handle(int client, int fd){
        
 
     // * SETUP DATA
-    const unsigned int BUFFER_MAX_SIZE = 25 * 1000 * 1000;
     uint8_t *image_buffer = new uint8_t[BUFFER_MAX_SIZE];
 
 
@@ -107,7 +129,7 @@ void client_handle(int client, int fd){
 
     if (bytesReceived < 3) {
         std::cerr << "Error writting to file" << std::endl;
-        cleanSock(client);
+        clean_socket(client);
         return;
     }
     int request = header[0];
@@ -126,21 +148,21 @@ void client_handle(int client, int fd){
         int size = send_packet(header,client);
         if(size <3){
             std::cerr << "ERROR | Failed to send confirmation header" << std::endl;
-            cleanSock(client);
+            clean_socket(client);
             return;
         }
     }else{
         std::cout << ", but edit type is not available " << (int)(header[1]) << std::endl;
         header[0] = 0x01;
-        int size = sendBytes(header,3,client);
+        int size = send_bytes(header,3,client);
         if(size <3){
             std::cerr << "ERROR | Failed to send confirmation header" << std::endl;
         }
-        cleanSock(client);
+        clean_socket(client);
         return;
     }
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));    
-    // // * RECEIVE FILE
+
+    // * RECEIVE FILE
     std::cout << "Receving data..." << std::endl;
     int data_size = receive_data(client,image_buffer,BUFFER_MAX_SIZE); // ! here
     
@@ -152,16 +174,16 @@ void client_handle(int client, int fd){
         return;
     }
         
-    // // // * PROCESS IMAGE
+    //* PROCESS IMAGE
         std::cout << "Image Processing... ";
 
         uint8_t *modified_image = new uint8_t[BUFFER_MAX_SIZE];
-        int status = apply_Algorithm(image_buffer, modified_image, data_size, algo);
+        int status = apply_algorithm(image_buffer, modified_image, data_size, algo);
         std::cout << "Done!" << std::endl;
 
         
         if(status != 0){
-            std::cerr <<"Algorithm is bad" << std::endl;
+            std::cerr <<"Algorithm endded badly. Sending report" << std::endl;
             header[0] = 0x01;   // fail
             header[1] = status; // error code
             int size = send_packet(header,client);
@@ -170,14 +192,14 @@ void client_handle(int client, int fd){
             delete [] image_buffer;
             return;
         }
-        std::cout <<"Algorithm ended good" << std::endl;
+        std::cout <<"Algorithm ended good. Sending report" << std::endl;
  
         header[0] = 0x00;
         int size = send_packet(header,client);
 
         std::cout << "Returning file:" << std::endl;
         std::cout << "size is "<< data_size << std::endl;
-        sendBytes(modified_image, data_size,client);        //! here
+        send_bytes(modified_image, data_size,client);        //! here
         std::cout << " -- end of return -- " << std::endl;
 
     // * CLEAN UP
@@ -186,20 +208,18 @@ void client_handle(int client, int fd){
         close(fd);
 }
 
+// std::vector<std::thread> threads;
 bool accept_client(int &sock){
     int clientSocket = accept(sock, nullptr, nullptr);
     if (clientSocket < 0) {
         std::cerr << "Error in accepting connections" << std::endl;
         return false;
     }
-
-   
-
     std::string name = "output.bmp";
     int fd = open(name.c_str(), O_CREAT | O_WRONLY | O_TRUNC, 0664);
     if (fd == -1) {
         std::cerr << "Couldn't open output file" << std::endl;
-        cleanSock(clientSocket);
+        clean_socket(clientSocket);
         return false;
     }
     std::thread(client_handle,clientSocket, fd).detach();
