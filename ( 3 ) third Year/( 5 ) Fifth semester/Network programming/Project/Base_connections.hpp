@@ -1,6 +1,9 @@
 #ifndef BASE_CONNECTIONS_HPP__
 #define BASE_CONNECTIONS_HPP__
 
+const std::string SERVER_IP = "127.0.0.1";
+const int SERVER_PORT = 8080;
+
 int send_bytes(uint8_t *buff, unsigned int size, int &sock){
 
     if(size <=4096){
@@ -8,11 +11,8 @@ int send_bytes(uint8_t *buff, unsigned int size, int &sock){
         int bytesSend = send(sock, buff, size,0);
         
         if(bytesSend <0) std::cerr << "Error sending header" << std::endl;
-        // else std::cout << "send bytes: "<<bytesSend << std::endl;
         return bytesSend;
     }
-        
-    // Send file in chunks
     const int BUF_SIZE = 4096;
     unsigned int totalBytes = 0;
 
@@ -38,7 +38,6 @@ int send_bytes(uint8_t *buff, unsigned int size, int &sock){
     } else {
         std::cout << "File sent successfully! Total bytes: " << totalBytes << std::endl;
     }
-    // shutdown(sock, SHUT_WR);
     return totalBytes;
 }
 

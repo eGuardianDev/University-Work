@@ -10,6 +10,7 @@
 #include "connection_client.hpp"
 #include "ImageProcessing/BMP_File.hpp"
 #include <thread>
+#include <iomanip>
 
 std::string logo = 
 "                                                                                              \n\
@@ -43,8 +44,10 @@ void print_manipulation_options(std::ostream &str){
     2    - gray scale\n\
     4    - black and white\n\
     8    - edge detection\n\
-    16   - gaussian blur\n\
-    32   - gaussian blur (threaded)\n\
+    16   - Gaussian blur\n\
+    32   - Gaussian blur (threaded)\n\
+    64   - Gabor filter\n\
+    128  - Gabor filter (threaded)\n\
     -1   - go back\n";
     str << data;
 }
@@ -88,7 +91,7 @@ bool send_image(int &fd,int options){
     int header_send_size = send_packet(header,socket); // ! send
     std::cout <<" done!" << std::endl;
     
-    if(header_send_size <3){
+    if(header_send_size < 3){
         std::cerr << "Error sending data" << std::endl;
         clean_socket(socket);
         return false;
@@ -96,10 +99,10 @@ bool send_image(int &fd,int options){
 
     std::cout <<"receving feedback if settings are coored" << std::endl;
 
-    // // * RECEVIE CONFORMATION
+    // * RECEVIE CONFORMATION
 
     int header_received_size = receive_options(socket, header);
-    if(header_received_size <3){
+    if(header_received_size < 3){
         std::cerr << "Error | Failed to receive conformation for settings; size not match" << std::endl;
         clean_socket(socket);
         return false;
@@ -117,6 +120,7 @@ bool send_image(int &fd,int options){
 
     std::this_thread::sleep_for(std::chrono::milliseconds(100));    
 
+    auto start = std::chrono::high_resolution_clock::now();
     std::cout << "Sending file..." << std::endl;
     // * SEND FILE
     int size = send_bytes(buff, buff_size, socket); // ! send
@@ -126,7 +130,8 @@ bool send_image(int &fd,int options){
     const unsigned int BUFFER_MAX_SIZE = 25 * 1000 * 1000;
     uint8_t *image_buffer = new uint8_t[BUFFER_MAX_SIZE];
     shutdown(socket, SHUT_WR); 
-    // // * RECEIVE HEADER
+    
+    // * RECEIVE HEADER
     int data =receive_options(socket,header); // ! receive
 
 
@@ -148,6 +153,11 @@ bool send_image(int &fd,int options){
     std::cout << "Receving image data: ";
     int data_size = receive_data(socket,image_buffer,BUFFER_MAX_SIZE); // ! receiver
  
+    auto end = std::chrono::high_resolution_clock::now();
+
+    double seconds = std::chrono::duration<double>(end - start).count();
+
+    std::cout << std::fixed << std::setprecision(3) <<" TIME | Algorithm applied in " <<  seconds << " seconds\n";
 
     // * VALIDATE RECEIVED DATA
     if(data_size <0){
@@ -164,11 +174,11 @@ bool send_image(int &fd,int options){
     write(output, image_buffer,data_size);
     close(output);
     
-    // std::cout << "Saved as output.bmp" << std::endl;
+    std::cout << "Saved as output.bmp" << std::endl;
         
     // * CLEAN UP
     clean_socket(socket);
-    // delete [] image_buffer;
+    delete [] image_buffer;
     return true;
 }
 

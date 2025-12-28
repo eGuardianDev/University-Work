@@ -18,7 +18,7 @@
 
 
 
-bool set_addr(sockaddr_in &serverAddress, const int &port =8080){
+bool set_addr(sockaddr_in &serverAddress, const int &port =SERVER_PORT){
     serverAddress.sin_family = AF_INET;
     serverAddress.sin_port = htons(port);
     serverAddress.sin_addr.s_addr = htonl(INADDR_ANY);
@@ -68,23 +68,29 @@ int apply_algorithm(uint8_t * bmp_data, uint8_t *dst, uint size, int algorithms)
 
     uint8_t* in  = work;
     uint8_t* out = dst;
+    std::cout << "width*3 = " << header.width*3 << std::endl;
+    std::cout << "image_size / height = " << header.image_size / header.height << std::endl;
 
     std::cout << "\t image size: " << header.image_size << std::endl;
 
     bool flag = algorithms & 0x01;
     if((algorithms & 0x01)){
+        Algo_Invert_Colours(in+header.data_offset,out+header.data_offset, header.image_size);
+        std::cout << "Applied inverse colour" << std::endl;
         //inverse
         std::swap(in, out);
     }
     algorithms = algorithms >> 1;
     if(algorithms & 0x01){
         Algo_Gray_Scale(in +header.data_offset ,out+header.data_offset, header.image_size);
+        std::cout << "Applied gray scale" << std::endl;
         // gray
         std::swap(in, out);
     }
     algorithms = algorithms >> 1;
     if(algorithms & 0x01){
         //black and white
+        Algo_Black_White(in+header.data_offset, out+header.data_offset, header.image_size);
         std::swap(in, out);
 
     }
@@ -92,15 +98,59 @@ int apply_algorithm(uint8_t * bmp_data, uint8_t *dst, uint size, int algorithms)
     if(algorithms & 0x01){
         //edge detection
         Algo_Sobel_Edge(in + header.data_offset, out+header.data_offset, header.width, header.height);
+        std::cout << "Applied edge detection" << std::endl;
         std::swap(in, out);
     }
     algorithms = algorithms >> 1;
     if(algorithms & 0x01){
         //gaussian blur
+        // memcpy(out, in, size);
+        Algo_Gaussian_Blur(in + header.data_offset, out+header.data_offset, header.width, header.height,1);
         std::swap(in, out);
     }
     algorithms = algorithms >> 1;
     if(algorithms & 0x01){
+        Algo_Gaussian_Blur(in + header.data_offset, out+header.data_offset, header.width, header.height);
+        //gaussian blur (threaded)
+        std::swap(in, out);
+    }
+    algorithms = algorithms >> 1;
+    if(algorithms & 0x01){
+        float theta = 90 *M_PI /180;
+        Algo_Gabor_Filter(
+            in  + header.data_offset,
+            out + header.data_offset,
+            header.width,
+            header.height,
+            21,          // ksize (odd!)
+            4.0f,        // sigma
+            theta,       // orientation
+            10.0f,       // lambda
+            0.5f,        // gamma
+            0.0f,         // psi
+            1
+        );
+
+        //gaussian blur (threaded)
+        std::swap(in, out);
+    }
+     algorithms = algorithms >> 1;
+    if(algorithms & 0x01){
+        float theta = 90 *M_PI /180;
+        Algo_Gabor_Filter(
+            in  + header.data_offset,
+            out + header.data_offset,
+            header.width,
+            header.height,
+            21,          // ksize (odd!)
+            4.0f,        // sigma
+            theta,       // orientation
+            10.0f,       // lambda
+            0.5f,        // gamma
+            0.0f,         // psi
+            0
+        );
+
         //gaussian blur (threaded)
         std::swap(in, out);
     }
@@ -115,7 +165,7 @@ int apply_algorithm(uint8_t * bmp_data, uint8_t *dst, uint size, int algorithms)
     return 0;
 }
 
-void client_handle(int client, int fd){
+void client_handle(int client){
        
 
     // * SETUP DATA
@@ -142,7 +192,7 @@ void client_handle(int client, int fd){
     }
 
     std::cout << "Requiested image editing";
-    if(header[1] > 0 && header[1] <64 ){
+    if(header[1] > 0 && header[1] <=255 ){
         std::cout << " #" << (int)header[1] << std::endl;
         header[0] = 0x00;
         int size = send_packet(header,client);
@@ -170,7 +220,7 @@ void client_handle(int client, int fd){
         std::cerr << "Failed to receive data" << std::endl;
         delete [] image_buffer;
         close(client);
-        close(fd);
+        // close(fd);
         return;
     }
         
@@ -188,7 +238,7 @@ void client_handle(int client, int fd){
             header[1] = status; // error code
             int size = send_packet(header,client);
             close(client);
-            close(fd);
+            // close(fd);
             delete [] image_buffer;
             return;
         }
@@ -202,27 +252,18 @@ void client_handle(int client, int fd){
         send_bytes(modified_image, data_size,client);        //! here
         std::cout << " -- end of return -- " << std::endl;
 
-    // * CLEAN UP
+        // * CLEAN UP
         delete [] image_buffer;
         close(client);
-        close(fd);
 }
 
-// std::vector<std::thread> threads;
 bool accept_client(int &sock){
     int clientSocket = accept(sock, nullptr, nullptr);
     if (clientSocket < 0) {
         std::cerr << "Error in accepting connections" << std::endl;
         return false;
     }
-    std::string name = "output.bmp";
-    int fd = open(name.c_str(), O_CREAT | O_WRONLY | O_TRUNC, 0664);
-    if (fd == -1) {
-        std::cerr << "Couldn't open output file" << std::endl;
-        clean_socket(clientSocket);
-        return false;
-    }
-    std::thread(client_handle,clientSocket, fd).detach();
+    std::thread(client_handle,clientSocket).detach();
 
     return true;
 }
