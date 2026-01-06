@@ -1,0 +1,6 @@
+
+File saving permissions
+
+Buffer access via pointers 
+
+Wrong file descriptor
