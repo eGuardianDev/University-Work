@@ -1,0 +1,190 @@
+
+
+-- movies with length bigger than starwars
+
+
+use movies
+
+SELECT m.*
+from MOVIE m
+WHERE m.LENGTH > (SELECT m1.LENGTH FROM MOVIE m1 WHERE m1.TITLE = 'Star Wars' AND m1.YEAR = 1977)
+
+-- expression in (list)
+-- expression not in (list)
+-- expression <comparison> ALL (list)
+-- expression <comparison> ANY (list)
+-- > = < >= <= !=
+
+
+
+-- movies recorded in 1980, 1985, 1990
+
+SELECT *
+FROM MOVIE 
+WHERE YEAR IN (1980, 1985, 1990)
+
+
+SELECT *
+FROM MOVIE 
+WHERE YEAR = 1980 OR YEAR = 1985 OR YEAR = 1990
+
+-- all printers with max price 
+use pc
+
+select * from printer
+order by price
+
+
+select top 1 *  -- return first n (=1) rows
+from printer p
+where p.price >= ALL (Select p1.price from printer p1)
+	AND P.CODE <= ALL(SELECT p3.code from printer p3)
+
+
+
+-- Classes, where non of the ships has sunk in battle
+
+use ships
+
+select ship from OUTCOMES
+where result = 'sunk'
+
+
+SELECT * FROM SHIPS
+select * from classes
+
+
+select class 
+from ships 
+where name in (select ship from outcomes where result = 'sunk')
+
+
+select s.class
+from ships s
+	join outcomes o on s.name = o.ship
+where o.result = 'sunk'
+
+
+-- classes which have zero sunk ships
+
+select class
+from classes 
+where class not in (
+					select s.class
+					from ships s 
+					WHERE NAME IN ( 
+						SELECT SHIP 
+						FROM outcomes 
+						where result = 'sunk')
+					)
+
+
+
+
+-- movie names, actress, birthday
+use movies
+
+select *
+from moviestar ms
+	join starsin si on si.STARNAME = ms.NAME
+where ms.gender = 'F'
+
+
+select si.MOVIETITLE, si.STARNAME, actresses.BIRTHDATE
+from starsin si 
+	join (select ms.name, ms.birthdate
+		from moviestar ms
+		where ms.gender = 'F') actresses on si.STARNAME = actresses.NAME
+-- where actresses.gender = 'F' -- it doens't work because it isn't in the query in (join ...)
+
+
+
+use ships
+
+select o.*, (select s.launched from ships s where s.name = o.ship)
+from outcomes o
+
+
+
+
+-- all pc's, laptop, printer from B
+
+use pc
+
+select l.model, l.price, 'laptop' as type 
+from laptop l
+	join product p on l.model = p.model
+union
+select l.model, l.price, 'pc' as type 
+from pc l
+	join product p on l.model = p.model
+union 
+select l.model, l.price, 'printer' as type 
+from printer l
+	join product p on l.model = p.model
+
+
+
+select *
+	from (
+select l.model, l.price, 'laptop' as type 
+from laptop l
+union
+select l.model, l.price, 'pc' as type 
+from pc l
+union 
+select l.model, l.price, 'printer' as type 
+from printer l
+	) u
+	join product p on p.model = u.model 
+where p.maker = 'B'
+
+
+
+
+-- exists (subquery) - if return atleast 1 
+
+
+-- names of stars that have been in movies after 40 birthday
+use movies
+
+select * 
+from moviestar ms
+where exists (-- ms.name, ms.birthday
+				select *
+				from starsin si 
+				where si.MOVIEYEAR> YEAR(ms.BIRTHDATE) + 40 and si.STARNAME = ms.NAME)
+
+
+select *
+from moviestar ms
+	join STARSIN si on ms.name = si.starname
+where si.MOVIEYEAR > Year(ms.BIRTHDATE) + 40
+
+
+
+-- names of movies where name was used for 2 
+-- select * from movie m1
+--  	join movie m2 on m1.title = m2.title and m1.year != m2.year
+
+
+-- select *
+-- from movie m1
+-- where m1.year > ANY (select m2.year from movie m2 where m2.title = m1.title) -- also can use < or !=
+
+
+
+
+-- maker of pc with smallest amount of memory, fastest processors
+use pc
+
+Select *
+from pc pc1
+where pc1.ram <= all ( select ram from pc )
+	and pc1.speed >= all ( select speed from pc pc2 where pc2.ram <= any (select ram from pc))
+
+
+Select *
+from pc pc1
+where pc1.ram <= all ( select ram from pc )
+	and pc1.speed >= all ( select speed from pc pc2 where pc2.ram = pc1.ram)

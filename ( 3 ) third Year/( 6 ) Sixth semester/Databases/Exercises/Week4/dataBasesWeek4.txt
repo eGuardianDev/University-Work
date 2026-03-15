@@ -1,0 +1,182 @@
+
+
+
+use movies
+
+select * from movie
+
+
+select *
+from movie m
+	join movieexec me on m.PRODUCERC# =me.cert#
+
+
+-- we won't lose any values
+-- instead we will get null values
+select *
+from movie m 
+	left outer join movieexec me on m.PRODUCERC# = me.CERT#
+-- right
+-- full = left + right
+
+-- outer / inner
+
+
+-- for every actor and/or producer to show their name, b-day, networth
+
+select * from MOVIESTAR
+select * from MOVIEEXEC
+
+select ms.NAME, ms.BIRTHDATE, Null as 'NETWORTH'
+from MOVIESTAR ms
+-- where ms.name not in (select name from movieexec)
+union 
+select me.NAME, null as BIRTHDATE, me.NETWORTH
+from MOVIEEXEC me
+-- where me.name not in (select name from moviestar)
+-- Union
+-- select ms.Name, ms.Birthday, me.Networth
+-- from moviestar ms
+-- join moviexec me on ms.Name= me.Name
+
+-- or alternatively
+select COALESCE(ms.Name,me.name), ms.BIRTHDATE, me.NETWORTH -- returns first non-null value
+from moviestar ms
+	full outer join movieexec me on ms.name = me.name
+
+
+
+-- for every country -- find every ship, that has never been in battle
+use ships
+
+select * from ships
+select * from CLASSES
+select * from BATTLES
+select * from OUTCOMES
+
+
+select c.country, s.name from classes c
+	join ships s on c.class = s.CLASS
+	left outer join outcomes o on s.NAME = o.SHIP
+where o.SHIP is null
+
+-- or alternativly
+select c.country, s.name
+from classes  c
+	join ships s on c.class = s.class
+where s.name not in (select ship from outcomes)
+
+
+select c.country ,s.name
+from outcomes o 
+	right outer join ships s on o.ship = s.name
+	join classes c on c.class = s.class 
+where o.ship is null
+
+
+-- for every british class - name of class, name of battles in which have participated this classes
+-- if this class doens't have ships or haven't been in battle - to be displayed in the result with null value for battles
+
+-- mine
+select distinct ships.class, outcomes.BATTLE from ships 
+	join classes on ships.class = classes.CLASS -- left outer
+	left join outcomes on ships.name = outcomes.ship 
+	where classes.COUNTRY = 'Gt.Britain'
+
+-- lecturer's (removes parasitic tuple)
+select c.class, o.battle
+from ships s
+	left outer join outcomes o on s.name = o.ship
+	right outer join classes c on c.class = s.CLASS
+where c.COUNTRY = 'Gt.Britain'
+
+-- or alternativly (better even)
+select *
+from outcomes o
+	join ships s on o.SHIP = s.NAME
+	right outer join classes c on c.class = s.CLASS
+where c.COUNTRY = 'Gt.Britain'
+
+
+
+-- some exercise, idk i was watching instagram
+
+
+
+
+
+
+
+
+-- for every class - name, country and name of their ships from 1916
+
+select *--classes.class, classes.country, ships.name 
+from classes  
+	join ships on classes.class = ships.class
+where ships.launched = 1916
+
+
+
+select classes.class, classes.country, ships.name 
+from classes  
+	left outer join ships on classes.class = ships.class and ships.LAUNCHED = 1916
+
+
+
+select c.class, c.COUNTRY, l1916.name
+from classes c
+	left outer join (select s.name, s.class
+					 from ships s 
+					 where s.launched = 1916) l1916 on c.class = l1916.class
+
+
+
+create table Employees {
+	EmplyeeID int,
+	FirstName varchar(32),
+	LastName varchar(32),
+	ReportsTo int
+}
+Go
+
+insert into Employees values
+	(1, 'John', 'Smith', NULL),
+	(2, 'John', 'Johnson', 1),
+	(3, 'Kate', 'McAlister', 1),
+	(4, 'Brian', 'Mitchell', 2),
+	(5, 'Richard', 'Davidson', 4)
+
+
+Select e.FirstName, e.LastName, b.FirstName, b.LastName
+from employees e
+	left outer join employees b on a.ReportsTo = b.EmployeeID
+
+
+-- 3 exercises in the exam will be from the last few exercises
+
+
+create table seat (id int, isFree bit)
+insert into seat values (1,1), (2,0), (3,1), (4,1), (5,1), (6,0), (7,1), (8,1), (9,0), (10,0)
+
+
+
+select * from seat
+
+select * from seat
+-- l - taken, r - free 
+-- 3 - 5
+-- 7 - 8
+
+
+select l.ID, r.ID
+from Seat bl
+	right outer join seat l on bl.id = l.id -1
+	join seat r on l.id = r.id -- <=
+	left outer join seat ar on r.id +1 = ar.id 
+where 1 = all (select isFree from Seat where Id between l.ID and r.ID)
+	and (bl.isFree = 0 or ar.isFree is null) and (ar.isFree = 0 or ar.isFree is null)
+-- this won't be on the test
+
+
+
+

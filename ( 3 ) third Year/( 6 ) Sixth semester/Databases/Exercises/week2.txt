@@ -1,0 +1,170 @@
+USE movies
+
+-- for every coloured movie - name, year, ADDRESS of studio,
+
+SELECT * FROM MOVIE
+SELECT * from STUDIO
+
+
+
+SELECT * FROM MOVIE, STUDIO -- CROSS JOIN
+--SELECT * FROM MOVIE CROSS JOIN STUDIO  -- collums are just joined on the right of the table
+
+
+
+SELECT TITLE, YEAR, STUDIONAME, ADDRESS AS STDUIOADDRESS
+FROM MOVIE, STUDIO 
+WHERE STUDIONAME = NAME AND INCOLOR = 'Y'
+-- SELECT * FROM MOVIE, STUDIO 
+
+
+
+SELECT TITLE, YEAR, STUDIONAME, ADDRESS AS STDUIOADDRESS
+FROM MOVIE
+	JOIN STUDIO ON STUDIONAME = NAME
+WHERE INCOLOR = 'Y'
+
+
+USE pc 
+-- For every 15 inch laptop - manifacturer, model, price
+
+
+SELECT MAKER, LAPTOP.MODEL, PRICE from laptop 
+	join product on laptop.model = product.model
+WHERE SCREEN = 15
+
+
+
+-- names of every movie with length of "star wars"
+
+use movies
+
+select m1.TITLE, m1.YEAR, M1.LENGTH
+from movie as m1
+	join movie as m2 on m2.TITLE = 'Star Wars' -- and m2.YEAR = '1977'
+where m1.LENGTH > m2.LENGTH
+
+
+
+-- name of every actress, that have been in MGM movie, and the names of this movies
+
+SELECT * 
+FROM MOVIESTAR 
+where GENDER = 'F'
+
+
+select MOVIETITLE, STARNAME
+from starsin 
+	join moviestar on starsin.starname = moviestar.NAME
+	join MOVIE on MOVIE.STUDIONAME = 'MGM' and movie.title = STARSIN.MOVIETITLE
+where moviestar.gender = 'F'
+
+
+select MOVIETITLE, STARNAME
+from starsin 
+	join moviestar on starsin.starname = moviestar.NAME
+	join MOVIE on movie.title = STARSIN.MOVIETITLE and movie.YEAR = STARSIN.MOVIEYEAR
+where moviestar.gender = 'F' and MOVIE.STUDIONAME = 'MGM'	
+
+select * from MOVIE
+
+
+-- second hour
+
+
+-- all movies, coloured, or have played Harrison Ford
+
+select TITLE, YEAR from MOVIE where INCOLOR = 'Y'
+union -- ALL -- this needs the selected objects to be the same; with ALL we can not lose copies (multiset)
+select MOVIETITLE, MOVIEYEAR from starsin where STARNAME = 'HARRISON FORD'
+order by TITLE
+
+
+select TITLE, YEAR from MOVIE where INCOLOR = 'Y'
+EXCEPT
+select MOVIETITLE, MOVIEYEAR from starsin where STARNAME = 'HARRISON FORD'
+
+
+select TITLE, YEAR from MOVIE where INCOLOR = 'Y'
+INTERSECT
+select MOVIETITLE, MOVIEYEAR from starsin where STARNAME = 'HARRISON FORD'
+
+
+
+-- all battles with fallen ship
+
+use ships
+
+
+select distinct battle  -- remove duplicates
+from OUTCOMES
+where RESULT = 'SUNK'
+
+
+
+
+
+use movies
+
+select distinct STARNAME
+from starsin 
+	join moviestar on starsin.starname = moviestar.NAME
+	join MOVIE on movie.title = STARSIN.MOVIETITLE and movie.YEAR = STARSIN.MOVIEYEAR
+where moviestar.gender = 'M' and MOVIE.STUDIONAME = 'MGM'	 -- for females is ok, but for males is duplicated
+
+
+
+
+
+
+
+ -- homework ex1 
+use movies
+
+select STARNAME from STARSIN
+where MOVIETITLE = 'Terms of Endearment'
+intersect
+select NAME from MOVIESTAR
+where gender = 'F'
+
+
+
+select starsin.STARNAME from MOVIE
+	join STARSIN on starsin.MOVIETITLE = movie.TITLE
+where STUDIONAME = 'MGM' and MOVIEYEAR = 1995
+
+
+
+ -- homework ex2
+use PC
+
+-- 1 
+select maker, speed from laptop
+	join product on laptop.model = product.model
+where hd >= 9
+
+
+-- 2
+select product.model, Price from printer 
+	join product on product.model = printer.model
+where product.maker = 'B'
+union
+select product.model, Price from laptop 
+	join product on product.model = laptop.model
+where product.maker = 'B'
+union
+select product.model, Price from pc 
+	join product on product.model = pc.model
+where product.maker = 'B'
+
+-- 3
+select distinct pc0.hd from pc as pc0
+	join pc as pc1 on pc0.hd = pc1.hd and pc0.model != pc1.model 
+order by hd
+
+
+
+-- 4
+select distinct pc0.model, pc1.model from pc as pc0
+	join pc as pc1 on pc0.speed = pc1.speed and pc0.ram = pc1.ram and pc0.model != pc1.model
+order by pc0.model
