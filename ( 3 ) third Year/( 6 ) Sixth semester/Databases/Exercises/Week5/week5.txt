@@ -1,0 +1,166 @@
+
+use ships
+
+select * from classes
+
+
+-- агрегатен израз
+select String_agg(class, ','), Min(NUMGUNS), max(NUMGUNS)
+From classes
+
+
+-- всяко студио - общата дължина на заснетите от него филми
+
+use movies
+
+select *, (select sum(length) from movie m where m.STUDIONAME = s.name)
+from STUDIO s
+
+select s.name, sum(m.length)
+from studio s 
+ left outer join movie m on s.name = m.studioname 
+group by s.name
+
+select *
+from movie
+
+select s.name, COALESCE(SUM(m.length),0)
+from STUDIO s
+	LEFT OUTER JOIN MOVIE m on S.NAME = m.STUDIONAME
+GROUP BY s.NAME
+
+
+select s.name, s.ADDRESS , STRING_AGG(Title + ':' + CAST(Year as VARCHAR(MAX)), ', '), COALESCE(SUM(m.LENGTH),0)
+from STUDIO s
+	LEFT OUTER JOIN MOVIE m on S.NAME = m.STUDIONAME
+GROUP BY s.NAME, s.ADDRESS
+
+
+select s.name,
+	   s.address,
+	   count(distinct incolor),
+	   string_agg(title + ':' + cast (Year as varchar(max)), ', '),
+	   coalesce(sum(m.length),0)
+from studio s
+	left outer join movie m on s.name = m.studioname 
+group by s.name, s.address
+
+
+select s.name,
+	   s.address,
+	   count(*),
+	   count(length),
+	   count(distinct incolor),
+	   count(distinct PRODUCERC#),
+	   string_agg(title + ':' + cast (Year as varchar(max)), ', '),
+	   coalesce(sum(m.length),0)
+from studio s
+	left outer join movie m on s.name = m.studioname 
+group by s.name, s.address
+
+select * from movie
+order by STUDIONAME, LENGTH
+
+
+select length, count(*)
+from movie
+group by length
+having count(*) >=2
+order by length desc
+
+
+-- сумарната дължина на всички филми заснети от Харисън Форд
+
+select starname, sum(Length)
+from MOVIE m 
+	join starsin si on m.title = si.MOVIETITLE and m.YEAR = si.MOVIEYEAR
+where si.STARNAME = 'Harrison Ford'
+group by starname
+
+select starname, sum(Length)
+from MOVIE m 
+	join starsin si on m.title = si.MOVIETITLE and m.YEAR = si.MOVIEYEAR
+group by starname
+having starname = 'Harrison Ford'
+
+
+-- коолко звезди са родени по години
+
+Select year(birthdate), count(*), Count(Name)
+from moviestar
+group by year(birthdate)
+
+
+select year(birthdate), gender, count(*), count(name)
+from moviestar
+group by year(birthdate), gender
+
+
+
+-- най-дължия филм
+
+select *
+from movie
+where length >= all (select coalesce(length, 0) from movie)
+
+
+select *
+from movie 
+where length = (Select max(LENGTH) from MOVIE)
+
+
+-- среден брой филми, в който са се снимали всички актьори
+-- средно аритметично от броя филми за вески актьор
+
+
+select avg(mc.moviecount) from
+(select ms.name, count(starname) as moviecount
+from moviestar ms
+	left outer join starsin si on ms.name = si.starname
+group by ms.name) mc
+
+
+-- броя на корабите потънали в битка според класа
+use ships
+
+select *
+from outcomes
+where result ='sunk'
+
+
+select s.class, count(o.result)
+from outcomes o
+	join ships s on o.ship = s.name
+where result = 'sunk'
+group by s.class
+
+
+select c.CLASS, count(o.ship)
+from classes c 
+	left outer join ships s on c.class = s.class
+	left outer join outcomes o on o.ship = s.name and o.result = 'sunk'
+group by c.class
+
+
+select c.CLASS, count(case o.result when 'sunk' then 1 else 0 end)
+from classes c 
+	left outer join ships s on c.class = s.class
+	left outer join outcomes o on o.ship = s.name
+group by c.class
+
+-- case 
+--	when then
+--  when then 
+--	else 
+-- end
+
+
+-- за всеки размер лаптоп -разликата в цента на най-скъия и най-евтиния
+use pc
+
+select screen, max(price)-min(price) as diff
+from laptop
+group by screen 
+
+
+
