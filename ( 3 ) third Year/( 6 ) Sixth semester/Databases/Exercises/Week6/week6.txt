@@ -1,0 +1,159 @@
+
+-- Statistics about number of movie stars in specific period
+-- before 1960, in 60, in 70, after 1980
+
+
+
+select case
+			when year(birthdate) < 1960 then 'before 1960'
+			when year(birthdate) >= 1960 and year(birthdate) < 1970 then '60s'
+			when year(birthdate) >= 1970 and year(birthdate) < 1980 then '70s'
+			--when year(birthdate) >= 1980 and year(birthdate) < 1980 then 'after 1980'
+			else 'after 1980'
+		end,
+		Count(Name) as StarCount
+from MOVIESTAR
+group by case
+			when year(birthdate) < 1960 then 'before 1960'
+			when year(birthdate) >= 1960 and year(birthdate) < 1970 then '60s'
+			when year(birthdate) >= 1970 and year(birthdate) < 1980 then '70s'
+			--when year(birthdate) >= 1980 and year(birthdate) < 1980 then 'after 1980'
+			else 'after 1980'
+		end
+
+
+
+select case
+			when year(birthdate) < 1960 then 'before 1960'
+			when year(birthdate) >= 1960 and year(birthdate) < 1970 then '60s'
+			when year(birthdate) >= 1970 and year(birthdate) < 1980 then '70s'
+			--when year(birthdate) >= 1980 and year(birthdate) < 1980 then 'after 1980'
+			else 'after 1980'
+		end TimePeriod, *
+from moviestar
+order by TimePeriod
+
+
+select * from moviestar order by Birthdate
+
+
+-- names of ships, which have been fighting in battle over 2 years
+
+
+select * from ships
+select * from battles
+
+select o.ship
+from battles b
+	join outcomes o on b.name = o.battle 
+group by ship 
+having (max(year(date)) - min(year(date))) >=1
+
+
+
+select o.ship, year(date), count(*)
+from battles b
+	join outcomes o on b.name = o.battle 
+group by o.ship, year(date)
+having count(*) >= 2
+
+
+
+-- all sunk ships, how many years have passed since the year of deplayment
+
+select s.name, year(date)- launched
+from ships s 
+	join outcomes o on s.name = o.ship 
+	join battles b on b.name = o.battle 
+where o.result = 'sunk'
+
+
+-- for every year, in which there was battle - number of ships, which have left water in that year 
+
+
+select Year(DATE), * from battles
+
+
+select launched, count(name) as 'shipCount' from ships 
+group by launched
+
+
+select * from ships s 
+	join battles b on s.launched = year(b.date)
+
+
+
+select s.launched, count(distinct s.name) as shipCount 
+from ships s 
+	join battles b on s.launched = year(b.date)
+group by s.launched
+
+
+-- Name of battels, in which have been atleast 3 battle with less or equal to 9 weapons
+-- and two were with result ok
+
+
+select * from outcomes
+	join ships on ships.NAME = outcomes.SHIP
+	join battles on battles.NAME = outcomes.BATTLE
+
+
+select o.battle -- , c.numguns, o.result
+from ships s 
+	join outcomes o on s.name = o.SHIP
+	join classes c on c.class = s.CLASS
+where c.NUMGUNS <= 9
+--order by o.BATTLE, s.NAME, o.result
+group by o.battle
+having count(s.name) >= 3 and sum(case o.result when 'ok' then 1 else 0 end) >= 2
+
+
+
+
+
+-- for every class - name of class, country, first year this class was shows as ship
+
+select c.class, c.country, min(s.LAUNCHED)
+from classes c
+	join ships s on c.class = s.class
+-- order by c.class
+group by c.class, c.country 
+
+
+
+-- the one up + column in which you have the list of ships deplayed that year
+select c.class, min(s.launched) as min_year, string_agg(s.name, ', ') as ship_list
+from classes c
+	join ships s on c.class = s.class
+	join (select class, min(launched) as min_year
+		 from ships
+		 group by class) sq on c.class = sq.CLASS
+group by c.class
+
+
+
+-- for every battle - the number of sunk ships, the number of damaged and others
+
+select b.name, 
+	sum(case o.result when 'ok' then 1 else 0 end) as ok,
+	sum(case o.result when 'sunk' then 1 else 0 end) as sunk,
+	sum(case o.result when 'sunk' then 0 when 'ok' then 0 else 1 end) as other
+from battles b
+	left outer join outcomes o on b.name = o.battle
+group by b.name
+
+
+
+select b.name, count(distinct o_sunk.ship), count(distinct o_damaged.ship), count(DISTINCT o_ok.ship)
+from battles b
+	left Outer join outcomes o_sunk on b.name = o_sunk.battle and o_sunk.RESULT = 'sunk'
+	left Outer join outcomes o_damaged on b.name = o_damaged.battle and o_damaged.RESULT = 'damaged'
+	left Outer join outcomes o_ok on b.name = o_ok.battle and o_ok.RESULT = 'ok'
+group by b.name
+
+
+select b.name,
+	(select count(*) from outcomes o where o.battle = b.name and o.Result = 'sunk') as sunk_count,
+	(select count(*) from outcomes o where o.battle = b.name and o.Result = 'ok') as ok_count,
+	(select count(*) from outcomes o where o.battle = b.name and o.Result = 'damaged') as damaged_count
+from battles b
