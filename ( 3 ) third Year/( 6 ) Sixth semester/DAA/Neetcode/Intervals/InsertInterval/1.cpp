@@ -40,21 +40,25 @@ vector<vector<int>> insert(vector<vector<int>>& intervals, vector<int>& newInter
 
     vector<vector<int>> result;
 
+    // for(auto a : intervals){
+    //     if(a[1] < newInterval[0]){
+    //         result.push_back(a);
+    //     }
+    // }
 
-    int i =0;
-    for(i =0;i<intervals.size();++i){
-        if(intervals[i][1] < newInterval[0] ){
-            result.push_back(intervals[i]);
-        }else{
-            if(intervals[i][1] > newInterval[1]) {
-                result.push_back(intervals[i]);
-            }else{
-                
-            }
+    // if(result == intervals){
+    //     result.push_back(newInterval);
+    //     return result;
+    // }
+    
 
-            break;
-        }
+
+    vector<int> curr;
+    for(int i =0;i<intervals.size();++i){
+        
+
     }
+
 
    
     return result;
