@@ -1,0 +1,4 @@
+
+Sensors needs to be actors too!
+
+https://www.geeksforgeeks.org/system-design/use-case-diagram/
