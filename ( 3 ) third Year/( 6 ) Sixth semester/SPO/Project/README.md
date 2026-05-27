@@ -7,7 +7,7 @@
 - [X] Config file
 - [X] Random number generator
 - [ ] Define output and data
-- [ ] Visualization
+- [X] Visualization
 - [ ] Update loop
 - [ ] Threading
 - [ ] Fish
