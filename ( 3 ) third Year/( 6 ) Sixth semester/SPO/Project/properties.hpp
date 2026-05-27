@@ -1,6 +1,7 @@
 #ifndef SIM_PROPERTIES
 #define SIM_PROPERTIES
 
+#include <SFML/Graphics/Color.hpp>
 #include <string>
 
 struct Config{
@@ -9,8 +10,18 @@ struct Config{
         inline static constexpr float WAIT_SECONDS_BEFORE_NEXT_STEP = 1;
         inline static constexpr int GRID_SIZE_WIDTH = 10;
         inline static constexpr int GRID_SIZE_HEIGHT = 10;
+        inline static constexpr int WINDOW_SIZE_WIDTH = 1000;
+        inline static constexpr int WINDOW_SIZE_HEIGHT = 1000;
         inline static constexpr int SEED = 1000;
         inline static const std::string TITLE_NAME = "Pixels";
+        inline static constexpr int THREADS = 1;
+    };
+
+    struct Rendering{
+        inline static const sf::Color EMPTY_COLOR = sf::Color::Black;
+        inline static const sf::Color FISH_COLOR = sf::Color::Green;
+        inline static const sf::Color SHARK_COLOR = sf::Color::Red;
+        inline static constexpr int FRAME_LIMIT = 60;
     };
 
     struct Spawn {
