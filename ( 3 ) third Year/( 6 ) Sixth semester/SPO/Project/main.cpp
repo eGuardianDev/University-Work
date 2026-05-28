@@ -1,3 +1,4 @@
+#include "logic.hpp"
 #include "properties.hpp"
 
 #include "random_numbers.hpp"
@@ -9,21 +10,30 @@
 
 int main(){
 
-    Visuals visuals;
-
-    // visuals.DrawCell(Config::World::GRID_SIZE_WIDTH/2,
-        // Config::World::GRID_SIZE_HEIGHT/2, sf::Color::Red);
-
+    // Buffers
     std::vector<std::vector<Entities>> map(
         Config::World::GRID_SIZE_HEIGHT,
         std::vector<Entities>(
             Config::World::GRID_SIZE_WIDTH));
+            
+    // Helpers
+    number_generator rng(Config::World::SEED);
+    Visuals visuals;
+    Logic logic(map, rng);
 
-    map[0][0].type = 1;
-    map[0][1].type = 2;
-    
-    while (visuals.Update()) {
-        visuals.RerenderMap(map);
+    // Initial
+    logic.spawnInitial(map);
+   
+    // Loop
+    // while (visuals.Update()) {
+    //     logic.Step(map);
+    //     visuals.RerenderMap(map);
+    //     sf::sleep(sf::seconds(Config::World::WAIT_SECONDS_BEFORE_NEXT_STEP));
+    // }
+
+    while(true){
+        logic.Step(map);
+        // sf::sleep(sf::seconds(Config::World::WAIT_SECONDS_BEFORE_NEXT_STEP));
     }
 
     return 0;
