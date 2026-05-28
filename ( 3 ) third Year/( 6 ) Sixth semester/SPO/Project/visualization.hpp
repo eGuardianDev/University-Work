@@ -9,17 +9,31 @@
 #include "properties.hpp"
 
 #include "entities.hpp"
-
-class Visuals{
-
-    public:
+class Visuals {
+public:
     Visuals():
-    window(
-        sf::VideoMode(
+    window(sf::VideoMode(
         Config::World::WINDOW_SIZE_WIDTH,
         Config::World::WINDOW_SIZE_HEIGHT),
-        Config::World::TITLE_NAME){
+        Config::World::TITLE_NAME),
+    vertices(sf::Quads, 
+        Config::World::GRID_SIZE_WIDTH * 
+        Config::World::GRID_SIZE_HEIGHT * 4)  
+    {
         window.setFramerateLimit(Config::Rendering::FRAME_LIMIT);
+
+        cellW = (float)Config::World::WINDOW_SIZE_WIDTH  / Config::World::GRID_SIZE_WIDTH;
+        cellH = (float)Config::World::WINDOW_SIZE_HEIGHT / Config::World::GRID_SIZE_HEIGHT;
+
+        for(int r = 0; r < Config::World::GRID_SIZE_HEIGHT; r++) {
+            for(int c = 0; c < Config::World::GRID_SIZE_WIDTH; c++) {
+                int i = (r * Config::World::GRID_SIZE_WIDTH + c) * 4;
+                vertices[i+0].position = sf::Vector2f(c * cellW,         r * cellH);
+                vertices[i+1].position = sf::Vector2f((c+1) * cellW,     r * cellH);
+                vertices[i+2].position = sf::Vector2f((c+1) * cellW, (r+1) * cellH);
+                vertices[i+3].position = sf::Vector2f(c * cellW,     (r+1) * cellH);
+            }
+        }
     }
 
     bool Update() {
@@ -33,51 +47,33 @@ class Visuals{
         }
         return window.isOpen();
     }
-
-    void DrawCell(int gridX, int gridY, sf::Color color) {
-        const float cellW = (float)Config::World::WINDOW_SIZE_WIDTH  / Config::World::GRID_SIZE_WIDTH;
-        const float cellH = (float)Config::World::WINDOW_SIZE_HEIGHT / Config::World::GRID_SIZE_HEIGHT;
-
-        sf::RectangleShape cell(sf::Vector2f(cellW, cellH));
-        cell.setPosition(gridX * cellW, gridY * cellH);
-        cell.setFillColor(color);
-        window.draw(cell);
-    }
-
-    void RerenderMap(
-        std::vector<std::vector<Entities>> &map){
-
-        window.clear();
-        
-        for(int r =0; r < Config::World::GRID_SIZE_HEIGHT;++r){
-            for(int c = 0; c<Config::World::GRID_SIZE_WIDTH;++c){
-                Entities ent = map[r][c];
-                switch(ent.type){
-                    case 0:
-                        DrawCell(c,r, Config::Rendering::EMPTY_COLOR);
-                        break;
-                    case 1:
-                        DrawCell(c,r, Config::Rendering::FISH_COLOR);
-                        break;
-                    case 2:
-                        DrawCell(c,r, Config::Rendering::SHARK_COLOR);
-                        break;
-                    default:
-                        throw std::invalid_argument("Invalid type in cell");
-                        break;
+    void RerenderMap(std::vector<std::vector<Entities>> &map) {
+        for(int r = 0; r < Config::World::GRID_SIZE_HEIGHT; r++) {
+            for(int c = 0; c < Config::World::GRID_SIZE_WIDTH; c++) {
+                int i = (r * Config::World::GRID_SIZE_WIDTH + c) * 4;
+                sf::Color color;
+                switch(map[r][c].type) {
+                    case 0: color = Config::Rendering::EMPTY_COLOR; break;
+                    case 1: color = Config::Rendering::FISH_COLOR;  break;
+                    case 2: color = Config::Rendering::SHARK_COLOR; break;
+                    default: throw std::invalid_argument("Invalid type");
                 }
+                vertices[i+0].color = color;
+                vertices[i+1].color = color;
+                vertices[i+2].color = color;
+                vertices[i+3].color = color;
             }
         }
 
+        window.clear();
+        window.draw(vertices);
         window.display();
     }
-        
-    ~Visuals(){
-        window.close();
-    }
 
-    private:
+private:
     sf::RenderWindow window;
+    sf::VertexArray vertices;
+    float cellW, cellH;
 };
 
 

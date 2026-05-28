@@ -20,12 +20,4 @@ private:
 };
 
 
-
-// USAGE:
-// number_generator rng(Config::World::SEED);
-
-// for(int i =0; i<50;++i){
-//     std::cout << rng.next_int(0, 10) << " ";
-// } std::cout << std::endl;
-
 #endif // RANDOM_NUMBERS_HPP
