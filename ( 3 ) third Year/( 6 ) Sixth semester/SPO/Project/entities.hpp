@@ -6,6 +6,7 @@ struct Entities{
     int type = 0;
     int breading_timer = 0;
     int energy = 0;
+    int moved = 0;
 };
 
 

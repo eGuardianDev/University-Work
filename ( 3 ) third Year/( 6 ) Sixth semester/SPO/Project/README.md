@@ -6,9 +6,9 @@
 ## plan of attack
 - [X] Config file
 - [X] Random number generator
-- [#] Define output and data
-- [#] Visualization
-- [#] Update loop
-- [ ] Threading
-- [#] Fish
-- [#] Sharks
+- [X] Define output and data
+- [X] Visualization
+- [X] Update loop
+- [X] Threading
+- [X] Fish
+- [X] Sharksg

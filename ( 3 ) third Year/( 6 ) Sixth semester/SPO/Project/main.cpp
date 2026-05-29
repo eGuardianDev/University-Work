@@ -2,6 +2,7 @@
 #include "properties.hpp"
 
 #include "random_numbers.hpp"
+#include <climits>
 #include <iostream>
 
 #include "visualization.hpp"
@@ -24,17 +25,39 @@ int main(){
     // Initial
     logic.spawnInitial(map);
    
-    // Loop
-    // while (visuals.Update()) {
-    //     logic.Step(map);
-    //     visuals.RerenderMap(map);
-    //     sf::sleep(sf::seconds(Config::World::WAIT_SECONDS_BEFORE_NEXT_STEP));
-    // }
+    
+    if constexpr (Config::Debug::RUN_SIMULATIONS) {
+        std::cout << "Starting simulations" << std::endl;
+        
+        // for(int i =0;i<)
 
-    while(true){
-        logic.Step(map);
-        // sf::sleep(sf::seconds(Config::World::WAIT_SECONDS_BEFORE_NEXT_STEP));
     }
+    // Loop
+    int steps = Config::World::STEPS;
+
+    if(steps == 0) steps = INT_MAX;
+    while (visuals.IsOpen()) {
+
+        bool shouldTakeStep = visuals.Update();
+
+        if (shouldTakeStep) {
+            
+            if(steps <= 0){
+                break;
+            }
+            steps--;
+            logic.Step(map);
+            sf::sleep(sf::seconds(Config::World::WAIT_SECONDS_BEFORE_NEXT_STEP));
+        }
+        visuals.RerenderMap(map);
+    }
+
+
+    std::cout << logic.averageTime() << std::endl;
+    // while(true){
+    //     logic.Step(map);
+    //     // sf::sleep(sf::seconds(Config::World::WAIT_SECONDS_BEFORE_NEXT_STEP));
+    // }
 
     return 0;
 }

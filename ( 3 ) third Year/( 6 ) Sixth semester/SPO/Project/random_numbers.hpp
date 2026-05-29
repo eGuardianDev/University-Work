@@ -8,13 +8,11 @@ public:
     number_generator(int seed) :
         seed_(seed){
     }
-
-    int next_int(int min, int max){
-        seed_ = (1103515245 * seed_ + 12345) % 2147483648;
-
-        return min + (seed_ % (max - min + 1));
+    int next_int(int min, int max) {
+        seed_ = 1103515245 * seed_ + 12345;
+            uint32_t random_val = (seed_ >> 16); 
+        return min + (random_val % (max - min + 1));
     }
-
 private:
     uint32_t seed_ = 0;
 };

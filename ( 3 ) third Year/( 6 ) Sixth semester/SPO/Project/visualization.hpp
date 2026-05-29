@@ -38,13 +38,20 @@ public:
 
     bool Update() {
         sf::Event event;
+        stepRequested = false;
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed)
                 window.close();
-            if (event.type == sf::Event::KeyPressed &&
-                event.key.code == sf::Keyboard::Escape)
-                window.close();
+            if (event.type == sf::Event::KeyPressed){
+                if(event.key.code == sf::Keyboard::Escape) window.close();
+                if (event.key.code == sf::Keyboard::Space) autoPlay = !autoPlay;
+                if (event.key.code == sf::Keyboard::Right) stepRequested = true;
+            }
         }
+        return autoPlay || stepRequested;
+    }
+
+    bool IsOpen() {
         return window.isOpen();
     }
     void RerenderMap(std::vector<std::vector<Entities>> &map) {
@@ -74,6 +81,8 @@ private:
     sf::RenderWindow window;
     sf::VertexArray vertices;
     float cellW, cellH;
+    bool autoPlay = true;
+    bool stepRequested = false;
 };
 
 
