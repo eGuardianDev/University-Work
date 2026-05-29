@@ -1,5 +1,12 @@
-#include "logic.hpp"
 #include "properties.hpp"
+
+
+#ifndef DUAL_BUFFER 
+#include "1b-logic.hpp"
+#else 
+#include "logic.hpp"
+#endif
+
 
 #include "random_numbers.hpp"
 #include <climits>
