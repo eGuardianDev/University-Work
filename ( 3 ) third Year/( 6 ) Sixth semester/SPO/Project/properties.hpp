@@ -9,27 +9,27 @@
 struct Config{
     
     struct World {
-        inline static constexpr float WAIT_SECONDS_BEFORE_NEXT_STEP = 0.001;
-        inline static constexpr int GRID_SIZE_WIDTH = 400;
-        inline static constexpr int GRID_SIZE_HEIGHT = 400;
+        inline static constexpr float WAIT_SECONDS_BEFORE_NEXT_STEP = 0;
+        inline static constexpr int GRID_SIZE_WIDTH = 1920;
+        inline static constexpr int GRID_SIZE_HEIGHT = 1080;
         inline static constexpr int WINDOW_SIZE_WIDTH = 1000;
         inline static constexpr int WINDOW_SIZE_HEIGHT = 1000;
         inline static constexpr int SEED = 1235;
         inline static const std::string TITLE_NAME = "Pixels";
-        inline static constexpr int THREADS = 8;
-        inline static constexpr int STEPS = 4000;
+        inline static constexpr int THREADS = 32;
+        inline static constexpr int STEPS = 2000;
     };
 
     struct Rendering{
         inline static const sf::Color EMPTY_COLOR = sf::Color::Black;
         inline static const sf::Color FISH_COLOR = sf::Color::Green;
         inline static const sf::Color SHARK_COLOR = sf::Color::Red;
-        inline static constexpr int FRAME_LIMIT = 10000;
+        inline static constexpr int FRAME_LIMIT = 100000;
     };
 
     struct Debug{
-        inline static constexpr bool COUNT_ANIMALS = true;
-        inline static constexpr bool RECORD_TO_FILE = true;
+        inline static constexpr bool COUNT_ANIMALS = false;
+        inline static constexpr bool RECORD_TO_FILE = false;
         inline static constexpr bool RUN_SIMULATIONS = true;
     };
 

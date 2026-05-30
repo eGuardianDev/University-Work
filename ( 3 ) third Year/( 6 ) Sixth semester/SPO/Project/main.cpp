@@ -18,53 +18,79 @@
 
 int main(){
 
-    // Buffers
-    std::vector<std::vector<Entities>> map(
-        Config::World::GRID_SIZE_HEIGHT,
-        std::vector<Entities>(
-            Config::World::GRID_SIZE_WIDTH));
-            
-    // Helpers
-    number_generator rng(Config::World::SEED);
-    Visuals visuals;
-    Logic logic(map, rng);
-
-    // Initial
-    logic.spawnInitial(map);
    
     
     if constexpr (Config::Debug::RUN_SIMULATIONS) {
         std::cout << "Starting simulations" << std::endl;
         
-        // for(int i =0;i<)
+        int runs =  std::thread::hardware_concurrency();
+        for(int i =runs;i>=1;--i){
 
-    }
-    // Loop
-    int steps = Config::World::STEPS;
+            if(Config::World::GRID_SIZE_HEIGHT % i != 0) continue;
+            if(Config::World::GRID_SIZE_WIDTH % i != 0) continue;
 
-    if(steps == 0) steps = INT_MAX;
-    while (visuals.IsOpen()) {
+            for(int k = 0;k<5;++k){
+                // Buffers
+                std::vector<std::vector<Entities>> map(
+                    Config::World::GRID_SIZE_HEIGHT,
+                    std::vector<Entities>(
+                        Config::World::GRID_SIZE_WIDTH));
+                        
+                // Helpers
+                number_generator rng(Config::World::SEED);
+                Logic logic(map, rng,i);
 
-        bool shouldTakeStep = visuals.Update();
+                // Initial
+                logic.spawnInitial(map);
 
-        if (shouldTakeStep) {
-            
-            if(steps <= 0){
-                break;
+                int steps = Config::World::STEPS;
+                if(steps == 0) steps = INT_MAX;
+                while (steps > 0) {                    
+                    steps--;
+                    logic.Step(map);
+                }
+                std::cout << "Threads: " << i << " time: " << logic.averageTime() << std::endl;
             }
-            steps--;
-            logic.Step(map);
-            sf::sleep(sf::seconds(Config::World::WAIT_SECONDS_BEFORE_NEXT_STEP));
+
         }
-        visuals.RerenderMap(map);
+        
+    }else{        
+
+        // Buffers
+        std::vector<std::vector<Entities>> map(
+            Config::World::GRID_SIZE_HEIGHT,
+            std::vector<Entities>(
+                Config::World::GRID_SIZE_WIDTH));
+                
+        // Helpers
+        number_generator rng(Config::World::SEED);
+        Logic logic(map, rng,1);
+
+        // Initial
+        logic.spawnInitial(map);
+        Visuals visuals;
+        // Loop
+        int steps = Config::World::STEPS;
+            if(steps == 0) steps = INT_MAX;
+            while (visuals.IsOpen()) {
+                
+                bool shouldTakeStep = visuals.Update();
+                
+                if (shouldTakeStep) {
+                    
+                    if(steps <= 0){
+                        break;
+                    }
+                    steps--;
+                logic.Step(map);
+                sf::sleep(sf::seconds(Config::World::WAIT_SECONDS_BEFORE_NEXT_STEP));
+            }
+            visuals.RerenderMap(map);
+        }
+        
+        std::cout << logic.averageTime() << std::endl;
     }
 
-
-    std::cout << logic.averageTime() << std::endl;
-    // while(true){
-    //     logic.Step(map);
-    //     // sf::sleep(sf::seconds(Config::World::WAIT_SECONDS_BEFORE_NEXT_STEP));
-    // }
 
     return 0;
 }

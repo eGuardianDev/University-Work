@@ -36,10 +36,12 @@ class Logic{
 
 
     Logic(std::vector<std::vector<Entities>> &map,
-            number_generator & rng)
+            number_generator & rng,
+        int threads_count = Config::World::THREADS)
             :rng_(rng),
-            border_mutexes_(Config::World::THREADS),
-            is_bordered_(map.size(),-1)
+            border_mutexes_(threads_count),
+            is_bordered_(map.size(),-1),
+            count_using_threads_(threads_count)
         {
         // size
         // std::vector<Entities>(map[0].size());
@@ -51,7 +53,7 @@ class Logic{
         }
 
 
-        int threads = Config::World::THREADS;
+        int threads = count_using_threads_;
 
         int grid_height = Config::World::GRID_SIZE_HEIGHT;
 
@@ -59,7 +61,7 @@ class Logic{
         int sector_height = grid_height/threads;
         sector_height_ = sector_height;
         
-        std::cout << threads << " " << grid_height << " " << sector_height << std::endl;
+        // std::cout << threads << " " << grid_height << " " << sector_height << std::endl;
 
         int current = 0;
         for(int i = 0; i < threads; ++i) {
@@ -90,17 +92,17 @@ class Logic{
             workers_.push_back(std::make_unique<ThreadWorker>(
                 seed_t, sectors_[i], border_mutexes_, is_bordered_
             ));
-            std::cout << "Created new worker > id: " << i << " sectors [ " << current << " : " << end-1 << " ]" << std::endl; 
+            // std::cout << "Created new worker > id: " << i << " sectors [ " << current << " : " << end-1 << " ]" << std::endl; 
 
 
             current = end;
         }
 
-        for(int i =0;i<is_bordered_.size();++i){
-            if(is_bordered_[i] != -1){
-                std::cout << i << " " << is_bordered_[i] << std::endl;
-            }
-        }
+        // for(int i =0;i<is_bordered_.size();++i){
+        //     if(is_bordered_[i] != -1){
+        //         std::cout << i << " " << is_bordered_[i] << std::endl;
+        //     }
+        // }
 
 
     }
@@ -130,7 +132,7 @@ class Logic{
         for(int i = 0; i < workers_.size(); i++) {
            workers_[i]->dispatch([&, i](int start, int end, number_generator& rng) {
             
-            int total_threads = Config::World::THREADS;
+            int total_threads = count_using_threads_;
             int top_mutex_idx = (i - 1 + total_threads) % total_threads;
             int bottom_mutex_idx = i;
 
@@ -404,6 +406,7 @@ class Logic{
 
     std::set<int> borders_;
 
+    int count_using_threads_ =0 ;
     int sector_height_ = 0;
 
     std::atomic<int> fishes_{0};
