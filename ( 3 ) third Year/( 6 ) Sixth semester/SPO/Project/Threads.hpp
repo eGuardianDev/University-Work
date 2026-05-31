@@ -18,7 +18,9 @@ public:
         std::pair<int,int> region,
         std::vector<std::mutex> &border_mutexes,
         std::vector<int> &mutex_mapping
-        ): rng_(seed), region_(region), border_mutexes_(border_mutexes), mutex_mapping_(mutex_mapping)
+        ): rng_(seed), region_(region),
+        //  border_mutexes_(border_mutexes), 
+         mutex_mapping_(mutex_mapping)
     {
         thread_ = std::thread(&ThreadWorker::loop, this);
     }
@@ -81,7 +83,7 @@ private:
 
     number_generator rng_;
     std::pair<int,int> region_;
-    std::vector<std::mutex>& border_mutexes_;
+    // std::vector<std::mutex>& border_mutexes_;
     std::vector<int>& mutex_mapping_; 
 
     std::thread thread_;

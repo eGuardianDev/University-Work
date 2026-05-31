@@ -1,0 +1,141 @@
+#ifndef SIM_PROPERTIES
+#define SIM_PROPERTIES
+
+// #include <SFML/Graphics/Color.hpp>
+#include <string>
+
+// #define DUAL_BUFFER 
+
+struct Config{
+    
+    struct World {
+        inline static constexpr float WAIT_SECONDS_BEFORE_NEXT_STEP = 0;
+        inline static constexpr int GRID_SIZE_WIDTH = 1920;
+        inline static constexpr int GRID_SIZE_HEIGHT = 1920;
+        inline static constexpr int WINDOW_SIZE_WIDTH = 1000;
+        inline static constexpr int WINDOW_SIZE_HEIGHT = 1000;
+        inline static constexpr int SEED = 1235;
+        inline static const std::string TITLE_NAME = "Pixels";
+        inline static constexpr int THREADS = 32;
+        inline static constexpr int STEPS = 2000;
+    };
+
+    struct Rendering{
+        // inline static const sf::Color EMPTY_COLOR = sf::Color::Black;
+        // inline static const sf::Color FISH_COLOR = sf::Color::Green;
+        // inline static const sf::Color SHARK_COLOR = sf::Color::Red;
+        inline static constexpr int FRAME_LIMIT = 100000;
+    };
+
+    struct Debug{
+        inline static constexpr bool COUNT_ANIMALS = false;
+        inline static constexpr bool RECORD_TO_FILE = false;
+        inline static constexpr bool RUN_SIMULATIONS = true;
+    };
+
+    struct Spawn {
+        inline static constexpr float INITIAL_FISH_DENSITY = 0.05f;
+        inline static constexpr float INITIAL_SHARK_DENSITY = 0.05f;
+    };
+    
+    struct Fish {
+        inline static constexpr int STARTING_BREED_TIMER = 10;
+    };
+
+    struct Shark {
+        inline static constexpr int STARTING_ENERGY = 10;
+        inline static constexpr int EATING_GAIN_ENERGY = 15;
+        inline static constexpr int STEP_LOSE_ENERGY = 1;
+        inline static constexpr int BREED_ENERGY_REQUIRED = 90;
+    };
+
+
+    
+};
+
+
+
+
+
+Threads: 32 time: 0.0146514
+Threads: 32 time: 0.014553
+Threads: 32 time: 0.0147909
+Threads: 32 time: 0.01458
+Threads: 32 time: 0.0148009
+Threads: 30 time: 0.0150538
+Threads: 30 time: 0.0154838
+Threads: 30 time: 0.0154511
+Threads: 30 time: 0.0154949
+Threads: 30 time: 0.0150995
+Threads: 24 time: 0.0182518
+Threads: 24 time: 0.0182527
+Threads: 24 time: 0.018276
+Threads: 24 time: 0.0183448
+Threads: 24 time: 0.0182183
+Threads: 20 time: 0.0211322
+Threads: 20 time: 0.021137
+Threads: 20 time: 0.0211044
+Threads: 20 time: 0.0211204
+Threads: 20 time: 0.0211727
+Threads: 16 time: 0.0193402
+Threads: 16 time: 0.0187068
+Threads: 16 time: 0.0195629
+Threads: 16 time: 0.0188269
+Threads: 16 time: 0.0186828
+Threads: 15 time: 0.019199
+Threads: 15 time: 0.0194874
+Threads: 15 time: 0.0193944
+Threads: 15 time: 0.0214156
+Threads: 15 time: 0.0213737
+Threads: 12 time: 0.0228375
+Threads: 12 time: 0.0229897
+Threads: 12 time: 0.0231277
+Threads: 12 time: 0.0228652
+Threads: 12 time: 0.0252356
+Threads: 10 time: 0.0298154
+Threads: 10 time: 0.0302311
+Threads: 10 time: 0.0293201
+Threads: 10 time: 0.0267505
+Threads: 10 time: 0.0296056
+
+Threads: 8 time: 0.0358128
+Threads: 8 time: 0.0353454
+Threads: 8 time: 0.0366806
+Threads: 8 time: 0.0362092
+Threads: 8 time: 0.0356784
+
+Threads: 6 time: 0.0457417
+Threads: 6 time: 0.0420086
+Threads: 6 time: 0.047967
+Threads: 6 time: 0.0468525
+Threads: 6 time: 0.0485818
+
+Threads: 5 time: 0.0561481
+Threads: 5 time: 0.0557473
+Threads: 5 time: 0.0552622
+Threads: 5 time: 0.0568134
+Threads: 5 time: 0.0569334
+
+Threads: 4 time: 0.0680556
+Threads: 4 time: 0.0703752
+Threads: 4 time: 0.0684902
+Threads: 4 time: 0.0617343
+Threads: 4 time: 0.0680805
+
+Threads: 3 time: 0.0857406
+Threads: 3 time: 0.0885505
+Threads: 3 time: 0.0885324
+Threads: 3 time: 0.0797869
+Threads: 3 time: 0.0858281
+
+Threads: 2 time: 0.120417
+Threads: 2 time: 0.121888
+Threads: 2 time: 0.122671
+Threads: 2 time: 0.119692
+Threads: 2 time: 0.121527
+
+Threads: 1 time: 0.236302
+Threads: 1 time: 0.23642
+Threads: 1 time: 0.236292
+Threads: 1 time: 0.240895
+Threads: 1 time: 0.236313

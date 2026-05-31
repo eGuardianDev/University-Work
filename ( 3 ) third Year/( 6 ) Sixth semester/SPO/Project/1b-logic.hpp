@@ -27,12 +27,17 @@ class Logic{
     int step_ = 1;
     float total_time_ = 0.0f;
 
+
+
     public:
 
     float averageTime(){
         return total_time_/step_;
     }
 
+    float total_time(){
+        return total_time_;
+    }
 
 
     Logic(std::vector<std::vector<Entities>> &map,

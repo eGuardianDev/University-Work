@@ -3,10 +3,10 @@
 
 
 struct Entities{
-    int type = 0;
-    int breading_timer = 0;
-    int energy = 0;
-    int moved = 0;
+    short type = 0;
+    short breading_timer = 0;
+    short energy = 0;
+    bool moved = 0;
 };
 
 

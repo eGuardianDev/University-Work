@@ -10,14 +10,14 @@ struct Config{
     
     struct World {
         inline static constexpr float WAIT_SECONDS_BEFORE_NEXT_STEP = 0;
-        inline static constexpr int GRID_SIZE_WIDTH = 1920;
-        inline static constexpr int GRID_SIZE_HEIGHT = 1080;
+        inline static constexpr int GRID_SIZE_WIDTH = 500;
+        inline static constexpr int GRID_SIZE_HEIGHT = 500;
         inline static constexpr int WINDOW_SIZE_WIDTH = 1000;
         inline static constexpr int WINDOW_SIZE_HEIGHT = 1000;
         inline static constexpr int SEED = 1235;
         inline static const std::string TITLE_NAME = "Pixels";
-        inline static constexpr int THREADS = 32;
-        inline static constexpr int STEPS = 2000;
+        inline static constexpr int THREADS = 8;
+        inline static constexpr int STEPS = 1000;
     };
 
     struct Rendering{
@@ -30,7 +30,8 @@ struct Config{
     struct Debug{
         inline static constexpr bool COUNT_ANIMALS = false;
         inline static constexpr bool RECORD_TO_FILE = false;
-        inline static constexpr bool RUN_SIMULATIONS = true;
+        inline static constexpr bool RUN_SIMULATIONS = false;
+        inline static constexpr bool VISUALS = true;
     };
 
     struct Spawn {
