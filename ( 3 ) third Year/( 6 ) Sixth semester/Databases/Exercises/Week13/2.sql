@@ -1,0 +1,23 @@
+
+
+-- SPEED UP MULTIPLE TRANSACTIONS 
+
+-- SNAPSHOTS
+
+SET TRANSACTION ISOLATION LEVEL REPEATABLE READ -- SERIALIZABLE
+
+
+BEGIN TRANSACTION 
+
+COMMIT
+-- ROLLBACK
+
+
+
+SELECT * from orders where orderid = 18248
+
+update orders 
+set OrderData = getdate()
+Where OrderId = 10246
+
+RollBack
