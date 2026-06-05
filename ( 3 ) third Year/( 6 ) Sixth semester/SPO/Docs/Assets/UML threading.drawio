@@ -1,0 +1,179 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Page-1" id="IvqR9Xu9XAu6m-mr-v-0">
+    <mxGraphModel dx="791" dy="479" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="rAK-C7DouxVS_7_V-ppz-13" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;dashed=1;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="104.52" y="120" as="sourcePoint" />
+            <mxPoint x="105" y="880" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rAK-C7DouxVS_7_V-ppz-1" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;" value="Потребител" vertex="1">
+          <mxGeometry height="60" width="30" x="90" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="rAK-C7DouxVS_7_V-ppz-12" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};" value="Основен код" vertex="1">
+          <mxGeometry height="850" width="130" x="210" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="rAK-C7DouxVS_7_V-ppz-14" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;" target="rAK-C7DouxVS_7_V-ppz-12" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="110" y="140" as="sourcePoint" />
+            <mxPoint x="210" y="150" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rAK-C7DouxVS_7_V-ppz-15" connectable="0" parent="rAK-C7DouxVS_7_V-ppz-14" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="Стартиране на програмата" vertex="1">
+          <mxGeometry relative="1" x="0.0516" as="geometry">
+            <mxPoint x="-6" y="-10" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rAK-C7DouxVS_7_V-ppz-16" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};" value="Главен цикъл" vertex="1">
+          <mxGeometry height="850" width="130" x="400" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="rAK-C7DouxVS_7_V-ppz-17" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Подготвяне на симулация" vertex="1">
+          <mxGeometry height="60" width="110" x="220" y="150" as="geometry" />
+        </mxCell>
+        <mxCell id="rAK-C7DouxVS_7_V-ppz-18" edge="1" parent="1" source="rAK-C7DouxVS_7_V-ppz-12" style="endArrow=classic;html=1;rounded=0;entryX=-0.026;entryY=0.093;entryDx=0;entryDy=0;entryPerimeter=0;" target="rAK-C7DouxVS_7_V-ppz-27" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <Array as="points" />
+            <mxPoint x="280" y="301" as="sourcePoint" />
+            <mxPoint x="459.87" y="300" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rAK-C7DouxVS_7_V-ppz-19" connectable="0" parent="rAK-C7DouxVS_7_V-ppz-18" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="Започване на цикъл" vertex="1">
+          <mxGeometry relative="1" x="0.0516" as="geometry">
+            <mxPoint y="-10" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rAK-C7DouxVS_7_V-ppz-20" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};" value="Нишки" vertex="1">
+          <mxGeometry height="850" width="130" x="700" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="rAK-C7DouxVS_7_V-ppz-21" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="rAK-C7DouxVS_7_V-ppz-24" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="464.590909090909" y="329.54999999999995" as="sourcePoint" />
+            <mxPoint x="650" y="320" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rAK-C7DouxVS_7_V-ppz-22" connectable="0" parent="rAK-C7DouxVS_7_V-ppz-21" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="Раздаване на задачи" vertex="1">
+          <mxGeometry relative="1" x="0.0516" as="geometry">
+            <mxPoint y="-10" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rAK-C7DouxVS_7_V-ppz-23" parent="1" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;width=80;height=30;" value="Паралелно" vertex="1">
+          <mxGeometry height="460" width="170" x="680" y="250" as="geometry" />
+        </mxCell>
+        <mxCell id="rAK-C7DouxVS_7_V-ppz-24" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Приема на работа" vertex="1">
+          <mxGeometry height="40" width="110" x="707" y="310" as="geometry" />
+        </mxCell>
+        <mxCell id="rAK-C7DouxVS_7_V-ppz-25" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;" target="rAK-C7DouxVS_7_V-ppz-20" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="330" y="170" as="sourcePoint" />
+            <mxPoint x="520" y="170" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rAK-C7DouxVS_7_V-ppz-26" connectable="0" parent="rAK-C7DouxVS_7_V-ppz-25" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="Създаване на нишки" vertex="1">
+          <mxGeometry relative="1" x="0.0516" as="geometry">
+            <mxPoint x="55" y="-10" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rAK-C7DouxVS_7_V-ppz-27" parent="1" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;width=80;height=30;" value="Цикъл" vertex="1">
+          <mxGeometry height="540" width="130" x="400" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="rAK-C7DouxVS_7_V-ppz-28" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Избор на начин за обработванае на сектор" vertex="1">
+          <mxGeometry height="60" width="110" x="707" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="rAK-C7DouxVS_7_V-ppz-31" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Обработване на стълб" vertex="1">
+          <mxGeometry height="60" width="110" x="710" y="520" as="geometry" />
+        </mxCell>
+        <mxCell id="rAK-C7DouxVS_7_V-ppz-32" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Приключване" vertex="1">
+          <mxGeometry height="30" width="110" x="707" y="670" as="geometry" />
+        </mxCell>
+        <mxCell id="rAK-C7DouxVS_7_V-ppz-36" edge="1" parent="1" source="rAK-C7DouxVS_7_V-ppz-32" style="endArrow=classic;html=1;rounded=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" target="rAK-C7DouxVS_7_V-ppz-16" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <Array as="points" />
+            <mxPoint x="707" y="652.5" as="sourcePoint" />
+            <mxPoint x="464.4473684210525" y="647.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rAK-C7DouxVS_7_V-ppz-38" connectable="0" parent="rAK-C7DouxVS_7_V-ppz-36" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="Известяване" vertex="1">
+          <mxGeometry relative="1" x="0.1432" y="3" as="geometry">
+            <mxPoint x="22" y="-13" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rAK-C7DouxVS_7_V-ppz-43" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <Array as="points">
+              <mxPoint x="360.75" y="830" />
+            </Array>
+            <mxPoint x="460.25" y="830" as="sourcePoint" />
+            <mxPoint x="280" y="830" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rAK-C7DouxVS_7_V-ppz-44" connectable="0" parent="rAK-C7DouxVS_7_V-ppz-43" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="Достигане да даден брой стъпки" vertex="1">
+          <mxGeometry relative="1" x="0.1432" y="3" as="geometry">
+            <mxPoint x="14" y="-13" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rAK-C7DouxVS_7_V-ppz-46" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <Array as="points">
+              <mxPoint x="160" y="870" />
+            </Array>
+            <mxPoint x="274.5" y="870" as="sourcePoint" />
+            <mxPoint x="110" y="870" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rAK-C7DouxVS_7_V-ppz-47" connectable="0" parent="rAK-C7DouxVS_7_V-ppz-46" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="Показване на резултат" vertex="1">
+          <mxGeometry relative="1" x="0.1432" y="3" as="geometry">
+            <mxPoint x="14" y="-23" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rAK-C7DouxVS_7_V-ppz-50" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Подготвяне на визуализация" vertex="1">
+          <mxGeometry height="60" width="110" x="220" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="rAK-C7DouxVS_7_V-ppz-51" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Графично визуализиране" vertex="1">
+          <mxGeometry height="40" width="107.5" x="411.25" y="700" as="geometry" />
+        </mxCell>
+        <mxCell id="rAK-C7DouxVS_7_V-ppz-52" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Данни в терминал" vertex="1">
+          <mxGeometry height="40" width="107.5" x="411.25" y="750" as="geometry" />
+        </mxCell>
+        <mxCell id="rAK-C7DouxVS_7_V-ppz-54" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};" value="Mutex" vertex="1">
+          <mxGeometry height="850" width="130" x="900" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="rAK-C7DouxVS_7_V-ppz-29" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Заключване на бариера" vertex="1">
+          <mxGeometry height="60" width="110" x="910" y="470" as="geometry" />
+        </mxCell>
+        <mxCell id="rAK-C7DouxVS_7_V-ppz-55" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Отключване на бариера" vertex="1">
+          <mxGeometry height="60" width="110" x="910" y="580" as="geometry" />
+        </mxCell>
+        <mxCell id="rAK-C7DouxVS_7_V-ppz-56" parent="1" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;width=140;height=30;" value="Обработване на редове" vertex="1">
+          <mxGeometry height="220" width="340" x="690" y="430" as="geometry" />
+        </mxCell>
+        <mxCell id="rAK-C7DouxVS_7_V-ppz-57" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <Array as="points" />
+            <mxPoint x="764.810344827586" y="499.5" as="sourcePoint" />
+            <mxPoint x="910" y="499.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rAK-C7DouxVS_7_V-ppz-58" connectable="0" parent="rAK-C7DouxVS_7_V-ppz-57" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="Граничен ред" vertex="1">
+          <mxGeometry relative="1" x="0.1432" y="3" as="geometry">
+            <mxPoint x="2" y="-7" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rAK-C7DouxVS_7_V-ppz-59" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <Array as="points" />
+            <mxPoint x="764.81" y="614" as="sourcePoint" />
+            <mxPoint x="909.9996551724139" y="614" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rAK-C7DouxVS_7_V-ppz-60" connectable="0" parent="rAK-C7DouxVS_7_V-ppz-59" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="&lt;div&gt;Приключване на&lt;/div&gt;&lt;div&gt;&amp;nbsp;граничен ред&lt;/div&gt;" vertex="1">
+          <mxGeometry relative="1" x="0.1432" y="3" as="geometry">
+            <mxPoint x="2" y="-17" as="offset" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
