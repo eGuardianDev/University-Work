@@ -1,0 +1,155 @@
+
+:- use_module(library(clpfd)).
+
+sorted_([]).
+sorted_([_]).
+sorted_([X,H|T]):-
+    X #=< H,
+    sorted_([H|T]),!.
+    
+
+concat([],L,L).
+concat([X|T],L,[X|R]):-
+    concat(T,L,R).
+
+insert(X,L,[X|L]).
+insert(X,[H|L],[H|R]):- insert(X,L,R).
+
+
+perm([],[]).
+perm(L,P):-
+    L=[H|T],
+    perm(T,T1),
+    insert(H,T1,P).
+
+sort_(L,S):-
+    perm(L,S),
+    sorted_(S).
+
+
+member(X, [X|_]).
+member(X, [_|T]):- member(X,T).
+          
+is_set([]).
+is_set([X|T]):-
+    not(member(X,T)),
+    is_set(T).
+
+make_set([],[]).
+make_set([H|T],L):-
+    (   (member(H,T), make_set(T,L));
+    (not(member(H,T)), L=[H|S1], make_set(T,S1))),!.
+
+
+union(X,Y,R):-
+    concat(X,Y,Z),
+    make_set(Z,R).
+
+intersection(X,Y,Z):-
+    findall(H, (member(H,X),member(H,Y)),Z).
+
+
+
+big_union(XX,R):-
+    findall(X, (member(Y,XX),member(X,Y)),R).
+
+big_intersection([X],X).
+big_intersection(XX,Z):- 
+    XX = [L1,L2|T],
+    intersection(L1,L2,H),
+    big_intersection([H|T],Z1),
+    make_set(Z1,Z).
+
+
+len([],0).
+len([_|T],N):-
+    len(T,N1),
+    N #= N1 +1.
+
+
+%subset(+L1,+L).
+subset([],_).
+subset([H|T],L):- member(H,L), subset(T,L).
+    
+decart(X, XX):- findall([U,V], (member(U,X), member(V,X)), XX).
+
+
+is_graph(G):-
+    G =[V,E],
+    is_set(V),
+    not(V=[]),
+    decart(V,VV),
+    subset(E,VV).
+          
+
+edges(G,E):-
+    G=[_,E],
+    is_graph(G).
+
+
+verticies(G,V):-
+    G=[V,_],
+    is_graph(G).
+
+%has_self_loops(+G).
+has_self_loops(G):-
+    is_graph(G),
+    G=[_,E],
+    member([X,X],E).
+          
+
+%path(+P,+G).
+path([_],_).
+path(P,G):- 
+    edges(G,E),
+    P=[H1,H2|T],
+    member([H1,H2], E),
+    path([H2|T],G).
+
+
+correct_path([_]).
+correct_path([H1,H2|T]):-
+    H1 = [_, U],
+    H2 = [U, _],
+    correct_path([H2|T]).
+    
+
+path_edges([Step],G) :- edges(G,E), member(Step, E).
+path_edges(P,G):-
+    edges(G,E),
+    correct_path(P),
+    P=[H1|T],
+    member(H1,E),
+    path_edges(T,G).
+
+
+path_without_cycle(P,G):-
+    is_set(P),
+    path_edges(P,G).
+
+
+last([H],H).
+last([_|T],X):-
+    last(T,X).
+
+
+has_cycle(P):-
+    correct_path(P),
+	not(is_set(P)).
+
+
+
+insert_(X,L,[X|L]).
+insert_(X,[H|L],[H|T]):-
+        insert_(X,L,T).
+
+
+
+
+
+
+
+
+
+
+    

@@ -1,0 +1,110 @@
+
+:- use_module(library(clpfd)).
+
+
+mem2(X,L):-
+    append(_,[X|_],L).
+
+nat(0).
+nat(X):-
+    nat(Y), 
+    Y is X+1.
+
+range(A,B,A):-
+    A #=< B.
+range(A,B,C):-
+    A #=< B,
+    A1 #= A +1,
+    range(A1,B,C).
+
+
+%seqK(+L,+K,-S)
+seqK(_,0,[]).
+seqK(L,K,[H|T]):-
+    K #>0,
+    mem2(H,L),
+    K1 is K-1,
+    seqK(L,K1,T).
+
+%subseq(+L,-S)
+subseq([],[]).
+subseq([H|T],[H|S]):-subseq(T,S).
+subseq([_|T],S):-subseq(T,S).
+
+
+bin_seq(K,S):-
+    seqK([1,0],K,S).
+
+
+%subseqK(+L,+K,-S).
+subseqK(L,K,S):-
+    subseq(L,S),
+    seqK(L,K,S).
+
+choose(X,[X|T],T).
+choose(X,[H|T],[H|R]):-
+    choose(X,T,R).
+
+%perm(L,S).
+perm([],[]).
+perm(L,[X|S]):-
+    choose(X,L,R),
+    perm(R,S).
+
+
+insert(X, L, [X|L]).
+insert(X, [H|T], [H|R]) :- insert(X, T, R).
+
+perm2([],[]).
+perm2(L, R) :- L=[X|T], perm2(T, T1), insert(X, T1, R).
+
+%perm_k(+L,+K,-S).
+%perm_k(L,K,S):-
+
+allevenpos([],[]).
+allevenpos([_],[]).
+allevenpos([_,H|T],[H|R]):-
+    allevenpos(T,R).
+
+%is_on_pos([X|_],1,X).
+is_on_pos([H|L],N,X):- 
+    N #> 0,
+    len([H|L],Leng),
+    N #< Leng,
+    concat(Z,[X|_],L),
+    len(Z,N-1).
+
+concat([],L,L).
+concat([X|H],L,[X|R]):- concat(H,L,R).
+
+elonposN(L, N, X) :- N#>0, len(L, K), N#<K, concat(Z, [X|_], L), len(Z, N-1).
+    %N1 #= N - 1,
+    %is_on_pos(L,N1,X).
+    
+%len(+L,-N)
+len([],0).
+len([_|T],N):-
+    len(T,N1),
+    N1 #= N -1.
+
+sum([],0).
+sum([X|T],R):-
+    sum(T,R1),
+    R #= R1+X.
+
+element(X,[X|_]).
+element(X,[_|T]):- element(X,T).
+
+notprime(X):- X #= Y*Z, Y#>1, Z#>1.
+prime(X):- not(notprime(X)), not(X#=1).
+primes(L,R):- findall(X, (element(X,L), prime(X)), R).
+
+
+allperm(L,All):- findall(X, (perm(L,X)), All).
+
+is_complex(L):- primes(L,PermL), len(L, N), len(PermL,NL), (N-NL) #< NL.
+
+first(X,[X|_]).
+
+firstelements(XX,R):- findall(X, (first(X,Y), element(Y,XX)),R).
+

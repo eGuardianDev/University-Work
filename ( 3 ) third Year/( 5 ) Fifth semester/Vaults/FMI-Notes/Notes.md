@@ -1,0 +1,16 @@
+- [ ] Name table of classes
+	- [ ] Static 
+		- [ ] add the definitions
+	- [ ] Dynamic
+- [ ] prototypes
+	- [x] Static 
+	- [ ] Dynamic
+- [ ] Dispatch table
+	- [x] Static 
+	- [ ] Dynamic
+- [ ] Init methods
+	- [ ] Static 
+	- [ ] Dynamic
+- [ ]  Class object table
+	- [ ] Static 
+	- [ ] Dynamic

@@ -1,0 +1,92 @@
+:- use_module(library(clpfd)).
+
+split([],[],[]).
+split([A],[A],[]).
+split([A,B|T],[A|R],[B|L]):-
+    split(T,R,L),
+    !.
+
+
+merge([],[],[]).
+merge([X|T],[],[X|T]).
+merge([],[X|T],[X|T]).
+merge([X|T],[H|T1],[X|L]):-
+    X #=< H,
+    merge(T,[H|T1],L).
+merge([X|T],[H|T1],[H|L]):-
+    H #< X,
+    merge([X|T],T1,L).
+
+
+mergeSort([],[]).
+mergeSort([X],[X]).
+mergeSort(L,S):-
+    split(L,L1,L2),
+    mergeSort(L1,SL1),
+    mergeSort(L2,SL2),
+    merge(SL1,SL2,S).
+
+
+
+insertSort([],[]).
+insertSort([X],[X]).
+insertSort([X|XS], Res):-
+    insertSort(XS, SortedXS),
+    insert(X,SortedXS,Res).
+
+
+
+insert(X,[],[X]).
+insert(X,[Y|Ys],[X,Y|Ys]):-
+    X #=<Y.
+insert(X,[Y|Ys],[Y|Zs]):-
+    X #> Y,
+    insert(X, Ys, Zs).
+
+
+last(X,[X]).
+last(X,[_|T]):-
+    last(X,T),!.
+
+
+
+append(X,[],[X]).
+append(X,T,[X|T]).
+
+%list_append([],[],[]).
+list_append([],[X|T],[X|T]).
+%list_append([X|T],[],[X|T]).
+list_append([X|T],[Y|R],[X|L]):-
+    list_append(T,[Y|R],L).
+
+rev([],[]).
+rev([X|T],R):-
+    rev(T,RT),
+    list_append(RT,[X],R).
+
+
+nat(X):-X#=0.
+nat(X):-nat(Y), X#=Y+1.
+    
+    
+even(0).
+even(X):- 
+    nat(Y),
+    Y#>0,
+    (   X#=Y*2;
+    X#=(-2)*Y).
+
+divisible_by_n(_,0).
+divisible_by_n(N,X):-
+    divisible_by_n(N,Y),
+    X #= N+Y.
+
+
+
+
+
+
+
+
+
+
