@@ -1,0 +1,54 @@
+
+-- 1
+
+case when ... then ... else ... end 
+case when ... then ... end
+^ used in select 
+-- can be used instead of doing many sub-queries 
+
+
+
+
+-- 3
+
+For () queries you should you custom names
+
+use count (distinct) 
+
+create or alter view ... as
+
+чети условието много внимателно!
+
+YEAR()
+
+-- 4
+
+begin transaction
+
+rollback transaction / commit transaction
+
+
+if
+begin 
+	rollback
+
+end 
+
+
+
+
+
+
+
+----
+
+
+column like '% %' not '% % %'
+
+
+where ... in ...
+
+
+where [not] exists (...) 
+
+вместо where ... not in ... <- ЛОШО!

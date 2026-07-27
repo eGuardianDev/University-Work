@@ -1,0 +1,153 @@
+
+
+
+# 44
+n <- 10^7
+x <- runif(n,-1,1)
+y <- runif(n,-1,1)
+4*sum(x^2 + y^2 <1)/n
+
+pi
+
+curve(sqrt(1-x^2), from=-1, to=1, add=T,col="red")
+curve(-sqrt(1-x^2), from=-1, to=1, add=T,col="blue")
+
+
+# 45
+
+f <- function(x){
+  exp(-x^2/2)*(1/sqrt(2*pi))
+}
+
+a <- 0.8
+b <- 4
+n <- 10^7
+x <- runif(n,a,b)
+y <- runif(n,0,f(a))
+
+(sum(y<f(x))/n)*(b-a)*f(a)
+
+
+
+# 46
+
+
+library(MASS)
+
+data(survey)
+
+table(survey$Exer)
+
+attach(survey)
+table(Exer)
+
+
+sort(table(Exer), descreasing=T)
+
+
+100 * table(Exer)/length(Exer)
+
+barplot( table(Exer))
+barplot(sort(table(Exer),decreasing =T))
+barplot( 100 * table(Exer)/length(Exer))
+
+pie(table(Exer))
+pie(table(Exer), col=c('red','blue','green'))
+
+# 50
+
+table(Pulse)
+
+table(Pulse, useNA='ifany')
+
+pulse.interval <- cut(Pulse, breaks=seq(30,110,10))
+pulse.interval
+
+
+hist(Pulse)
+hist(Pulse, breaks=seq(30,110,5))
+
+
+stripchart(Pulse, method="stack",pch=20)
+stripchart(Pulse, method="stack",pch="*")
+
+# 51
+
+table(Age)
+
+age.interval <- cut(Age, breaks=seq(15,75,10))
+
+table(age.interval)
+
+barplot(table(age.interval))
+hist(Age)
+
+
+stripchart(Age, method = "stack", pch='*')
+
+# 53
+
+getwd()
+load("cereals.RData")
+
+
+
+attach(cereals)
+median(carbo, na.rm=T)
+mean(carbo, na.rm=T)
+sd(carbo, na.rm=T)
+
+hist(carbo)
+boxplot(carbo,horizontal=T)
+
+
+
+# 54
+mean( Pulse[W.Hnd == "Left"], na.rm=T )
+mean( Pulse[W.Hnd == "Right"], na.rm=T )
+
+median( Pulse[W.Hnd == "Left"], na.rm=T )
+median( Pulse[W.Hnd == "Right"], na.rm=T )
+
+
+boxplot(Pulse ~ W.Hnd)
+
+
+# 55
+
+
+my.summary <- function(x){
+   res <- c(median(x,na.rm=T),
+            mean(x,na.rm=T),
+            sd(x,na.rm=T))
+   names(res) <- c("Median", "Mean", "StDev")
+   res
+}
+
+# a)
+my.summary(Pulse)
+# b)
+my.summary(Pulse[Sex=="Female"])
+# v)
+my.summary(Pulse[Age <= 25 ])
+# g)
+my.summary(Pulse[Exer=="Freq"])
+# d)
+my.summary(Pulse[Smoke == "Never" & Exer == "Freq"])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

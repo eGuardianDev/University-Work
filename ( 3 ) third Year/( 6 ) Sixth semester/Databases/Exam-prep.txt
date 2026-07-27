@@ -10,19 +10,17 @@ Type of questions on the "practical" exam:
 ### To study (6 topics):
  - [X] Exercise 8 - Update tables 
  - [X] Exercise 9 - Create tables
- - [ ] Exercise 10 - Conditions and limitations 
- - [ ] Exercise 11 - Indexing 
- - [ ] Exercise 11.2 - Indexing 2 
+ - [X] Exercise 10 - Conditions and limitations 
+ - [X] Exercise 11 - Indexing 
+ - [X] Exercise 11.2 - Indexing 2 
  - [ ] Exercise 12 - Triggers 
 
 
-
 ### Theory (8 topics):
-- [ ] 5. Functional
-- [ ] 6. Attributes and requirements 
-- [ ] 7. Normalization 1
-- [ ] 8. Normalization 2
-- [ ] 9. Relation algebra 
-- [ ] 10. Relation algebra over multisets 
-- [ ] 11. Full-text search 
-- [ ] 12. Transactions
+- [X] 5. Functional
+- [X] 6. Attributes and requirements 
+- [X] 7. Normalization 1
+- [X] 8. Normalization 2
+- [X] 9. Relation algebra 
+- [X] 10. Relation algebra over multisets 
+

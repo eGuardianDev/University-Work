@@ -1,0 +1,131 @@
+
+x <- c(1,5,7,21)
+y <- c(2,8,9,12)
+
+x
+y
+
+
+x+y
+
+x*y
+
+x+1
+
+x[3]
+
+ind <- c(1,3)
+x[ind]
+
+
+1:20
+20:5
+
+seq(2,30,2)
+
+seq(30,2, -2)
+
+
+rep(5,20)
+rep(x,3)
+
+x
+sum(x)
+length(x)
+
+
+
+sample( c(1:10), 3, replace=F)
+
+
+
+
+# 1
+sim.zad1 <- function(){
+  x <- sample( c(1:8), 2, replace=T)
+  x[1] == x[2]
+}
+
+sim.zad1()
+
+res <- replicate(300000, sim.zad1())
+sum(res)/length(res)
+
+
+# 2
+
+sim.socks <- function(){
+  socks <- c(1,1,2,2,3,3)
+  x <- sample(socks,2 ,replace=F)
+  x[1] == x[2] 
+}
+
+
+res <- replicate(300000, sim.socks())
+sum(res)/length(res)
+
+
+# 3
+
+sim.keys <- function(){
+  keys <- c(1:4)
+  x <- sample(keys,4,replace=F)
+  x[4] == 1
+}
+
+res <- replicate(300000, sim.keys())
+sum(res)/length(res)
+
+# 4
+
+sim.exam = function(){
+  questions <- c( rep(0,3), rep(1,17))
+  x <- sample(questions, 2, replace=F)
+  sum(x) == 1
+}
+
+res <- replicate(300000, sim.exam())
+sum(res)/length(res)
+
+
+
+# 5
+  days <- c( 1:365 )
+sim.days <- function(k){
+  x <- sample( days, k ,replace = T )
+  any(duplicated(x)) == TRUE                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+}
+
+res <-replicate(300000,sim.days(5))
+sum(res)/length(res)
+
+
+# 6
+
+sim.gif <- function(){
+  people <- c(1:20)
+  run <- sample(people, 20, replace=F)
+  d <- run - people
+  any(d==0)
+}
+
+res <-replicate(300000,sim.gif())
+sum(res)/length(res)
+
+# 7
+
+sim.ants <- function(){
+  a1 <- sample(c(2,3),1)
+  a2 <- sample(c(1,3),1)
+  a3 <- sample(c(1,2),1)
+  
+  a <- c(a1,a2,a3)
+  
+  length(unique(a)) == 3
+}
+
+sim.ants()
+
+res <-replicate(300000,sim.ants())
+sum(res)/length(res)
+

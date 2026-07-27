@@ -6,3 +6,37 @@ WHERE ... <> ''
 
 
 Partiction by 
+
+
+имай предвит за Union ALL, left outer join, left inner join и right ...
+
+
+
+update е за дата 
+alter е за таблица
+
+
+sum(case when .... then 1 else 0 end)
+count(case when ... then 1 else null end)
+
+
+внимавай с count(*) или го избягвай
+
+чети внимателно
+
+
+виж with check options на view
+
+
+гледай за default, наричат се още "стойност по премълчаване"
+
+
+-- 12 --
+
+column like '%text%'
+
+
+don't do equal, do WHERE ... IN ...
+
+
+за проверка дали го има вътре се ползва // where [not] exists ( select 1 ...) // а не // where ... not in ... //

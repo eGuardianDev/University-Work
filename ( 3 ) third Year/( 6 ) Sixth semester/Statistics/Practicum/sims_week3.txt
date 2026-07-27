@@ -1,0 +1,212 @@
+
+
+# 8
+
+sim.eggs <- function(){
+  
+  eggs <- c (rep('r',6),rep('b',2))
+  
+  draws <- sample(eggs, 8, replace=F)
+  
+  draws
+  
+  player1 <- draws[seq(1,7,2)]
+  player2 <- draws[seq(2,8,2)]
+  
+  player1
+  player2
+  
+  
+  b1 <- sum(player1=="b")
+  b2 <- sum(player2=="b")
+  c(b1,b2)
+}
+
+sim.eggs()
+
+Nrep <- 100000
+res <- replicate(Nrep, sim.eggs())
+
+res [,8] # access specific collum
+res [1,] # access specific row
+
+# P(A)
+
+res2 <- res[1,] * res[2,]
+
+met <- sum(res2 == 0)
+
+met/length(res2)
+
+(sum(res[1,]==2) + sum(res[2,]==2)) / Nrep
+
+
+
+# P(B)
+(sum(res[1,] == 1 ))/Nrep
+
+# P(C)
+sum(res[1,] == 2) /Nrep
+# P(D)
+sum(res[2,] == 2) /Nrep
+
+
+
+
+# 9
+
+sim.test1 <- function(){
+  x <- sample( c(0,0,0,1), 10, replace=T)
+  sum(x)
+
+}
+sim.test1()
+
+res <- replicate( 100000, sim.test1() )
+
+sum(res >= 5) / 100000
+
+
+sim.test2 <- function(){
+  x <- sample( c(0,1), 10, replace=T, prob=c(0.75,0.25))
+  sum(x)
+}
+
+
+res <- replicate( 100000, sim.test2() )
+
+sum(res >= 5) / 100000
+
+
+
+sim.airplane <- function(){
+  x <- sample( c(0,1), 143, replace=T, prob=c(0.08,0.92))
+  sum(x)  
+}
+
+res <- replicate(100000, sim.airplane())
+
+# a)
+sum(res <= 138) / length(res)
+
+# b)
+sum(res == 137) / length(res)
+
+
+# 11
+
+sim.lla <- function(){
+  dice <- sample( c(1:6), 1)
+  if (dice == 6){
+    ball <- sample( c('g', 'g', 'r', 'r'), 1 )
+  }else{
+    ball <- sample( c('g', 'r', 'r', 'r', 'r'), 1 )
+  }
+  ball == 'g'
+}
+
+
+# a)
+res <- replicate(100000, sim.lla())
+sum(res) / 100000
+
+
+# b)
+sim.llb <- function(){
+  dice <- sample( c(1:6), 1)
+  if (dice == 6){
+    ball <- sample( c('g', 'g', 'r', 'r'), 1 )
+  }else{
+    ball <- sample( c('g', 'r', 'r', 'r', 'r'), 1 )
+  }
+  c(dice, ball)
+}
+
+sim.llb()
+
+Nrep <- 300000
+res <- replicate(Nrep, sim.llb())
+
+
+sum( res[1,] != 6 & res[2,]=='g') / sum(res[2,]=='g')
+
+
+# 12 
+
+sim.coins.a <- function(){
+  coin <- sample( c(11,11,22,12,12), 1 )
+  if(coin == 12){
+    up <- sample(c(1,2),1)
+  }else{
+    if(coin == 22){
+      up <- 2
+    }else{
+      up <- 1
+    }
+  }
+  up ==1
+}
+
+res <- replicate ( 100000, sim.coins.a())
+
+sum(res)/length(res)
+
+
+
+sim.coins.b <- function(){
+  coin <- sample( c(11,11,22,12,12), 1 )
+  if(coin == 12){
+    up <- 50
+  }else{
+    if(coin == 22){
+      up <- 0
+    }else{
+      up <- 0
+    }
+  }
+  up
+}
+
+res <- replicate ( 100000, sim.coins.b())
+
+sum(res >=50)/length(res)
+
+
+substr("abcde", star=2,stop=2)
+
+
+#b)
+sim.coins.b <- function(){
+  coin <- sample( c("11", "11","22","12","12"),1)
+  coin
+  side <- sample( c(1,2),2)
+  side
+  up <- substr( coin, start=side, stop=side)
+  up
+  c(up,coin)
+}
+
+
+res <- replicate(100000, sim.coins.b())
+
+sum( res[2,] == "12" & res[1,] == 1)  / sum(res[1,] == 1)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
