@@ -40,16 +40,7 @@ $$
 
 първо оценяваме всеки от термовете \(\tau_i\), а след това прилагаме интерпретацията на \(f\):
 
-$$
-\|f(\tau_1,\ldots,\tau_n)\|_{\mathcal A}^{v}
-=
-f^{\mathcal A}
-(
-\|\tau_1\|_{\mathcal A}^{v},
-\ldots,
-\|\tau_n\|_{\mathcal A}^{v}
-).
-$$
+$$ \|f(\tau_1,\ldots,\tau_n)\|_{\mathcal A}^{v} = f^{\mathcal A} ( \|\tau_1\|_{\mathcal A}^{v}, \ldots, \|\tau_n\|_{\mathcal A}^{v} ). $$
 
 Константата може да се разглежда като функция без аргументи.
 
@@ -235,11 +226,7 @@ $$
 1=\{0\}=\{\varnothing\},
 $$
 
-$$
-2=\{0,1\}
-=
-\{\varnothing,\{\varnothing\}\},
-$$
+$$ 2=\{0,1\} = \{\varnothing,\{\varnothing\}\}, $$
 
 и така нататък.
 
