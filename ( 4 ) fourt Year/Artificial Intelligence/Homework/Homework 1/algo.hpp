@@ -10,7 +10,7 @@ bool in_bound(int index, int size){
 }
 
 
-bool move(vector<int> &list, int index){
+bool move(vector<short> &list, int index){
 
     int size = list.size();
     if(in_bound(index, size) == false) return false;
@@ -49,7 +49,7 @@ bool move(vector<int> &list, int index){
 }
 
 
-bool dfs(vector<int> list){
+bool dfs(vector<short> list){
 
     if(is_list_solved(list)){
         return true;
@@ -67,7 +67,7 @@ bool dfs(vector<int> list){
     return false;
 }
 
-void start_dfs(vector<int> list){
+void start_dfs(vector<short> list){
     if(dfs(list)){
         print(list);
     }

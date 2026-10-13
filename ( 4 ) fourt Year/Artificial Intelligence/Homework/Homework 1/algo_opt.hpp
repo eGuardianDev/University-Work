@@ -1,75 +1,55 @@
-// #ifndef ALGO
-// #define ALGO
+#ifndef ALGO
+#define ALGO
 
 
-// #include "helper.hpp"
-
-// bool in_bound(int index, int size){
-//     if(index <0 || index >= size ) return false;
-//     return true; 
-// }
-
-// bool move(vector<int> &list, int index){
-
-//     int size = list.size();
-//     if(in_bound(index, size) == false) return false;
-
-//     if(list[index] == 1){
-//         if(in_bound(index+1,size)){
-//             if(list[index+1] == 0){
-//                 swap(list[index], list[index+1]);
-//                 return true;
-//             }
-//         }
-//         if(in_bound(index+2,size)){
-//             if(list[index+2] == 0){
-//                 swap(list[index], list[index+2]);
-//                 return true;
-//             }
-//         }
-//         return false;
-//     }
-//     else if(list[index] == 2){
-//         if(in_bound(index-1,size)){
-//             if(list[index-1] == 0){
-//                 swap(list[index], list[index-1]);
-//                 return true;
-//             }
-//         }
-//         if(in_bound(index-2,size)){
-//             if(list[index-2] == 0){
-//                 swap(list[index], list[index-2]);
-//                 return true;
-//             }
-//         }
-//         return false;
-//     }
-//     return false;
-// }
+#include "helper.hpp"
 
 
-// bool dfs(vector<int> list){
+bool dfs(vector<short> &list, int &index, int &size){
+    if(is_list_solved(list)){
+        return true;
+    }
 
-//     if(is_list_solved(list)){
-//         return true;
-//     }
-//     for(int i =0; i<list.size();++i){
-//         vector<int> n_list = list;
-//         if(move(n_list,i)){
-//             if(dfs(n_list)){
-//                 print(n_list);
-//                 return true;
-//             }
-//         }
-//     }
+    // print(list);
+    
+    for(int i =1;i<=2;++i){
+        int frog_right = index + i;
+        if(frog_right < size && list[frog_right] == 2) {
+            swap(list[frog_right], list[index]);
+            if(dfs(list,frog_right,size)){
+                print(list);
+                swap(list[frog_right], list[index]);
+                return true;
+            }
+            swap(list[frog_right], list[index]);
+        }
+    }
 
-//     return false;
-// }
+    for(int i =1;i<=2;++i){
+        int frog_left = index - i;
+        if(frog_left >= 0 && list[frog_left] == 1) {
+            swap(list[frog_left], list[index]);
+            if(dfs(list,frog_left,size)){
+                print(list);
+                swap(list[frog_left], list[index]);
+                return true;
+            }
+            swap(list[frog_left], list[index]);
+        }
+    }
 
-// void start_dfs(vector<int> list){
-//     if(dfs(list)){
-//         print(list);
-//     }
-// }
 
-// #endif // ALGO
+    return false;
+}
+
+inline void start_dfs(vector<short> &list){
+    int size = list.size();
+    int middle = size/2;
+    if(dfs(list, middle, size)){
+        print(list);
+    }else{
+        std::cout << "Solution not found" << std::endl;
+    }
+}
+
+#endif // ALGO

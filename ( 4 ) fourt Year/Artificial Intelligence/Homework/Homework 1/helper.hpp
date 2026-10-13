@@ -2,12 +2,8 @@
 #ifndef HELPER
 #define HELPER
 
-
-
-
-inline bool print(const vector<int> &list){
+inline bool print(const vector<short> &list){
     for(int a : list){
-        // printf("%d ",a);
         switch(a){
             case 1:
                 cout << "<";
@@ -19,23 +15,12 @@ inline bool print(const vector<int> &list){
                 cout << "_";
             break;
         }
-        // if(a == 1){
-        //     cout << "\033[1;31m" << a;
-        // }
-        // if(a == 2){
-        //     cout << "\033[1;32m" << a;
-        // }
-        // if(a == 0){
-        //     cout << "\033[0m" << a;
-        // }
     }
-    // printf("\n");
-
     cout <<endl;
     return 0;
 }
 
-inline bool is_list_solved(const vector<int> &list){
+inline bool is_list_solved(const vector<short> &list){
     int top1 = list.size()/2;
     int begin2 =top1+1;
 
@@ -53,7 +38,7 @@ inline bool is_list_solved(const vector<int> &list){
     return 1;
 }
 
-inline bool populate(vector<int> &list){
+inline bool populate(vector<short> &list){
     int top1 = list.size()/2;
     int begin2 =top1+1;
 

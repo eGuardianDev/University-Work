@@ -11,7 +11,7 @@ using namespace std;
 #include <chrono>
 
 #include "helper.hpp"
-#include "algo.hpp"
+#include "algo_opt.hpp"
 
 int main(){
 
@@ -19,7 +19,7 @@ int main(){
     std::cin >> n;
 
     int size = 2*n+1;
-    vector<int> list(size,0);
+    vector<short> list(size,0);
 
     populate(list);
     // print(list);
