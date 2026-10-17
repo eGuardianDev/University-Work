@@ -45,7 +45,7 @@
     "problem": "frog-leap",
     "test": "t04",
     "status": "OK",
-    "time_ms": 3,
+    "time_ms": 17,
     "time_budget_ms": 1000,
     "tier": "fast",
     "correct": true,
@@ -59,7 +59,7 @@
     "problem": "frog-leap",
     "test": "t05",
     "status": "OK",
-    "time_ms": 16,
+    "time_ms": 148,
     "time_budget_ms": 1000,
     "tier": "fast",
     "correct": true,
@@ -67,13 +67,13 @@
     "optimal": true,
     "note": "(runs: 1/1 OK)",
     "time_alg_ms": null,
-    "time_cal_ms": 0
+    "time_cal_ms": 123
   },
   {
     "problem": "frog-leap",
     "test": "t06",
     "status": "OK",
-    "time_ms": 79,
+    "time_ms": 452,
     "time_budget_ms": 1000,
     "tier": "fast",
     "correct": true,
@@ -81,6 +81,6 @@
     "optimal": null,
     "note": "time-only (runs: 1/1 OK)",
     "time_alg_ms": null,
-    "time_cal_ms": 54
+    "time_cal_ms": 427
   }
 ]
