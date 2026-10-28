@@ -118,12 +118,14 @@ int main() {
 
   // check if solvable
   {
-    // int _inversions = inversions(board, n);
-    // if (_inversions % 2 != 0) {
-    //   std::cout << "Not solvable due to Inversions - " << _inversions
-    //             << std::endl;
-    //   return 2;
-    // }
+    int _inversions = inversions(board, n);
+    if (_inversions % 2 != 0) {
+      // std::cout << "Not solvable due to Inversions - " << _inversions
+      // << std::endl;
+
+      std::cout << "-1" << std::endl;
+      return 0;
+    }
     if (duplications(board, n)) {
       std::cout << "Duplicates in the boxes" << std::endl;
       return 3;

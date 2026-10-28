@@ -47,9 +47,10 @@ int bound = 0;
 
 std::vector<int> paths;
 
-int ida_star(std::vector<int> board, const int last_move,
-             const int &final_zero_position, const int &current_zero_position,
-             const int &depth, const int &limit) {
+inline int ida_star(std::vector<int> &board, const int &last_move,
+                    const int &final_zero_position,
+                    const int &current_zero_position, const int &depth,
+                    const int &limit) {
 
   //   std::priority_queue<Node> queue;
 
@@ -119,6 +120,7 @@ int start_ida_star(std::vector<int> board, const int &final_zero_position) {
 }
 
 void display_path() {
+  std::cout << paths.size() << std::endl;
   //   for (int i = paths.size() - 1; i >= 0; --i) {
   for (int i = 0; i < paths.size(); ++i) {
     switch (paths[i]) {
