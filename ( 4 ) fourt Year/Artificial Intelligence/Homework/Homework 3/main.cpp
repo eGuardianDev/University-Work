@@ -137,23 +137,26 @@ bool algorithm(){
             return false;
         }
 
-        int queen_index = int_range(0,n);
-
+        
         ++iterations;
         // selecting row
-
+        
         int min_conflict_index = -1;
         int min_conflict_dia1_index = -1;
         int min_conflict_dia2_index = -1;
         int min_conflict = INT_MAX;
         
-        int o_r = queens[queen_index].first;
-        int o_c = queens[queen_index].second;
+        int o_r,o_c,o_d1, o_d2, queen_index;
+        do{
+            
+            queen_index = int_range(0,n);
+            o_r = queens[queen_index].first;
+            o_c = queens[queen_index].second;
 
-        int o_d1 = (o_c + o_r) ;
-        int o_d2 = (o_c - o_r + n - 1) ;
-        if(rows[o_r] + diagonal1[o_d1] + diagonal2[o_d2] == 3) continue;
-
+            o_d1 = (o_c + o_r) ;
+            o_d2 = (o_c - o_r + n - 1);
+        }
+        while (rows[o_r] + diagonal1[o_d1] + diagonal2[o_d2] == 3);
 
         std::vector<int> best;
         for(int i =0;i<n;++i){
