@@ -1,0 +1,13 @@
+problem,test,status,time_ms,time_budget_ms,tier,correct,complete,optimal,time_alg_ms,time_cal_ms,note
+n-queens,t01,OK,1,1000,fast,true,true,,,0,(runs: 1/1 OK)
+n-queens,t02,OK,1,1000,fast,true,true,,,0,(runs: 1/1 OK)
+n-queens,t03,OK,1,1000,fast,true,true,,,0,(runs: 1/1 OK)
+n-queens,t04,OK,1,1000,fast,true,true,,,0,(runs: 1/1 OK)
+n-queens,t05,OK,1,1000,fast,true,true,,,0,(runs: 1/1 OK)
+n-queens,t06,OK,1,1000,fast,true,true,,,0,(runs: 5/5 OK)
+n-queens,t07,OK,1,1000,fast,true,true,,,0,(runs: 1/1 OK)
+n-queens,t08,OK,96,1000,fast,true,true,,,71,time-only (runs: 1/1 OK)
+n-queens,t09,TLE,3635,1000,fast,false,false,,,3610,over time (+2610ms; eff=1025ms) (runs: 0/1 OK)
+n-queens,t10,TLE,6031,1000,fast,false,false,,,6006,over time (+5006ms; eff=1025ms) (runs: 0/1 OK)
+n-queens,t11,TLE,6031,1000,fast,false,false,,,6006,over time (+5006ms; eff=1025ms) (runs: 0/1 OK)
+n-queens,t12,TLE,6031,1000,fast,false,false,,,6006,over time (+5006ms; eff=1025ms) (runs: 0/1 OK)
