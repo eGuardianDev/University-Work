@@ -1,7 +1,0 @@
-problem,test,status,time_ms,time_budget_ms,tier,correct,complete,optimal,time_alg_ms,time_cal_ms,note
-frog-leap,t01,OK,1,1000,fast,true,true,true,,0,(runs: 1/1 OK)
-frog-leap,t02,OK,1,1000,fast,true,true,true,,0,(runs: 1/1 OK)
-frog-leap,t03,OK,1,1000,fast,true,true,true,,0,(runs: 1/1 OK)
-frog-leap,t04,OK,17,1000,fast,true,true,true,,0,(runs: 1/1 OK)
-frog-leap,t05,OK,148,1000,fast,true,true,true,,123,(runs: 1/1 OK)
-frog-leap,t06,OK,452,1000,fast,true,true,,,427,time-only (runs: 1/1 OK)
