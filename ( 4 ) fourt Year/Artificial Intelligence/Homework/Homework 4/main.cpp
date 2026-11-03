@@ -23,29 +23,32 @@ int32_t int_range(int l, int h) {
   return (SEED % (h - l)) + l;
 }
 
-void populate(const int &max_mass,
-              const std::vector<std::pair<int, int>> &items,
-              std::vector<std::vector<bool>> &list) {
+struct individual {
+  std::vector<short> chromosome;
+  int mass;
+  int cost;
+};
 
-  int elements = list[0].size();
-  for (int i = 0; i < list.size(); ++i) {
-    int mass = 0;
-    int count = 0;
-    while (true) {
-      count++;
-      int j = int_range(0, elements);
-      bool sol = int_range(0, 2) && mass + items[j].first <= max_mass;
-      list[i][j] = sol;
-      if (sol) {
-        mass += items[j].first;
+void populate(const int &max_mass, const int &max_count,
+              const std::vector<std::pair<int, int>> &items,
+              std::vector<individual> &list) {
+  for (auto &indv : list) {
+    indv.mass = 0;
+    indv.cost = 0;
+    indv.chromosome.assign(items.size(), 0);
+
+    for (int i = 0; i < items.size(); ++i) {
+      bool take = int_range(0, 2);
+      if (take && indv.mass + items[i].first <= max_mass) {
+        indv.chromosome[i] = 1;
+        indv.mass += items[i].first;
+        indv.cost += items[i].second;
       }
-      if (count >= elements)
-        break;
     }
   }
 }
 
-void print_chromosome(std::vector<bool> &chromosome) {
+void print_chromosome(std::vector<short> &chromosome) {
 
   for (int i = 0; i < chromosome.size(); ++i) {
     std::cout << chromosome[i] << " ";
@@ -54,80 +57,94 @@ void print_chromosome(std::vector<bool> &chromosome) {
 }
 
 // mass,cost
-std::pair<int, int> compute(const std::vector<std::pair<int, int>> &items,
-                            const std::vector<bool> &chromosome) {
-  int mass = 0, cost = 0;
-  for (int i = 0; i < chromosome.size(); ++i) {
-    mass += chromosome[i] * items[i].first;
-    cost += chromosome[i] * items[i].second;
-  }
+// std::pair<int, int> compute(const std::vector<std::pair<int, int>> &items,
+//                             const std::vector<bool> &chromosome) {
+//   int mass = 0, cost = 0;
+//   for (int i = 0; i < chromosome.size(); ++i) {
+//     mass += chromosome[i] * items[i].first;
+//     cost += chromosome[i] * items[i].second;
+//   }
 
-  return {mass, cost};
-}
+//   return {mass, cost};
+// }
 
-int find_best(const int &max_mass,
-              const std::vector<std::pair<int, int>> &items,
-              const std::vector<std::vector<bool>> &chromosomes) {
-  int index = -1;
-  int cost = INT_MIN;
+// int find_best(const int &max_mass,
+//               const std::vector<std::pair<int, int>> &items,
+//               const std::vector<std::vector<bool>> &chromosomes) {
+//   int index = -1;
+//   int cost = INT_MIN;
 
-  for (int i = 0; i < chromosomes.size(); ++i) {
-    auto [m, c] = compute(items, chromosomes[i]);
-    if (m <= max_mass && c >= cost) {
-      cost = c;
-      index = i;
-    }
-  }
+//   for (int i = 0; i < chromosomes.size(); ++i) {
+//     auto [m, c] = compute(items, chromosomes[i]);
+//     if (m <= max_mass && c >= cost) {
+//       cost = c;
+//       index = i;
+//     }
+//   }
 
-  return index;
-}
+//   return index;
+// }
 
 void sort_population(const int &max_mass,
                      const std::vector<std::pair<int, int>> &items,
-                     std::vector<std::vector<bool>> &chromosomes) {
+                     std::vector<individual> &chromosomes) {
   std::sort(chromosomes.begin(), chromosomes.end(),
             [&](const auto &a, const auto &b) {
-              auto [mass_a, cost_a] = compute(items, a);
-              auto [mass_b, cost_b] = compute(items, b);
-
-              bool valid_a = mass_a <= max_mass;
-              bool valid_b = mass_b <= max_mass;
+              bool valid_a = a.mass <= max_mass;
+              bool valid_b = b.mass <= max_mass;
 
               if (valid_a != valid_b) {
                 return valid_a;
               }
 
-              return cost_a > cost_b;
+              return a.cost > b.cost;
             });
 }
 
-std::vector<bool> cross(const std::vector<bool> &chromosome1,
-                        const std::vector<bool> &chromosome2) {
-  int n = chromosome1.size();
-  std::vector<bool> child(n, 0);
+individual cross(const std::vector<std::pair<int, int>> &items,
+                 const individual &indv1, const individual &indv2) {
+  int n = indv1.chromosome.size();
+  individual child;
+
+  child.mass = 0;
+  child.cost = 0;
+
+  child.chromosome.resize(n);
 
   int point = int_range(0, n + 1);
   for (int i = 0; i < n; ++i) {
-    if (i < point) {
-      child[i] = chromosome1[i];
-    } else {
-      child[i] = chromosome2[i];
+
+    short parent = (i < point) ? indv1.chromosome[i] : indv2.chromosome[i];
+
+    child.chromosome[i] = (parent);
+
+    if (parent) {
+      child.mass += items[i].first;
+      child.cost += items[i].second;
     }
   }
   return child;
 }
 
-void mutate(std::vector<bool> &chromosome, int change = 1) {
+void mutate(std::vector<std::pair<int, int>> &items, individual &indv,
+            int change = 1) {
 
-  for (int i = 0; i < chromosome.size(); ++i) {
-    int val = int_range(0, 101);
-    if (change >= val) {
-      chromosome[i] = !chromosome[i];
+  for (int i = 0; i < indv.chromosome.size(); ++i) {
+    int val = int_range(0, 1001);
+    if (change > val) {
+      indv.chromosome[i] = !indv.chromosome[i];
+      if (indv.chromosome[i] == 0) {
+        indv.mass -= items[i].first;
+        indv.cost -= items[i].second;
+      } else {
+        indv.mass += items[i].first;
+        indv.cost += items[i].second;
+      }
     }
   }
 }
 
-const int START_POPULATION = 100;
+const int START_POPULATION = 400;
 
 int pick(int tries = 3) {
   int best = int_range(0, START_POPULATION);
@@ -135,6 +152,19 @@ int pick(int tries = 3) {
     best = std::min(best, int_range(0, START_POPULATION));
   }
   return best;
+}
+
+void repair(const int &max_mass, const std::vector<std::pair<int, int>> &items,
+            individual &indv) {
+
+  while (indv.mass > max_mass) {
+    int j = int_range(0, indv.chromosome.size());
+    if (indv.chromosome[j] == 1) {
+      indv.chromosome[j] = false;
+      indv.mass -= items[j].first;
+      indv.cost -= items[j].second;
+    }
+  }
 }
 
 int main() {
@@ -151,47 +181,47 @@ int main() {
     items.push_back({m, n});
   }
 
-  std::vector<std::vector<bool>> list(START_POPULATION,
-                                      std::vector<bool>(N, 0));
+  std::vector<individual> list(START_POPULATION);
 
-  populate(M, items, list);
-  //   print_chromosome(list[0]);
-  //   auto [m, c] = compute(items, list[0]);
-  //   std::cout << "mass: " << m << " | cost " << c << std::endl;
+  populate(M, N, items, list);
+  std::vector<individual> new_list;
+  int count = 0;
 
-  //   int best_index = find_best(M, items, list);
-  //   print_chromosome(list[best_index]);
-  //   auto [m1, c1] = compute(items, list[best_index]);
-
-  //   std::cout << "mass: " << m1 << " | cost " << c1 << std::endl;
-
-  std::vector<std::vector<bool>> new_list;
-  for (int iteration = 0; iteration < 10000; ++iteration) {
+  for (int iteration = 0; iteration < 500; ++iteration) {
 
     sort_population(M, items, list);
-
-    // print_chromosome(list[0]);
 
     new_list.push_back(list[0]);
 
     while (new_list.size() < START_POPULATION) {
 
-      int p1 = pick();
-      int p2 = pick();
+      int p1 = pick(20);
+      int p2 = pick(20);
 
-      std::vector<bool> child = cross(list[p1], list[p2]);
-      mutate(child, 1);
+      individual child = cross(items, list[p1], list[p2]);
+      mutate(items, child, 10);
+      repair(M, items, child);
       new_list.push_back(child);
     }
-    if (iteration % 100 == 0) {
-      auto [mass, cost] = compute(items, list[0]);
-      std::cout << "Generation: " << iteration << " | Mass: " << mass
-                << " | Cost: " << cost << '\n';
+    ++count;
+    if (count <= 9) {
+      std::cout << list[0].cost << std::endl;
     }
+    // print_chromosome(list[0].chromosome);
+
+    //     // auto [mass, cost] = compute(items, list[0]);
+    //     // std::cout << "Generation: " << iteration << " | Mass: " << mass
+    //     // << " | Cost: " << cost << '\n';
     list = new_list;
     new_list.clear();
-    // std::cout << "mass: " << m2 << " | cost " << c2 << std::endl;
+    //   // std::cout << "mass: " << m2 << " | cost " << c2 << std::endl;
   }
+  std::cout << list[0].cost << std::endl;
+
+  std::cout << "\n";
+  std::cout << list[0].cost << std::endl;
+  // print_chromosome(list[0].chromosome);
+  // std::cout << "Mass: " << list[0].mass << " | Cost: " << list[0].cost;
 
   return 0;
 }
