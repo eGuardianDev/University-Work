@@ -2,6 +2,8 @@
 #include <iostream>
 #include <vector>
 
+enum Place : short { X = 1, O = 2 };
+
 void print(const std::vector<int> &board) {
 
   std::cout << "+---+---+---+\n";
@@ -69,46 +71,70 @@ inline int solved(std::vector<int> &board) {
   return 0;
 }
 
-int minimax(std::vector<int> &board, bool min, int alpha, int beta) {
+int minimax(std::vector<int> &board, int me, bool min, int alpha, int beta,
+            int depth) {
 
+  int other = (me == 2) ? 1 : 2;
   int s = solved(board);
   if (s != 2) {
-    return s;
+    s *= (10 - depth);
+    return me == 1 ? s : -s;
   }
+
+  const int order[9] = {4, 0, 2, 6, 8, 1, 3, 5, 7};
 
   if (min) {
     int minimal = INT_MAX;
-    for (int i = 0; i < 9; ++i) {
+    for (int j = 0; j < 9; ++j) {
+      int i = order[j];
       if (board[i] != 0)
         continue;
-      board[i] = 2;
-      minimal = std::min(minimal, minimax(board, !min, alpha, beta));
+      board[i] = other;
+      minimal =
+          std::min(minimal, minimax(board, me, !min, alpha, beta, depth + 1));
       board[i] = 0;
+
+      if (minimal <= alpha)
+        return minimal;
+      beta = std::min(minimal, beta);
     }
     return minimal;
   } else { // max
     int maximum = INT_MIN;
-    for (int i = 0; i < 9; ++i) {
+    for (int j = 0; j < 9; ++j) {
+      int i = order[j];
       if (board[i] != 0)
         continue;
-      board[i] = 1;
-      maximum = std::max(maximum, minimax(board, !min, alpha, beta));
+      board[i] = me;
+      maximum =
+          std::max(maximum, minimax(board, me, !min, alpha, beta, depth + 1));
       board[i] = 0;
+
+      if (maximum >= beta)
+        return maximum;
+      alpha = std::max(maximum, alpha);
     }
     return maximum;
   }
 }
 
-int start_algo(std::vector<int> &board) {
+int start_algo(std::vector<int> &board, char turn) {
+  int me = 1; // x
+  if (turn == 'O') {
+    me = 2; // O
+  }
+  const int order[9] = {4, 0, 2, 6, 8, 1, 3, 5, 7};
+
   int index = -1;
-  int best = INT_MAX;
-  for (int i = 0; i < 9; ++i) {
+  int best = INT_MIN;
+  for (int j = 0; j < 9; ++j) {
+    int i = order[j];
     if (board[i] != 0)
       continue;
-    board[i] = 2;
-    int m = minimax(board, false, INT_MAX, INT_MIN);
+    board[i] = me;
+    int m = minimax(board, me, true, INT_MIN, INT_MAX, 1);
     board[i] = 0;
-    if (best > m) {
+    if (best < m) {
       best = m;
       index = i;
     }
@@ -116,79 +142,141 @@ int start_algo(std::vector<int> &board) {
   return index;
 }
 
+void JUDGE_play() {
+
+  std::vector<int> board(9, 0);
+  std::string turn;
+  std::getline(std::cin, turn);
+
+  char turn_type = '0';
+  for (int i = 0; i < turn.size(); ++i) {
+    if (turn[i] == 'X' || turn[i] == 'O') {
+      turn_type = turn[i];
+      break;
+    }
+  }
+
+  if (turn_type == '0')
+    return;
+
+  int count = 0;
+  for (int i = 0; i < 7; ++i) {
+    std::string line;
+    std::getline(std::cin, line);
+    if (i % 2 == 1) {
+      for (int j = 0; j < line.size(); ++j) {
+        if (line[j] == '_') {
+          board[count++] = 0;
+        } else if (line[j] == 'X') {
+          board[count++] = Place::X;
+        } else if (line[j] == 'O') {
+          board[count++] = Place::O;
+        }
+      }
+    }
+  }
+
+  if (solved(board) != 2) {
+    std::cout << -1 << std::endl;
+    return;
+  }
+
+  int index = start_algo(board, turn_type);
+  std::cout << (index / 3) + 1 << " " << (index % 3) + 1 << std::endl;
+}
+
+void GAME_play() {
+  std::vector<int> board(9, 0);
+
+  std::string first;
+  std::getline(std::cin, first);
+
+  char first_type = '0';
+  for (int i = 0; i < first.size(); ++i) {
+    if (first[i] == 'X' || first[i] == 'O') {
+      first_type = first[i];
+      break;
+    }
+  }
+
+  std::string human;
+  std::getline(std::cin, human);
+
+  char human_type = '0';
+  for (int i = 0; i < human.size(); ++i) {
+    if (human[i] == 'X' || human[i] == 'O') {
+      human_type = human[i];
+      break;
+    }
+  }
+
+  bool human_turn = (human_type == first_type);
+  int game = 0;
+
+  while ((game = solved(board)) == 2) {
+    if (human_turn == true) {
+      int r, c;
+      while (true) {
+        std::cin >> r >> c;
+        if (r < 1 || r > 3)
+          continue;
+        if (c < 1 || c > 3)
+          continue;
+        r -= 1;
+        c -= 1;
+        if (board[r * 3 + c]) {
+          continue;
+        }
+        break;
+      }
+      if (human_type == 'X') {
+        board[r * 3 + c] = Place::X;
+      } else {
+        board[r * 3 + c] = Place::O;
+      }
+      human_turn = false;
+    } else {
+
+      int inde = 0;
+
+      if (human_type == 'X') {
+        inde = start_algo(board, 'O');
+        board[inde] = Place::O;
+      } else {
+        inde = start_algo(board, 'X');
+        board[inde] = Place::X;
+      }
+      human_turn = true;
+    }
+    print(board);
+  }
+
+  switch (game) {
+  case 0:
+    std::cout << "Draw" << std::endl;
+    break;
+  case 1:
+    std::cout << "Win X" << std::endl;
+    break;
+  case -1:
+    std::cout << "Win O" << std::endl;
+    break;
+  }
+  print_raw(board);
+}
+
 int main() {
 
   std::string type;
   std::getline(std::cin, type);
 
-  // std::string delimiter = " ";
-  // std::string token = s.substr(0, s.find(delimiter)); // token is "scott"
-  std::vector<int> board(9, 0);
+  if (!type.empty() && type.back() == '\r')
+    type.pop_back();
 
   if (type == "JUDGE") {
-    std::string turn;
-    std::getline(std::cin, turn);
-
-    int count = 0;
-    for (int i = 0; i < 6; ++i) {
-      std::string line;
-      std::getline(std::cin, line);
-      if (i % 2 == 0) {
-        for (int j = 0; j < line.size(); ++j) {
-          if (line[j] == '_') {
-            board[count++] = 0;
-          } else if (line[j] == 'X') {
-            board[count++] = 1;
-          } else if (line[j] == 'O') {
-            board[count++] = 2;
-          }
-        }
-      }
-    }
-    print(board);
+    JUDGE_play();
   } else if (type == "GAME") {
-
-    int match = 0;
-    int game = 0;
-    while ((game = solved(board)) == 2) {
-
-      match++;
-
-      if (match % 2 == 0) {
-        int r, c;
-        while (true) {
-          std::cin >> r >> c;
-          if (r < 1 || r > 3)
-            continue;
-          if (c < 1 || c > 3)
-            continue;
-          r -= 1;
-          c -= 1;
-          if (board[r * 3 + c]) {
-            continue;
-          }
-          break;
-        }
-        board[r * 3 + c] = 1;
-      } else {
-        int inde = start_algo(board);
-        board[inde] = 2;
-      }
-
-      print(board);
-    }
-    switch (game) {
-    case 0:
-      std::cout << "Draw" << std::endl;
-      break;
-    case 1:
-      std::cout << "Win X" << std::endl;
-      break;
-    case -1:
-      std::cout << "Win O" << std::endl;
-      break;
-    }
-    print_raw(board);
+    GAME_play();
   }
 
   return 0;
