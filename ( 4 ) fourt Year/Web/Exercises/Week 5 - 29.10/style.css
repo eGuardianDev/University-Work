@@ -1,0 +1,80 @@
+* {
+    box-sizing: border-box;
+}
+
+html {
+    background-color: bisque;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+html body {
+    max-width: 80%;
+    margin: auto;
+}
+
+body header {
+    border: 5px black solid;
+    padding: 1rem;
+    margin: 2rem;
+}
+
+nav a {
+    font-size: 1.5rem;
+    color: #404040;
+    text-decoration: none;
+}
+
+nav ul li {
+    border: 2px solid gray;
+    padding: 0.5rem;
+    width: auto;
+    margin: 1rem;
+    list-style-type: none;
+}
+
+.display-in-row li {
+    display: inline-block;
+}
+
+
+main {
+    margin: 2rem;
+}
+
+main article section {
+    border: 2px black solid;
+    padding: 0.5rem;
+    margin-top: 0.2rem;
+
+}
+
+form #rating {
+    align-items: center;
+}
+
+form #rating {}
+
+
+#rating {
+    border: 0px;
+}
+
+#comments input,
+textarea {
+    background-color: whitesmoke;
+    font-size: 1.2rem;
+
+}
+
+#comments button {
+    background-color: #404040;
+    color: white;
+    font-size: x-large;
+}
+
+
+footer {
+    background-color: lightgray;
+    padding: 1rem;
+    opacity: 0.7;
+}
