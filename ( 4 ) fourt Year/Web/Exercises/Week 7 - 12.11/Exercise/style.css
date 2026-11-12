@@ -1,0 +1,9 @@
+html {
+    width: 50%;
+    margin: auto;
+}
+
+.done {
+    text-decoration: line-through;
+    color: gray;
+}
