@@ -1,0 +1,20 @@
+
+
+pamtsu
+
+
+performance - how fast they system response  ( and resource usage )
+accessability - system continues under (errors) // failed conditions 
+modifiability - system is changable (cost and time for changes also)
+testability - system can be tested for errors (how easy is it to find errors)
+security - system is protected from attacks (unathorized access)
+usability - system is easy to learn by users 	
+
+
+availability - internal/external - fault, ommision, response, crash
+modify - developer - wish to 
+performance - sources - periodic, sporadic, stochastic
+security - individual or system - tries to - get block, report 
+testability - developer, system - analyse, design, integrate - prepares test, computes, processes
+usability - user - wants to learn, use - system - retrieve password, support for efficient nav - success ratio, number of errors, user satisfaction
+
