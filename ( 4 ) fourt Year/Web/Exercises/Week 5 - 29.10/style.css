@@ -10,12 +10,23 @@ html {
 html body {
     max-width: 80%;
     margin: auto;
+
 }
 
 body header {
     border: 5px black solid;
     padding: 1rem;
     margin: 2rem;
+}
+
+main {
+    margin: 2rem;
+}
+
+footer {
+    background-color: lightgray;
+    padding: 1rem;
+    opacity: 0.7;
 }
 
 nav a {
@@ -32,14 +43,10 @@ nav ul li {
     list-style-type: none;
 }
 
-.display-in-row li {
-    display: inline-block;
+nav li:hover {
+    background-color: lightblue;
 }
 
-
-main {
-    margin: 2rem;
-}
 
 main article section {
     border: 2px black solid;
@@ -48,19 +55,9 @@ main article section {
 
 }
 
-form #rating {
-    align-items: center;
-}
-
-form #rating {}
-
-
-#rating {
-    border: 0px;
-}
 
 #comments input,
-textarea {
+#comments textarea {
     background-color: whitesmoke;
     font-size: 1.2rem;
 
@@ -72,9 +69,83 @@ textarea {
     font-size: x-large;
 }
 
-
-footer {
+details {
     background-color: lightgray;
     padding: 1rem;
-    opacity: 0.7;
+}
+
+
+table {
+    border-collapse: collapse;
+}
+
+table th {
+    color: honeydew;
+    background-color: darkslategray;
+}
+
+table tr:nth-child(even) {
+    background-color: lightcoral;
+}
+
+table tr:nth-child(odd) {
+    background-color: lightskyblue;
+}
+
+table th,
+table td {
+    border: 1px solid black;
+    text-align: center;
+    font-size: large;
+}
+
+table {
+    width: 100%;
+}
+
+
+#comments label {
+    font-size: larger;
+    font-weight: bold;
+}
+
+#comments fieldset {
+    margin-top: 1rem;
+}
+
+#comments fieldset label {
+    font-weight: normal;
+    font-size: medium;
+    padding: 1rem;
+
+}
+
+#comments fieldset legend {
+    font-weight: bold;
+    font-size: large;
+}
+
+form #rating {
+    border: 2px solid black;
+    border-radius: 1rem;
+}
+
+
+/* general use classes */
+
+.full-length {
+    width: 100%;
+}
+
+
+.on-right {
+    float: right;
+}
+
+.hyperlink-additional {
+    color: black;
+}
+
+.display-in-row li {
+    display: inline-block;
 }
