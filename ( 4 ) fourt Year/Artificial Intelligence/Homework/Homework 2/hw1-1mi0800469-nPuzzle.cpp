@@ -140,19 +140,6 @@ void display_path() {
   }
 }
 
-inline int inversions(std::vector<int> &board, const int &n) {
-  int inversions = 0;
-
-  for (int i = 0; i < n * n; ++i) {
-    for (int j = i + 1; j < n * n; ++j) {
-      if (board[i] > board[j] && board[i] != 0 && board[j] != 0) {
-        ++inversions;
-      }
-    }
-  }
-  return inversions;
-}
-
 inline bool duplications(std::vector<int> &board, const int &n) {
 
   for (int i = 0; i < n * n; ++i) {
@@ -215,6 +202,37 @@ inline bool solved(std::vector<int> board, const int zero_position) {
   return true;
 }
 
+bool is_solvable(std::vector<int> &board, const int &n,
+                 const int &final_zero_position) {
+
+  if (duplications(board, n)) {
+    return false;
+  }
+  int current_zero_pos = -1;
+  int inversions = 0;
+  for (int i = 0; i < board.size(); ++i) {
+    if (board[i] == 0) {
+      current_zero_pos = i;
+      continue;
+    }
+
+    for (int j = 0; j < i; ++j) {
+      if (board[j] != 0 && board[j] > board[i]) {
+        ++inversions;
+      }
+    }
+  }
+
+  if (current_zero_pos == -1)
+    return false;
+
+  if (n % 2 == 1) {
+    return inversions % 2 == 0;
+  }
+  int curr_zero_row = current_zero_pos / n;
+int goal_zero_row = final_zero_position / n;
+  return (inversions + curr_zero_row) % 2 == goal_zero_row % 2;
+}
 int main() {
 
   int size = 0;
@@ -249,29 +267,9 @@ int main() {
   }
 
   // check if solvable
-  {
-    int _inversions = inversions(board, n);
-    if (_inversions % 2 != 0) {
-      // std::cout << "Not solvable due to Inversions - " << _inversions
-      // << std::endl;
-
-      std::cout << "-1" << std::endl;
-      return 0;
-    }
-    if (duplications(board, n)) {
-      std::cout << "Duplicates in the boxes" << std::endl;
-      return 3;
-    }
-
-    int i = 0;
-    for (i = 0; i < board.size(); ++i) {
-      if (board[i] == 0)
-        break;
-    }
-    if (i == board.size()) {
-      std::cout << "Zero is missing" << std::endl;
-      return 4;
-    }
+  if (!is_solvable(board, n, final_zero_position)) {
+    std::cout << "-1" << std::endl;
+    return 0;
   }
 
   // std::cout << "Heuristic: "
